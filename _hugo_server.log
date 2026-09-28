@@ -19,3 +19,20 @@ Environment: "development"
 Serving pages from disk
 Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1) 
 Press Ctrl+C to stop
+
+Change detected, rebuilding site (#1).
+2026-09-29 01:01:24.817 +0800
+Source changed /event/_training_10_2026-07-to-2027-01_visiting-scholar-dr-lihua-liu-/_index.md
+Source changed /event/_training_3_2025_visiting-scholar-training-mr-z/_index.md
+Source changed /event/_training_5_2025_visiting-scholar-training-prof/_index.md
+Source changed /event/_training_8_2026-01-to-2026-12_visiting-scholar-dr-yulong-yan/_index.md
+Source changed /event/_training_9_2026-03-to-2027-02_visiting-scholar-dr-yaohui-qu-/_index.md
+Source changed /event
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 1197 ms
+
+Change detected, rebuilding site (#2).
+2026-09-29 01:01:26.016 +0800
+Source changed /event
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 2469 ms

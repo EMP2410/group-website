@@ -3,3 +3,7 @@ WARN  deprecated: .Site.LanguageCode was deprecated in Hugo v0.158.0 and will be
 WARN  deprecated: .Site.Data was deprecated in Hugo v0.156.0 and will be removed in a future release. Use hugo.Data instead.
 WARN  deprecated: .Page.IsNode was deprecated in Hugo v0.163.0 and will be removed in a future release. Use .Page.IsBranch or not .Page.IsPage instead.
 WARN  deprecated: .Site.AllPages was deprecated in Hugo v0.156.0 and will be removed in a future release. See https://discourse.gohugo.io/t/56732.
+WARN  deprecated: .Site.LanguageCode was deprecated in Hugo v0.158.0 and will be removed in a future release. Use .Site.Language.Locale instead.
+WARN  deprecated: .Page.IsNode was deprecated in Hugo v0.163.0 and will be removed in a future release. Use .Page.IsBranch or not .Page.IsPage instead.
+WARN  deprecated: .Site.LanguageCode was deprecated in Hugo v0.158.0 and will be removed in a future release. Use .Site.Language.Locale instead.
+WARN  deprecated: .Page.IsNode was deprecated in Hugo v0.163.0 and will be removed in a future release. Use .Page.IsBranch or not .Page.IsPage instead.
