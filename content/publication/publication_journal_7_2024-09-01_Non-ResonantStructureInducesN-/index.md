@@ -1,6 +1,6 @@
 ---
 title: Non-Resonant Structure Induces N-Rich Solid Electrolyte Interface toward Ultra-Stable Solid-State Lithium-Metal Batteries/Advanced Functional Materials
-authors: [Shuoxiao Zhang, Han Liu, Zhengbo Liu, Yajun Zhao, Jie Yan, Yangqian Zhang, Fangyan Liu, Qi Liu, Chen Liu, Gang Sun, Zhen‐Bo Wang, Jiayi Yang, Yang Ren]
+authors: [Shuoxiao Zhang, liuhan, Zhengbo Liu, Yajun Zhao, yanjie, zhangyangqian, liufangyan, Qi Liu, Chen Liu, Gang Sun, Zhen‐Bo Wang, yangjiayi, yangren]
 author_notes: []
 date: '2024-03-19T00:00:00Z'
 doi: 10.1002/adfm.202401377

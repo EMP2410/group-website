@@ -1,6 +1,6 @@
 ---
 title: Double-network hybrid hydrogel electrolyte suppresses zinc dendrites and vanadium dissolution for durable zinc-metal batteries
-authors: [Ruiqiang Yang, Yangqian Zhang, Yaqi Liao, Chihon Leung, Haijin Ji, Meilan Xie, Han Liu, Yongqing Wang, Qibing Chang, Yang Ren]
+authors: [Ruiqiang Yang, zhangyangqian, liaoyaqi, Chihon Leung, Haijin Ji, Meilan Xie, liuhan, Yongqing Wang, Qibing Chang, yangren]
 author_notes: []
 date: '2026-04-08T00:00:00Z'
 doi: 10.1016/j.ensm.2026.105097

@@ -1,6 +1,6 @@
 ---
 title: Ultra-stable and large elastocaloric effect in a nano-precipitated bulk TiNiCuCo shape memory alloy
-authors: [Hongyang Lin, Peng Hua, Yang Li, Qiao Li, Kaiping Yu, Jie Yan, Yusuke Onuki, Qiuhong Wang, Chong Su, Guoan Zhou, Shigeo Sato, Kai Ming Huang, Junhua Luan, Yi-Kuen Lee, Mingxin Huang, Yong Sik Yang, Yang Ren, Qingping Sun]
+authors: [Hongyang Lin, Peng Hua, Yang Li, Qiao Li, Kaiping Yu, yanjie, Yusuke Onuki, Qiuhong Wang, Chong Su, Guoan Zhou, Shigeo Sato, Kai Ming Huang, Junhua Luan, Yi-Kuen Lee, Mingxin Huang, Yong Sik Yang, yangren, Qingping Sun]
 author_notes: []
 date: '2025-11-13T00:00:00Z'
 doi: 10.1016/j.msea.2025.149449

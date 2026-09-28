@@ -1,6 +1,6 @@
 ---
 title: Covalent Boron–Oxygen Bond Stabilizes Anion Redox for Lithium-Rich Manganese-Based Layered Oxide Cathodes
-authors: [Tingting Li, Yaqi Liao, Han Liu, Wei Wang, Xingjun Li, Liuqi Wang, Haijin Ji, Wei Liu, Yang Ren, Qi Liu]
+authors: [Tingting Li, liaoyaqi, liuhan, wangwei, Xingjun Li, Liuqi Wang, Haijin Ji, Wei Liu, yangren, Qi Liu]
 author_notes: []
 date: '2026-04-01T00:00:00Z'
 doi: 10.1021/acsnano.5c20939

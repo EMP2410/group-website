@@ -1,6 +1,6 @@
 ---
 title: Enhancement of the mechanical properties by controlling the superlattice ordering in Ni-42W alloys
-authors: [Zhenchang Hou, Zhihua Nie, Yang Ren, Xun Guo, Yandong Wang, Chengwen Tan]
+authors: [Zhenchang Hou, Zhihua Nie, yangren, Xun Guo, Yandong Wang, Chengwen Tan]
 author_notes: []
 date: '2025-06-18T00:00:00Z'
 doi: 10.1016/j.msea.2025.148690

@@ -1,6 +1,6 @@
 ---
 title: Recent advances in high-entropy solid electrolytes for all-solid-state lithium batteries
-authors: [Yutong Chen, Feng Yue, Yang Ren, Keke Huang, Songbai Han]
+authors: [Yutong Chen, Feng Yue, yangren, Keke Huang, Songbai Han]
 author_notes: []
 date: '2025-04-09T00:00:00Z'
 doi: 10.1016/j.enchem.2025.100157

@@ -1,6 +1,6 @@
 ---
 title: Sn-Mediated Local Atomic Ordering Enhances Reversible Anionic Redox Activity in Cation-Disordered Li1.3Mn0.4Nb0.3O2 Cathodes
-authors: [Gang Sun, Dan Nie, Qingjun Zhu, Lijun Gao, Yi‐Hung Chang, Han Liu, Jiayi Yang, Yang Ren, Yu‐Cheng Shao, Hirofumi Ishii, Xu‐Lei Sui, Panpan Wang, Hsiao‐Tsu Wang, Zhen‐Bo Wang]
+authors: [Gang Sun, Dan Nie, Qingjun Zhu, Lijun Gao, Yi‐Hung Chang, liuhan, yangjiayi, yangren, Yu‐Cheng Shao, Hirofumi Ishii, Xu‐Lei Sui, Panpan Wang, Hsiao‐Tsu Wang, Zhen‐Bo Wang]
 author_notes: []
 date: '2025-04-02T00:00:00Z'
 doi: 10.1002/aenm.202500217

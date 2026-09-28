@@ -1,6 +1,6 @@
 ---
 title: Umpolung of a covalent organic framework for high-performance cathodic sodium ion storage
-authors: [Fangyuan Kang, Yuchan Zhang, Zihao Chen, Zhaowen Bai, Qianfeng Gu, Jinglun Yang, Qi Liu, Yang Ren, Chun-Sing Lee, Qichun Zhang]
+authors: [Fangyuan Kang, Yuchan Zhang, Zihao Chen, baizhaowen, Qianfeng Gu, Jinglun Yang, Qi Liu, yangren, Chun-Sing Lee, Qichun Zhang]
 author_notes: []
 date: '2025-01-01T00:00:00Z'
 doi: 10.1039/d5sc01195g

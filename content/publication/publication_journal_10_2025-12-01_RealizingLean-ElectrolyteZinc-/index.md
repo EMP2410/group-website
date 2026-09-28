@@ -1,6 +1,6 @@
 ---
 title: Realizing Lean-Electrolyte Zinc-Ion Batteries via An Ultrathin and Cost-Effective Separator
-authors: [Yurou Wu, Meilan Xie, Kai Fu, Zhendong Li, Huixin Shi, Jiarui Zhang, Lihan Wang, Yun-Liang Jiang, Cai‐ling Liu, Dui Ma, Hongbo Huang, Fanyan Zeng, Yaqi Liao, Han Liu, Yang Ren, Xiao Min Liang]
+authors: [Yurou Wu, Meilan Xie, Kai Fu, Zhendong Li, Huixin Shi, Jiarui Zhang, Lihan Wang, Yun-Liang Jiang, Cai‐ling Liu, Dui Ma, Hongbo Huang, Fanyan Zeng, liaoyaqi, liuhan, yangren, Xiao Min Liang]
 author_notes: []
 date: '2025-12-07T00:00:00Z'
 doi: 10.1002/adfm.202527567

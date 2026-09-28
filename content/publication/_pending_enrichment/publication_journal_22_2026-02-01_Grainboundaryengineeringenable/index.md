@@ -1,6 +1,6 @@
 ---
 title: Grain boundary engineering enables stable high-voltage LiCoO2 cathodes
-authors: [Ze-Zhou Lin, Yan-Hao Ren, Chi Zhang, Zhaowen Bai, Yang Ren, Ye Zhu, Peiyu Hou, Hai-Tao Huang]
+authors: [Ze-Zhou Lin, Yan-Hao Ren, Chi Zhang, baizhaowen, yangren, Ye Zhu, Peiyu Hou, Hai-Tao Huang]
 author_notes: []
 date: '2026-02-18T00:00:00Z'
 doi: 10.1007/s42864-025-00371-8

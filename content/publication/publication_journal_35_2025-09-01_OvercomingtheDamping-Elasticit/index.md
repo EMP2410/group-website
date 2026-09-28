@@ -1,6 +1,6 @@
 ---
 title: Overcoming the Damping-Elasticity Paradox via 3D-Printed NiTiSn Nanocomposite
-authors: [Bo Feng, Helong Liu, Hui Shen, Ying Yang, Fangmin Guo, Lishan Cui, Yang Ren, Jie Ying Chen, Shuke Huang, Yao Xiao, Zhihui Zhang, Hongxiang Zong, Yinong Liu, Shiyu Hao]
+authors: [Bo Feng, Helong Liu, Hui Shen, Ying Yang, Fangmin Guo, Lishan Cui, yangren, Jie Ying Chen, Shuke Huang, Yao Xiao, Zhihui Zhang, Hongxiang Zong, Yinong Liu, Shiyu Hao]
 author_notes: []
 date: '2025-06-10T00:00:00Z'
 doi: 10.1002/advs.202506410

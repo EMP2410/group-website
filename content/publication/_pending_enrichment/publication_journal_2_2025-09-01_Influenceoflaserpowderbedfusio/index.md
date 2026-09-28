@@ -1,6 +1,6 @@
 ---
 title: Influence of laser powder bed fusion parameters on deformation behavior and stress-induced martensitic transformation in NiTi alloys at constant volumetric energy density level
-authors: [Zhen Zhang, Jianzhou Huang, Dongdong He, Qisheng Feng, Guangyao Chen, Runguang Li, Caijuan Shi, Yang Ren, Xionggang Lu, Pengyue Gao, Chonghe Li]
+authors: [Zhen Zhang, Jianzhou Huang, Dongdong He, Qisheng Feng, Guangyao Chen, Runguang Li, Caijuan Shi, yangren, Xionggang Lu, Pengyue Gao, Chonghe Li]
 author_notes: []
 date: '2025-09-14T00:00:00Z'
 doi: 10.1016/j.msea.2025.149113

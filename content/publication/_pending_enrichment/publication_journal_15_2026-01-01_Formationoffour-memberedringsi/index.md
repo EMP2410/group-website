@@ -1,6 +1,6 @@
 ---
 title: Formation of four-membered rings in metallic glasses with minor additions
-authors: [Sinan Liu, Ran Yu, He Zhu, Ao Yan, Haoran Sun, Jidong Ge, Gang Sha, Yubin Ke, Huihui Kong, H. Fuchs, Wei Liu, Yang Ren, Jöerg C. Neuefeind, Zhenduo Wu, Lin Gu, X. F. Wang, Si Lan, YuQiang MA]
+authors: [Sinan Liu, Ran Yu, He Zhu, Ao Yan, Haoran Sun, Jidong Ge, Gang Sha, Yubin Ke, Huihui Kong, H. Fuchs, Wei Liu, yangren, Jöerg C. Neuefeind, Zhenduo Wu, Lin Gu, X. F. Wang, Si Lan, YuQiang MA]
 author_notes: []
 date: '2026-01-04T00:00:00Z'
 doi: 10.1016/j.actamat.2026.121897

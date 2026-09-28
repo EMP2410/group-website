@@ -1,6 +1,6 @@
 ---
 title: An anomalous interfacial structural-compositional rearrangement in a bulk granular nanostructured glass
-authors: [Shu Hong Fu, Xiaoshuang Yin, Yu Lou, Zhenduo Wu, Xubin Ye, Sinan Liu, He Sun Zhu, Yang Ren, X. F. Wang, Tao Feng, Gerhard Wilde, Xiaohui Yu, Si Lan]
+authors: [Shu Hong Fu, Xiaoshuang Yin, Yu Lou, Zhenduo Wu, Xubin Ye, Sinan Liu, He Sun Zhu, yangren, X. F. Wang, Tao Feng, Gerhard Wilde, Xiaohui Yu, Si Lan]
 author_notes: []
 date: '2026-01-05T00:00:00Z'
 doi: 10.1038/s43246-025-01057-x

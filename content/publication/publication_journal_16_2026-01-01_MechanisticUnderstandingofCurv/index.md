@@ -1,6 +1,6 @@
 ---
 title: Mechanistic Understanding of Curvature Effects on ORR/OER Activity in Single-Atom Catalysts From Atomic-Scale Perspective
-authors: [Ninggui Ma, Han Liu, Lei Yu, Qijun Yu, Jun Cheng, Yang Ren, Jun Fan, Zhanhua WEI]
+authors: [Ninggui Ma, liuhan, Lei Yu, Qijun Yu, Jun Cheng, yangren, Jun Fan, Zhanhua WEI]
 author_notes: []
 date: '2026-01-30T00:00:00Z'
 doi: 10.1002/smll.202513102

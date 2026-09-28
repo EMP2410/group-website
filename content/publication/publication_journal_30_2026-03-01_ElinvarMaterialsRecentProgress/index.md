@@ -1,6 +1,6 @@
 ---
 title: 'Elinvar Materials: Recent Progress and Challenges'
-authors: [Wenjie Li, Yang Ren]
+authors: [liwenjie, yangren]
 author_notes: []
 date: '2026-03-01T00:00:00Z'
 doi: 10.1002/adem.202502210

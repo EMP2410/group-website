@@ -1,6 +1,6 @@
 ---
 title: Interlayer Entropy Engineering Inducing the Symmetry-Broken Layered Oxide Cathodes to Activate Reversible High-Voltage Redox Reaction/Small
-authors: [Jianhua Zhang, Wenbin Li, Jiayi Yang, Jingjing Wang, Qi Dong, Xiyu Wang, Yumei Wu, Yang Ren, Xifei Li]
+authors: [Jianhua Zhang, Wenbin Li, yangjiayi, Jingjing Wang, Qi Dong, Xiyu Wang, Yumei Wu, yangren, Xifei Li]
 author_notes: []
 date: '2024-04-26T00:00:00Z'
 doi: 10.1002/smll.202401443

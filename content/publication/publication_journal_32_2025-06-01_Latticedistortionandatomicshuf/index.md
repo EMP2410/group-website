@@ -1,6 +1,6 @@
 ---
 title: Lattice distortion and atomic shuffle coupling of the R phase under grain size confinement in a Ni48Ti50Fe2 alloy
-authors: [Yuxuan Chen, Xiaobin Shi, Junsong Zhang, Yunzhi Wang, Yang Ren, Feihong Chu, Shan Huang, Aobing Wang, Yue Wu, Shuzhi Zhang, Xinyu Zhang, Riping Liu, Yinong Liu]
+authors: [Yuxuan Chen, Xiaobin Shi, Junsong Zhang, Yunzhi Wang, yangren, Feihong Chu, Shan Huang, Aobing Wang, Yue Wu, Shuzhi Zhang, Xinyu Zhang, Riping Liu, Yinong Liu]
 author_notes: []
 date: '2025-04-15T00:00:00Z'
 doi: 10.1016/j.actamat.2025.121055

@@ -1,6 +1,6 @@
 ---
 title: Tuning Interphasial Chemistry with Titanium-Oxo Clusters for High-Energy-Density Lithium Metal Batteries
-authors: [Wenjie Lin, Qiang Gao, Yi Hang Zhang, Fenghua Zhang, Zhenyu Huang, Qi Kang, Yaqi Liao, Lin Wu, Shuaipeng Hao, Yang Ren, Fei Pei, Yunhui Huang]
+authors: [Wenjie Lin, Qiang Gao, Yi Hang Zhang, Fenghua Zhang, Zhenyu Huang, Qi Kang, liaoyaqi, Lin Wu, Shuaipeng Hao, yangren, Fei Pei, Yunhui Huang]
 author_notes: []
 date: '2025-11-13T00:00:00Z'
 doi: 10.1021/jacs.5c13474

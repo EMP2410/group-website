@@ -1,6 +1,6 @@
 ---
 title: Composition engineering of short-range-ordered polyhedra in Ni-Mo-P-B metallic glass for electrochemical sensing
-authors: [Zhongzheng Yao, Hao Zhu, Yu Lou, Fan Xue, Jingqian Huang, Hua Ji, Liu Wei-di, Xindong Zhu, Sinan Liu, Jianrong Zeng, Yang Ren, Xun‐Li Wang, Yang Lu, Si Lan]
+authors: [Zhongzheng Yao, Hao Zhu, Yu Lou, Fan Xue, Jingqian Huang, Hua Ji, Liu Wei-di, Xindong Zhu, Sinan Liu, Jianrong Zeng, yangren, Xun‐Li Wang, Yang Lu, Si Lan]
 author_notes: []
 date: '2026-02-18T00:00:00Z'
 doi: 10.1016/j.mattod.2026.103245

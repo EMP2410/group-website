@@ -1,6 +1,6 @@
 ---
 title: Direct observation of annealing-driven recrystallization behavior in magnesium alloy at low strain condition/Journal of Magnesium and Alloys
-authors: [Yuzhi Zhu, Shuoxin Lv, Tianyi Li, Yang Ren, Zidong Wang, Dewen Hou]
+authors: [Yuzhi Zhu, Shuoxin Lv, Tianyi Li, yangren, Zidong Wang, Dewen Hou]
 author_notes: []
 date: '2024-12-10T00:00:00Z'
 doi: 10.1016/j.jma.2024.11.016

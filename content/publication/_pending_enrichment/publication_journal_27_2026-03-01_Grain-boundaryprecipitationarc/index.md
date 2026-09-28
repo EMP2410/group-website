@@ -1,6 +1,6 @@
 ---
 title: Grain-boundary precipitation architected hard-shell heterostructure achieves extraordinary strain hardening in high-entropy alloys
-authors: [Linlin Wang, Wenjun Lu, Xutao Wang, Linlin Wang, Wenqi Guo, Yaojian Liang, Ke Jin, Benpeng Wang, Yunkai Li, Yang Ren, Xiaolei Wu, Yunfei Xue]
+authors: [Linlin Wang, Wenjun Lu, Xutao Wang, Linlin Wang, Wenqi Guo, Yaojian Liang, Ke Jin, Benpeng Wang, Yunkai Li, yangren, Xiaolei Wu, Yunfei Xue]
 author_notes: []
 date: '2026-03-21T00:00:00Z'
 doi: 10.1016/j.actamat.2026.122151

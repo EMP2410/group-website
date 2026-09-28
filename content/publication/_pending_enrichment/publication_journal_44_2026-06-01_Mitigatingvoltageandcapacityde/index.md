@@ -1,6 +1,6 @@
 ---
 title: Mitigating voltage and capacity decay for ultrastable O2-type Li-rich cathodes via oxygen framework engineering
-authors: [Yuzhi He, Tianqi Yang, Zhengbo Liu, Yu Tang, Wei Wang, Min Jiang, Yixin Li, Zhiyong Huang, Xingyu Wang, Xingjun Li, Yali Wen, Yang Ren, Qi Liu]
+authors: [Yuzhi He, Tianqi Yang, Zhengbo Liu, Yu Tang, wangwei, Min Jiang, Yixin Li, Zhiyong Huang, Xingyu Wang, Xingjun Li, Yali Wen, yangren, Qi Liu]
 author_notes: []
 date: '2026-06-01T00:00:00Z'
 doi: 10.1016/j.jechem.2026.05.043

@@ -1,6 +1,6 @@
 ---
 title: Emerging medium-range order in deformed Zr-based bulk metallic glasses during sub-Tg relaxation
-authors: [Zhongzheng Yao, Sinan Liu, Jiacheng Ge, Huiqiang Ying, Wentao Zhang, Yao Jiang, Huaijun Lin, Kaveh Edalati, He Sun Zhu, Zhenduo Wu, Jianrong Zeng, Yang Ren, X. F. Wang, Si Lan]
+authors: [Zhongzheng Yao, Sinan Liu, Jiacheng Ge, Huiqiang Ying, Wentao Zhang, Yao Jiang, Huaijun Lin, Kaveh Edalati, He Sun Zhu, Zhenduo Wu, Jianrong Zeng, yangren, X. F. Wang, Si Lan]
 author_notes: []
 date: '2026-06-24T00:00:00Z'
 doi: 10.20517/microstructures.2026.06

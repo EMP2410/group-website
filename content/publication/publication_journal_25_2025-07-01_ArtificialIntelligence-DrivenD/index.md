@@ -1,6 +1,6 @@
 ---
 title: 'Artificial Intelligence-Driven Development in Rechargeable Battery Materials: Progress, Challenges, and Future Perspectives'
-authors: [Qingyun Hu, Junyuan Lu, Jian Hui, Ziyuan Rao, Yang Ren, Hong Wang]
+authors: [Qingyun Hu, Junyuan Lu, Jian Hui, Ziyuan Rao, yangren, Hong Wang]
 author_notes: []
 date: '2025-07-06T00:00:00Z'
 doi: 10.1002/adfm.202508438

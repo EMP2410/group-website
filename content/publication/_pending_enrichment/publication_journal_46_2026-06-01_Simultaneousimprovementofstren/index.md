@@ -1,6 +1,6 @@
 ---
 title: Simultaneous improvement of strength and corrosion resistance in β-type Ti-24Nb-4Zr-8Sn alloy through a spinodally modulated dual-phase microstructure
-authors: [Delun Gong, Boxin Wei, Wenjie Li, Yujing Liu, Zibo Zhao, L. S. R. Kumara, Yang Ren, Rui Yang, U. Ramamurty, Yulin Hao]
+authors: [Delun Gong, Boxin Wei, liwenjie, Yujing Liu, Zibo Zhao, L. S. R. Kumara, yangren, Rui Yang, U. Ramamurty, Yulin Hao]
 author_notes: []
 date: '2026-06-14T00:00:00Z'
 doi: 10.1016/j.actamat.2026.122455

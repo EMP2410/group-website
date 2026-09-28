@@ -1,6 +1,6 @@
 ---
 title: Unveiling the formation of nanotwin-mediated metastable ζ-hydrides in fatigued Zr-1Nb-0.01Cu cladding tube/Acta Materialia
-authors: [Shengjie Wang, Shilei Li, Xinxing Zhang, Senmao Liang, Youkang Wang, Weijia Gong, Yang Ren, Yandong Wang]
+authors: [Shengjie Wang, Shilei Li, Xinxing Zhang, Senmao Liang, Youkang Wang, Weijia Gong, yangren, Yandong Wang]
 author_notes: []
 date: '2024-07-09T00:00:00Z'
 doi: 10.1016/j.actamat.2024.120170

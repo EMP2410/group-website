@@ -1,6 +1,6 @@
 ---
 title: Strong nanolamellar/nanotwinned martensite revealed by in situ synchrotron X-ray diffraction
-authors: [Yadong Ru, Fangmin Guo, Yang Ren, Zhaoshun Gao, Lishan Cui]
+authors: [Yadong Ru, Fangmin Guo, yangren, Zhaoshun Gao, Lishan Cui]
 author_notes: []
 date: '2026-02-26T00:00:00Z'
 doi: 10.1007/s10853-026-12322-w

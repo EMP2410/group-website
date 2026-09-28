@@ -1,6 +1,6 @@
 ---
 title: Reversible detwinning and texture evolution in a nanocrystalline NiTi alloy during deformation
-authors: [Yuxuan Chen, Xiaobin Shi, Junsong Zhang, Yang Ren, Shan Huang, Zepei Yao, Shuzhi Zhang, Xinyu Zhang, Riping Liu, Yinong Liu]
+authors: [Yuxuan Chen, Xiaobin Shi, Junsong Zhang, yangren, Shan Huang, Zepei Yao, Shuzhi Zhang, Xinyu Zhang, Riping Liu, Yinong Liu]
 author_notes: []
 date: '2025-06-06T00:00:00Z'
 doi: 10.1016/j.actamat.2025.121224

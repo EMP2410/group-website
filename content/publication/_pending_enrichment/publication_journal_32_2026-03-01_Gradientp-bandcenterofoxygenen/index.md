@@ -1,6 +1,6 @@
 ---
 title: Gradient p-band center of oxygen enabling full proton intercalation in mild electrolytes
-authors: [J. Y. Zhang, Wei Li, Ranqi Li, Ranqi Li, Wei Wang, Bo Sun, Qingyu Kong, V. Honkimäki, Jingjing Wang, Qi Dong, Yuhui Xu, Xiaokang Li, Xiaokang Li, Yang Ren, Jiayi Yang, Xifei Li, Xifei Li]
+authors: [J. Y. Zhang, Wei Li, Ranqi Li, Ranqi Li, wangwei, Bo Sun, Qingyu Kong, V. Honkimäki, Jingjing Wang, Qi Dong, Yuhui Xu, Xiaokang Li, Xiaokang Li, yangren, yangjiayi, Xifei Li, Xifei Li]
 author_notes: []
 date: '2026-03-27T00:00:00Z'
 doi: 10.1016/j.mattod.2026.103308

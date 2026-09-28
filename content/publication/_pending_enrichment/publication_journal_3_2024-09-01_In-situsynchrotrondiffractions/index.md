@@ -1,6 +1,6 @@
 ---
 title: In-situ synchrotron diffraction study on the anisotropic deformation and phase transformation behaviors in NiTi shape memory alloy fabricated by laser powder bed fusion/Additive Manufacturing
-authors: [Pengyue Gao, Zhen Zhang, Jianzhou Huang, Dongdong He, Runguang Li, Runguang Li, Qisheng Feng, Guangyao Chen, Kai Zheng, Xueliang Kang, Caijuan Shi, Yang Ren, Huiping Ren, Chonghe Li, Chonghe Li]
+authors: [Pengyue Gao, Zhen Zhang, Jianzhou Huang, Dongdong He, Runguang Li, Runguang Li, Qisheng Feng, Guangyao Chen, Kai Zheng, Xueliang Kang, Caijuan Shi, yangren, Huiping Ren, Chonghe Li, Chonghe Li]
 author_notes: []
 date: '2024-09-01T00:00:00Z'
 doi: 10.1016/j.addma.2024.104566

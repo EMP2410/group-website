@@ -1,6 +1,6 @@
 ---
 title: Symmetry Breaking Enabled Stable Oxygen Redox in Li-Rich Cathodes via π-Type Interaction
-authors: [Fu‐Da Yu, Zhe-Jian Yi, Hainan Wang, Jia‐Zhen Zhao, Yang‐Qian Zhang, Yang Ren, Jigang Zhou, Jihuai Wu, Zhang Lan, Yiming Xie, Lan‐Fang Que, Yun‐Shan Jiang, Zhen‐Bo Wang]
+authors: [Fu‐Da Yu, Zhe-Jian Yi, Hainan Wang, Jia‐Zhen Zhao, Yang‐Qian Zhang, yangren, Jigang Zhou, Jihuai Wu, Zhang Lan, Yiming Xie, Lan‐Fang Que, Yun‐Shan Jiang, Zhen‐Bo Wang]
 author_notes: []
 date: '2025-06-30T00:00:00Z'
 doi: 10.1002/anie.202506507

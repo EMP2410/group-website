@@ -1,6 +1,6 @@
 ---
 title: Quantitative Identification of Dopant Occupation in Li-Rich Cathodes
-authors: [Tianhao Wu, Xu Zhang, Yuqiang Li, Haozhe Du, Tongchao Liu, Yubo Yang, Zihe Zhang, Xiaosong Liu, Qingzhen Huang, Yang Ren, Jiangtao Qu, Shu Zhao, Boya Wang, Rongkun Zheng, Khalil Amine, Haijun Yu]
+authors: [Tianhao Wu, Xu Zhang, Yuqiang Li, Haozhe Du, Tongchao Liu, Yubo Yang, Zihe Zhang, Xiaosong Liu, Qingzhen Huang, yangren, Jiangtao Qu, Shu Zhao, Boya Wang, Rongkun Zheng, Khalil Amine, Haijun Yu]
 author_notes: []
 date: '2024-11-25T00:00:00Z'
 doi: 10.1002/adma.202408543

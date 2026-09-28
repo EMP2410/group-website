@@ -1,6 +1,6 @@
 ---
 title: Electron-delocalized π-network enables low-reactive polyacrylonitrile-based solid-state electrolytes for lithium metal batteries
-authors: [Jiayi Yang, Yangqian Zhang, Han Liu, Yaqi Liao, Chihon Leung, Rongfeng Chen, Ying Wei, Le Hu, Mengyuan Zhou, Gang Sun, Ziping Wu, Henghui Xu, Zhenbo Wang, Shaoming Huang, Yang Ren]
+authors: [yangjiayi, zhangyangqian, liuhan, liaoyaqi, Chihon Leung, Rongfeng Chen, weiying, Le Hu, Mengyuan Zhou, Gang Sun, Ziping Wu, Henghui Xu, Zhenbo Wang, Shaoming Huang, yangren]
 author_notes: []
 date: '2026-02-01T00:00:00Z'
 doi: 10.1016/j.ensm.2026.104953

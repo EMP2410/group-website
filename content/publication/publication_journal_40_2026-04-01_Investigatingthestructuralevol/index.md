@@ -1,6 +1,6 @@
 ---
 title: Investigating the structural evolution of lithium zirconium nitrochloride solid electrolytes for all-solid-state batteries
-authors: [Denys Butenko, Xinyu Zhang, Martin T. Dove, Jo-Chi Tseng, Yuanpeng Zhang, Pengcheng Yu, Jian Chen, Chao Gu, Shuoxiao Zhang, Jiuwei Lei, Yang Ren, Yue Chen, Jinlong Zhu, Wei Xia]
+authors: [Denys Butenko, Xinyu Zhang, Martin T. Dove, Jo-Chi Tseng, Yuanpeng Zhang, Pengcheng Yu, Jian Chen, Chao Gu, Shuoxiao Zhang, Jiuwei Lei, yangren, Yue Chen, Jinlong Zhu, Wei Xia]
 author_notes: []
 date: '2026-04-23T00:00:00Z'
 doi: 10.1038/s41467-026-71879-x

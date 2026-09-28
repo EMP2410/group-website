@@ -1,6 +1,6 @@
 ---
 title: Revealing the synergistic manipulation mechanisms of laser power on forming quality and comprehensive performances in selective laser melting NiTi shape memory alloy
-authors: [Bo Feng, Ke Yang, Cheng Wang, Jianhua Zhao, H Liu, Yang Ren, Qin Yang, Shijie Hao]
+authors: [Bo Feng, Ke Yang, Cheng Wang, Jianhua Zhao, H Liu, yangren, Qin Yang, Shijie Hao]
 author_notes: []
 date: '2026-06-16T00:00:00Z'
 doi: 10.1016/j.optlastec.2026.115727

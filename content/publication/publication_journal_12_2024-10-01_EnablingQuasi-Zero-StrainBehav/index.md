@@ -1,6 +1,6 @@
 ---
 title: Enabling Quasi-Zero-Strain Behavior of Layered Oxide Cathodes via Multiple-cations Induced Order-to-Disorder Transition/Small
-authors: [Jianhua Zhang, Wenbin Li, Jiayi Yang, Wei Wang, Jingjing Wang, Qi Dong, Xiyu Wang, Yumei Wu, Yuhui Xu, Yixuan Wang, Haofei Yang, Ni Wang, Yang Ren, Xifei Li]
+authors: [Jianhua Zhang, Wenbin Li, yangjiayi, wangwei, Jingjing Wang, Qi Dong, Xiyu Wang, Yumei Wu, Yuhui Xu, Yixuan Wang, Haofei Yang, Ni Wang, yangren, Xifei Li]
 author_notes: []
 date: '2024-06-28T00:00:00Z'
 doi: 10.1002/smll.202404099

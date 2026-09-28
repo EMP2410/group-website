@@ -1,6 +1,6 @@
 ---
 title: Superior fast-charging Ni-rich cathode via promoted kinetic-mechanical performance/Nano Energy
-authors: [Yu Tang, Zhiyong Huang, Wei Wang, Wei Wang, Yali Wen, Shuoxiao Zhang, Xi Chen, Zhibo Zhang, Zijia Yin, Tingting Yang, Tianyi Li, Leighanne C. Gallington, He Zhu, Steven Wang, Steven Wang, Yang Ren, Zhenduo Wu, Qi Liu]
+authors: [Yu Tang, Zhiyong Huang, wangwei, wangwei, Yali Wen, Shuoxiao Zhang, Xi Chen, Zhibo Zhang, Zijia Yin, Tingting Yang, Tianyi Li, Leighanne C. Gallington, He Zhu, Steven Wang, Steven Wang, yangren, Zhenduo Wu, Qi Liu]
 author_notes: []
 date: '2024-06-23T00:00:00Z'
 doi: 10.1016/j.nanoen.2024.109908

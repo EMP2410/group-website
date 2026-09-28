@@ -8,15 +8,52 @@ hugo v0.166.0+extended windows/amd64 BuildDate=unknown VendorInfo=conda-forge
 ──────────────────┼──────
  Pages            │ 1053 
  Paginator pages  │   61 
- Non-page files   │  170 
+ Non-page files   │  171 
  Static files     │    9 
- Processed images │  674 
+ Processed images │  676 
  Aliases          │   16 
  Cleaned          │    0 
 
-Built in 2329 ms
+Built in 1622 ms
 Environment: "development"
 Serving pages from disk
 Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
 Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1) 
 Press Ctrl+C to stop
+
+Change detected, rebuilding site (#1).
+2026-09-28 23:06:49.265 +0800
+Source changed /contact/index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 157 ms
+
+Change detected, rebuilding site (#2).
+2026-09-28 23:09:35.274 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 282 ms
+adding created directory to watchlist C:\Users\11293\Desktop\group_web\lab-site\layouts\partials\functions
+
+Change detected, rebuilding site (#3).
+2026-09-28 23:13:08.266 +0800
+Template added /partials/functions
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 179 ms
+
+Change detected, rebuilding site (#4).
+2026-09-28 23:13:08.765 +0800
+Template added /partials
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 45 ms
+
+Change detected, rebuilding site (#5).
+2026-09-28 23:14:09.265 +0800
+Template changed /partials/functions/parse_block_v2.html
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 116 ms
+
+Change detected, rebuilding site (#6).
+2026-09-28 23:14:09.775 +0800
+Template added /partials/functions
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 34 ms

@@ -1,6 +1,6 @@
 ---
 title: Enhancing thermal stability of Nb nanowires in a NiTiFe matrix via texture engineering/Acta Materialia
-authors: [Yuxuan Chen, Yang Li, Suo Qing Yu, Junsong Zhang, Shan Huang, Feihong Chu, Xiaobin Shi, Kaixuan Li, Zishu Lian, Daqiang Jiang, Yang Ren, Lishan Cui, Kaiyuan Yu]
+authors: [Yuxuan Chen, Yang Li, Suo Qing Yu, Junsong Zhang, Shan Huang, Feihong Chu, Xiaobin Shi, Kaixuan Li, Zishu Lian, Daqiang Jiang, yangren, Lishan Cui, Kaiyuan Yu]
 author_notes: []
 date: '2024-11-04T00:00:00Z'
 doi: 10.1016/j.actamat.2024.120525

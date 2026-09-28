@@ -1,6 +1,6 @@
 ---
 title: Effect of Fe content on the coupling between lattice distortion and atomic shuffle of the R phase in Ti50Ni50-xFex alloys
-authors: [Yuxuan Chen, Shan Huang, Junsong Zhang, Xiaobin Shi, Zishu Lian, Zepei Yao, Yue Wu, S.X. Liang, Shuzhi Zhang, Yang Ren, Xinyu Zhang, Riping Liu, Yinong Liu]
+authors: [Yuxuan Chen, Shan Huang, Junsong Zhang, Xiaobin Shi, Zishu Lian, Zepei Yao, Yue Wu, S.X. Liang, Shuzhi Zhang, yangren, Xinyu Zhang, Riping Liu, Yinong Liu]
 author_notes: []
 date: '2026-02-20T00:00:00Z'
 doi: 10.1016/j.actamat.2026.122047

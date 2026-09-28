@@ -1,6 +1,6 @@
 ---
 title: Machine learning-assisted high-throughput screening of superlattice-like O-PCM thin films
-authors: [Hongjian Yuan, Genmao Zhuang, Yang Ren, Hong Wang, Jian Hui]
+authors: [Hongjian Yuan, Genmao Zhuang, yangren, Hong Wang, Jian Hui]
 author_notes: []
 date: '2026-04-21T00:00:00Z'
 doi: 10.1038/s41524-026-02091-0

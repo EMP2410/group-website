@@ -1,6 +1,6 @@
 ---
 title: 'Small-Angle Neutron Scattering for Lithium-Based Battery Research: Progress and Perspective'
-authors: [Zhiqian Lin, Liyuan Qian, Jiayi Yang, Haibin Lin, Xiaofei Wang, Liusuo Wu, Bao Yuan, Le Kang, Jinlong Zhu, Yang Ren, Yubin Ke, Songbai Han]
+authors: [Zhiqian Lin, Liyuan Qian, yangjiayi, Haibin Lin, Xiaofei Wang, Liusuo Wu, Bao Yuan, Le Kang, Jinlong Zhu, yangren, Yubin Ke, Songbai Han]
 author_notes: []
 date: '2025-02-13T00:00:00Z'
 doi: 10.1021/acsami.4c17240

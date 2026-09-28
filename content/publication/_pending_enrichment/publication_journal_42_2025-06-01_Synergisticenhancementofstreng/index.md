@@ -1,6 +1,6 @@
 ---
 title: Synergistic enhancement of strength-ductility in ODS copper alloy by exploring heterogeneous structure
-authors: [Yang Li, Cunguang Chen, Wei Sun, Miao Qi, Jie Yan, Changle Zhang, Han Liu, Han Liu, Yang Ren, Xinhua Liu]
+authors: [Yang Li, Cunguang Chen, Wei Sun, Miao Qi, yanjie, Changle Zhang, liuhan, liuhan, yangren, Xinhua Liu]
 author_notes: []
 date: '2025-03-11T00:00:00Z'
 doi: 10.1016/j.msea.2025.148194

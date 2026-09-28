@@ -1,6 +1,6 @@
 ---
 title: 'Large language models for material property predictions: elastic constant tensor prediction and materials design'
-authors: [Siyu Liu, Tongqi Wen, Beilin Ye, Zhuoyuan Li, Han Liu, Yang Ren, David J. Srolovitz]
+authors: [Siyu Liu, Tongqi Wen, Beilin Ye, Zhuoyuan Li, liuhan, yangren, David J. Srolovitz]
 author_notes: []
 date: '2025-01-01T00:00:00Z'
 doi: 10.1039/d5dd00061k

@@ -1,6 +1,6 @@
 ---
 title: 'A tetrathiafulvalene-containing covalent organic nanobelt: preparation, crystal structure and application for sodium-ion batteries'
-authors: [Xin Wang, Yuchan Zhang, Lei Zhang, Qianfeng Gu, Qi Liu, Yang Ren, Chun‐Sing Lee, Qichun Zhang]
+authors: [Xin Wang, Yuchan Zhang, Lei Zhang, Qianfeng Gu, Qi Liu, yangren, Chun‐Sing Lee, Qichun Zhang]
 author_notes: []
 date: '2024-01-01T00:00:00Z'
 doi: 10.1039/d4sc06300g

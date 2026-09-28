@@ -1,6 +1,6 @@
 ---
 title: Ni Migration-Induced Strain and Phase Segregation in LiNiO2 Cathodes
-authors: [Zhaowen Bai, Subash Kandasamy, Wei Wang, Rui Zhou, Zhenjie Zhang, Xuefeng Wang, Jiatu Liu, Zhenbin Wang, Guohua Chen, Qingyu Kong, Tianyi Li, Yang Ren]
+authors: [baizhaowen, Subash Kandasamy, wangwei, Rui Zhou, Zhenjie Zhang, Xuefeng Wang, Jiatu Liu, Zhenbin Wang, Guohua Chen, Qingyu Kong, Tianyi Li, yangren]
 author_notes: []
 date: '2025-05-15T00:00:00Z'
 doi: 10.1021/acsnano.5c03288

@@ -1,6 +1,6 @@
 ---
 title: Dual-Anion-Rich Polymer Electrolytes for High-Voltage Solid-State Lithium Metal Batteries/ACS Nano
-authors: [Yangqian Zhang, Han Liu, Fangyan Liu, Shuoxiao Zhang, Mengyuan Zhou, Yaqi Liao, Ying Jin Wei, Weixia Dong, Tianyi Li, Chen Liu, Qi Liu, Henghui Xu, Gang Sun, Zhen‐Bo Wang, Yang Ren, Jiayi Yang]
+authors: [zhangyangqian, liuhan, liufangyan, Shuoxiao Zhang, Mengyuan Zhou, liaoyaqi, Ying Jin Wei, Weixia Dong, Tianyi Li, Chen Liu, Qi Liu, Henghui Xu, Gang Sun, Zhen‐Bo Wang, yangren, yangjiayi]
 author_notes: []
 date: '2025-01-10T00:00:00Z'
 doi: 10.1021/acsnano.4c09953

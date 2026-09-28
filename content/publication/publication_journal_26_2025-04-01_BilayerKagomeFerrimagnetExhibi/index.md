@@ -1,6 +1,6 @@
 ---
 title: Bilayer Kagome Ferrimagnet Exhibiting Exceptional Spontaneous Exchange Bias in TbMn6(Ge,Ga)6
-authors: [Hankun Xu, Wenjie Li, Junjie Chen, Sergii Khmelevskyi, Dmitry D. Khalyavin, Pascal Manuel, Chuanying Xi, Shogo Kawaguchi, Jing Chen, Wanda Yang, Qinghua Zhang, Yili Cao, Chengyi Yu, Yang Ren, Kun Lin, Xianran Xing]
+authors: [Hankun Xu, liwenjie, Junjie Chen, Sergii Khmelevskyi, Dmitry D. Khalyavin, Pascal Manuel, Chuanying Xi, Shogo Kawaguchi, Jing Chen, Wanda Yang, Qinghua Zhang, Yili Cao, Chengyi Yu, yangren, Kun Lin, Xianran Xing]
 author_notes: []
 date: '2025-03-27T00:00:00Z'
 doi: 10.1021/jacs.4c17505

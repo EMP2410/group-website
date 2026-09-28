@@ -1,6 +1,6 @@
 ---
 title: Contact
-date: 2022-10-24
+date: 2026-09-28
 
 type: landing
 
@@ -8,62 +8,44 @@ sections:
   - block: contact
     content:
       title: Contact
+      subtitle: Prof. Yang REN (任洋)
+      avatar: avatar.jpg
       text: |-
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer tempus augue non tempor egestas. Proin nisl nunc, dignissim in accumsan dapibus, auctor ullamcorper neque. Quisque at elit felis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aenean eget elementum odio. Cras interdum eget risus sit amet aliquet. In volutpat, nisl ut fringilla dignissim, arcu nisl suscipit ante, at accumsan sapien nisl eu eros.
-      email: test@example.org
-      phone: 888 888 88 88
+        For research collaborations, postdoctoral or PhD applications,
+        media inquiries, or visits to the group, please contact Prof. REN
+        directly by email. Prospective students and postdocs are invited
+        to send a CV, a brief research statement, and their preferred
+        start date.
+      email: yangren@cityu.edu.hk
+      phone: '+852 34429140'
       address:
-        street: 450 Serra Mall
-        city: Stanford
-        region: CA
-        postcode: '94305'
-        country: United States
-        country_code: US
+        street: 'Room YEUNG-G5137, Yeung Kin Man Academic Building (AC1)'
+        city: 'Kowloon Tong'
+        region: 'Kowloon'
+        postcode: ''
+        country: Hong Kong SAR
+        country_code: HK
       coordinates:
-        latitude: '37.4275'
-        longitude: '-122.1697'
-      directions: Enter Building 1 and take the stairs to Office 200 on Floor 2
+        latitude: '22.3364'
+        longitude: '114.1733'
+      directions: 'MTR Kowloon Tong Station, Exit A or C; ~5 minutes walk to AC1.'
       office_hours:
-        - 'Monday 10:00 to 13:00'
-        - 'Wednesday 09:00 to 10:00'
-      appointment_url: 'https://calendly.com'
-      #contact_links:
-      #  - icon: comments
-      #    icon_pack: fas
-      #    name: Discuss on Forum
-      #    link: 'https://discourse.gohugo.io'
-    
-      # Automatically link email and phone or display as text?
+        - 'By appointment (please email in advance)'
+      appointment_url: ''
+      contact_links:
+        - icon: graduation-cap
+          icon_pack: fas
+          name: CityU Scholar Profile
+          link: 'https://scholars.cityu.edu.hk/en/persons/yang-ren'
+        - icon: orcid
+          icon_pack: ai
+          name: ORCID
+          link: 'https://orcid.org/0000-0001-9831-6035'
+        - icon: researchgate
+          icon_pack: ai
+          name: Scopus Author
+          link: 'https://www.scopus.com/authid/detail.uri?authorId=7403274395'
       autolink: true
-    
-      # Email form provider
-      form:
-        provider: netlify
-        formspree:
-          id:
-        netlify:
-          # Enable CAPTCHA challenge to reduce spam?
-          captcha: false
     design:
-      columns: '1'
-
-  - block: markdown
-    content:
-      title:
-      subtitle: ''
-      text:
-    design:
-      columns: '1'
-      background:
-        image: 
-          filename: contact.jpg
-          filters:
-            brightness: 1
-          parallax: false
-          position: center
-          size: cover
-          text_color_light: true
-      spacing:
-        padding: ['20px', '0', '20px', '0']
-      css_class: fullscreen
+      columns: '2'
 ---

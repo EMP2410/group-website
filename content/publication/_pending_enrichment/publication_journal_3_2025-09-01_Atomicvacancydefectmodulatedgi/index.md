@@ -1,6 +1,6 @@
 ---
 title: Atomic vacancy defect modulated giant magnetocaloric effect in multi-component MnCoNiGeSi based compounds
-authors: [Fengqi Zhang, Ziying Wu, Ziying Wu, Yong Gong, Wenjie Li, Xuefei Miao, Jun Liu, Yuanguang Xia, Wen‐Jin Yin, Ulrich Lienert, Stephan W. H. Eijt, Zhenduo Wu, Zhenduo Wu, Henk Schut, Jakub Čı́žek, Niels van Dijk, E. Brück, Yang Ren]
+authors: [zhangfengqi, Ziying Wu, Ziying Wu, Yong Gong, liwenjie, Xuefei Miao, Jun Liu, Yuanguang Xia, Wen‐Jin Yin, Ulrich Lienert, Stephan W. H. Eijt, Zhenduo Wu, Zhenduo Wu, Henk Schut, Jakub Čı́žek, Niels van Dijk, E. Brück, yangren]
 author_notes: []
 date: '2025-09-04T00:00:00Z'
 doi: 10.1016/j.actamat.2025.121508

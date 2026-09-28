@@ -1,0 +1,130 @@
+Watching for changes in C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/archetypes/{authors,event,post,project,publication,...}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/assets/{css,js,media,scss}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/data/{fonts,i18n,themes}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/i18n, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/layouts/{_default,authors,book,event,landing,...}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/static/webfonts, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b/data, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b/functions, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b/templates, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-netlify@v1.1.2-0.20240509231741-c3d23d929bc6/src/layouts, ... and 4 more
+Watching for config changes in C:\Users\11293\Desktop\group_web\lab-site\config\_default, C:\Users\11293\AppData\Local\hugo_cache\modules\filecache\modules\pkg\mod\github.com\!hugo!blox\hugo-blox-builder\modules\blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b\config.yaml, C:\Users\11293\AppData\Local\hugo_cache\modules\filecache\modules\pkg\mod\github.com\!hugo!blox\hugo-blox-builder\modules\blox-plugin-netlify@v1.1.2-0.20240509231741-c3d23d929bc6\config.yaml, C:\Users\11293\AppData\Local\hugo_cache\modules\filecache\modules\pkg\mod\github.com\!hugo!blox\hugo-blox-builder\modules\blox-bootstrap\v5@v5.9.8-0.20241012174104-661cadc17327\hugo.yaml, C:\Users\11293\Desktop\group_web\lab-site\go.mod
+Start building sites … 
+hugo v0.166.0+extended windows/amd64 BuildDate=unknown VendorInfo=conda-forge
+
+
+                  │  EN  
+──────────────────┼──────
+ Pages            │ 1053 
+ Paginator pages  │   61 
+ Non-page files   │  171 
+ Static files     │    9 
+ Processed images │  673 
+ Aliases          │   16 
+ Cleaned          │    0 
+
+Built in 1419 ms
+Environment: "development"
+Serving pages from disk
+Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1) 
+Press Ctrl+C to stop
+
+Change detected, rebuilding site (#1).
+2026-09-28 23:53:54.169 +0800
+Source changed /authors/admin/_index.md
+Source changed /authors/admin/index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 264 ms
+
+Change detected, rebuilding site (#2).
+2026-09-28 23:54:23.180 +0800
+Source changed /authors/admin/index.md
+Source changed /authors/admin/_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 227 ms
+
+Change detected, rebuilding site (#3).
+2026-09-29 00:01:22.669 +0800
+Asset changed /media/placeholder_avatar.jpg
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 163 ms
+
+Change detected, rebuilding site (#4).
+2026-09-29 00:01:23.169 +0800
+Asset changed /media
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 11 ms
+adding created directory to watchlist C:\Users\11293\Desktop\group_web\lab-site\content\authors\yangren
+
+Change detected, rebuilding site (#5).
+2026-09-29 00:01:28.671 +0800
+Source changed /authors/admin/_index.md
+Source changed /authors/admin/avatar.jpg
+Source changed /authors/admin/avatar1.jpg
+Source changed /authors/admin/avatartest.jpg
+Source changed /authors/yangren/_index.md
+Source changed /authors/yangren/avatar.jpg
+Source changed /authors
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 408 ms
+
+Change detected, rebuilding site (#6).
+2026-09-29 00:01:35.169 +0800
+Source changed /authors/baizhaowen
+Source changed /authors/huangyimeng
+Source changed /authors/jiangyunshannew
+Source changed /authors/liaoyaqi
+Source changed /authors/liuhan
+Source changed /authors/liwenjie
+Source changed /authors/tangyu
+Source changed /authors/weiying
+Source changed /authors/yangjiayi
+Source changed /authors/zhangfengqi
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 372 ms
+
+Change detected, rebuilding site (#7).
+2026-09-29 00:01:38.678 +0800
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Rebuilt in 2349 ms
+
+Change detected, rebuilding site (#8).
+2026-09-29 00:01:44.169 +0800
+Source changed /authors/arkanantarasendriya
+Source changed /authors/lirunkunnew
+Source changed /authors/liufangyan
+Source changed /authors/liuyiran
+Source changed /authors/wangwei
+Source changed /authors/xuehaoyuannew
+Source changed /authors/yanjie
+Source changed /authors/yixuerui
+Source changed /authors/zhangyangqian
+Source changed /authors/zhangzhuoxiao
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 375 ms
+
+Change detected, rebuilding site (#9).
+2026-09-29 00:01:47.680 +0800
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Rebuilt in 2400 ms
+
+Change detected, rebuilding site (#10).
+2026-09-29 00:01:50.678 +0800
+Source changed /authors/postdoc/_index.md
+Source changed /authors/student/_index.md
+Source changed /authors
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 1257 ms
+
+Change detected, rebuilding site (#11).
+2026-09-29 00:01:51.938 +0800
+Source changed /authors
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 501 ms
+
+Change detected, rebuilding site (#12).
+2026-09-29 00:02:13.170 +0800
+Source changed /publication/publication_journal_51_2026-08-01_atomichigh-spincobaltunlocksre/index.md
+Source changed /publication/publication_journal_5_2024-08-01_interlayerentropyengineeringin/index.md
+Source changed /publication/publication_journal_6_2025-11-01_evidenceofliquidliquidphasetra/index.md
+Source changed /publication/publication_journal_7_2024-09-01_non-resonantstructureinducesn-/index.md
+Source changed /publication/publication_journal_9_2025-11-01_tuninginterphasialchemistrywit/index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 163 ms
+
+Change detected, rebuilding site (#13).
+2026-09-29 00:02:16.669 +0800
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Rebuilt in 1676 ms

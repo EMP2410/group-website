@@ -1,6 +1,6 @@
 ---
 title: Self-healing supramolecular cathode binder additive with dynamic bonds for durable high-voltage solid-state lithium batteries
-authors: [Ying Wei, Yangqian Zhang, Hao Wang, Wei Wang, Yi Zhang, Tianyi Li, Qingyu Kong, Jiayi Yang, Ronghui Dou, Han Liu, Zhen Li, Yang Ren, H. He, Henghui Xu, Yunhui Huang]
+authors: [weiying, zhangyangqian, Hao Wang, wangwei, Yi Zhang, Tianyi Li, Qingyu Kong, yangjiayi, Ronghui Dou, liuhan, Zhen Li, yangren, H. He, Henghui Xu, Yunhui Huang]
 author_notes: []
 date: '2026-02-08T00:00:00Z'
 doi: 10.1016/j.esci.2026.100555

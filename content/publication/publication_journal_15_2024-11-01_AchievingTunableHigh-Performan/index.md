@@ -1,6 +1,6 @@
 ---
 title: Achieving Tunable High-Performance Giant Magnetocaloric Effect in Hexagonal Mn-Fe-P-Si Materials through Different D-Block Doping/Advanced Functional Materials
-authors: [Fengqi Zhang, Panjun Feng, Anika Kiecana, Ziying Wu, Zhaowen Bai, Wenjie Li, Huaican Chen, Wen‐Jin Yin, Xun‐Wang Yan, Fengjie Ma, Niels van Dijk, E. Brück, Yang Ren]
+authors: [zhangfengqi, Panjun Feng, Anika Kiecana, Ziying Wu, baizhaowen, liwenjie, Huaican Chen, Wen‐Jin Yin, Xun‐Wang Yan, Fengjie Ma, Niels van Dijk, E. Brück, yangren]
 author_notes: []
 date: '2024-11-01T00:00:00Z'
 doi: 10.1002/adfm.202470264

@@ -1,6 +1,6 @@
 ---
 title: Dual-gradient structure made a titanium alloy strong and ductile
-authors: [Na Li, Yuankui Cao, Jixun Zhang, Jie Yan, Yang Ren, Wei Liu, Bin Liu, Yuntian T. Zhu, Yong Liu]
+authors: [Na Li, Yuankui Cao, Jixun Zhang, yanjie, yangren, Wei Liu, Bin Liu, Yuntian T. Zhu, Yong Liu]
 author_notes: []
 date: '2025-06-06T00:00:00Z'
 doi: 10.1016/j.msea.2025.148655

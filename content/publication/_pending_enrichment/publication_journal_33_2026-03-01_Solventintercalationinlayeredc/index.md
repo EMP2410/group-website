@@ -1,6 +1,6 @@
 ---
 title: Solvent intercalation in layered cathodes for ultrafast sodium-ion batteries
-authors: [Xingyu Wang, Qi Fan, Wei Wang, Xiongyi Liang, Zhenbo Liu, Liuqi Wang, Qingyu Kong, Xingjun Li, Cheng Chao Li, Steven Wang, Zhenjun Xue, Yang Ren, Xiao Cheng Zeng, Qi Liu]
+authors: [Xingyu Wang, Qi Fan, wangwei, Xiongyi Liang, Zhenbo Liu, Liuqi Wang, Qingyu Kong, Xingjun Li, Cheng Chao Li, Steven Wang, Zhenjun Xue, yangren, Xiao Cheng Zeng, Qi Liu]
 author_notes: []
 date: '2026-03-06T00:00:00Z'
 doi: 10.1038/s41560-026-01995-x

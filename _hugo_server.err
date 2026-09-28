@@ -1,0 +1,5 @@
+WARN  skipping template file "C:\\Users\\11293\\AppData\\Local\\hugo_cache\\modules\\filecache\\modules\\pkg\\mod\\github.com\\!hugo!blox\\hugo-blox-builder\\modules\\blox-seo@v0.2.3\\layouts\\_default\\_markup\\sitemap.xml": unrecognized render hook template
+WARN  deprecated: .Site.LanguageCode was deprecated in Hugo v0.158.0 and will be removed in a future release. Use .Site.Language.Locale instead.
+WARN  deprecated: .Site.Data was deprecated in Hugo v0.156.0 and will be removed in a future release. Use hugo.Data instead.
+WARN  deprecated: .Page.IsNode was deprecated in Hugo v0.163.0 and will be removed in a future release. Use .Page.IsBranch or not .Page.IsPage instead.
+WARN  deprecated: .Site.AllPages was deprecated in Hugo v0.156.0 and will be removed in a future release. See https://discourse.gohugo.io/t/56732.

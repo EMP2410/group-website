@@ -1,6 +1,6 @@
 ---
 title: Supervariate Gel Transforms into Various Biominerals in Salt Solutions
-authors: [Xinxue Tang, Chong Wang, Yuk‐Tong Cheng, Junda Shen, Yunchen Long, Hongkun Li, Jie Yan, Yang Ren, Xiao Ma, Yu‐Feng Huang, Zhengtao Xu, Jian Lü, Yang Yang Li]
+authors: [Xinxue Tang, Chong Wang, Yuk‐Tong Cheng, Junda Shen, Yunchen Long, Hongkun Li, yanjie, yangren, Xiao Ma, Yu‐Feng Huang, Zhengtao Xu, Jian Lü, Yang Yang Li]
 author_notes: []
 date: '2025-04-17T00:00:00Z'
 doi: 10.1002/adfm.202504321

@@ -1,6 +1,6 @@
 ---
 title: Precipitation and transformation of γ- and δ-hydrides in quenched Zr-1Nb-0.01Cu cladding tube revealed by high-energy X-ray diffraction
-authors: [Shengjie Wang, Shengjie Wang, Shilei Li, Xinxing Zhang, Senmao Liang, Ying Yu, Weijia Gong, Yang Ren, Chunlei Zhao, Yandong Wang]
+authors: [Shengjie Wang, Shengjie Wang, Shilei Li, Xinxing Zhang, Senmao Liang, Ying Yu, Weijia Gong, yangren, Chunlei Zhao, Yandong Wang]
 author_notes: []
 date: '2026-02-06T00:00:00Z'
 doi: 10.1016/j.jnucmat.2026.156515

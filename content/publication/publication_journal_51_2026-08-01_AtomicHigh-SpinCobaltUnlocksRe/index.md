@@ -1,6 +1,6 @@
 ---
 title: Atomic High-Spin Cobalt Unlocks Reversible Multi-Electron Transfer Chemistry for Superb Aqueous Zn-Mn Batteries
-authors: [Yajun Zhao, Yajun Zhao, Yanan Lv, Yanan Lv, Shuoxiao Zhang, Kai Jiang, Meng Xu, Mudasir Muhammad, Yang Ren, Yang Ren, Yi Zhao, Yi Zhao, Xiaoming Sun]
+authors: [Yajun Zhao, Yajun Zhao, Yanan Lv, Yanan Lv, Shuoxiao Zhang, Kai Jiang, Meng Xu, Mudasir Muhammad, yangren, yangren, Yi Zhao, Yi Zhao, Xiaoming Sun]
 author_notes: []
 date: '2026-08-10T00:00:00Z'
 doi: 10.1007/s40820-026-02328-z

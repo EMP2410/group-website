@@ -1,6 +1,6 @@
 ---
 title: High-Performance NIR-II Sn-Based Perovskite LEDs Enabled by the Functionalization of Sulfaguanidine
-authors: [Xiuling Li, Yi Bi, Xiang Feng Guan, Jiaqi Wang, Jinli Liu, Yingjie Zhao, Chunli Zhao, Zhuojian Li, Shurui Chi, Junnan Wang, Renjing Chen, Zixun Zhao, Zemin Wang, Xin Tong, Ninggui Ma, Han Liu, Zhiming M. Wang, Zongwen Liu, Yang Ren, Zhanhua Wei, Kebin Lin]
+authors: [Xiuling Li, Yi Bi, Xiang Feng Guan, Jiaqi Wang, Jinli Liu, Yingjie Zhao, Chunli Zhao, Zhuojian Li, Shurui Chi, Junnan Wang, Renjing Chen, Zixun Zhao, Zemin Wang, Xin Tong, Ninggui Ma, liuhan, Zhiming M. Wang, Zongwen Liu, yangren, Zhanhua Wei, Kebin Lin]
 author_notes: []
 date: '2025-12-19T00:00:00Z'
 doi: 10.1002/adma.202516632

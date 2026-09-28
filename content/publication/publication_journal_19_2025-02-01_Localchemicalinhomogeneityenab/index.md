@@ -1,6 +1,6 @@
 ---
 title: Local chemical inhomogeneity enables superior strength-ductility-superelasticity synergy in additively manufactured NiTi shape memory alloys/Nature Communications
-authors: [Zhonghan Li, Jixiang Cai, Zhihao Zhao, Ying Yang, Yang Ren, Gang Sha, Lishan Cui, Kaiyuan Yu, Daqiang Jiang, Yao Xiao, Shengcheng Mao, Shiyu Hao]
+authors: [Zhonghan Li, Jixiang Cai, Zhihao Zhao, Ying Yang, yangren, Gang Sha, Lishan Cui, Kaiyuan Yu, Daqiang Jiang, Yao Xiao, Shengcheng Mao, Shiyu Hao]
 author_notes: []
 date: '2025-02-24T00:00:00Z'
 doi: 10.1038/s41467-025-56775-0

@@ -1,6 +1,6 @@
 ---
 title: Designing high-performance Ni/co single-atom catalysts for ORR/OER through spin-coordination engineering
-authors: [Lei Yu, Zhaoen Su, Ninggui Ma, Shuang Luo, Yau Yuen Yeung, Yangyang Si, Yang Ren, Jun Fan, Zhanhua Wei]
+authors: [Lei Yu, Zhaoen Su, Ninggui Ma, Shuang Luo, Yau Yuen Yeung, Yangyang Si, yangren, Jun Fan, Zhanhua Wei]
 author_notes: []
 date: '2025-11-30T00:00:00Z'
 doi: 10.1016/j.jcis.2025.139596

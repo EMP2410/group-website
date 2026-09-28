@@ -1,6 +1,6 @@
 ---
 title: Theoretical Explanation of Diatomic Synergies and Repulsion Interactions between ORR/OER Catalytic Intermediates
-authors: [Ninggui Ma, Chihon Leung, Yuhang Wang, Yaqin Zhang, Shuang Luo, Han Liu, Bochun Liang, Changxiong Huang, Zhanhua Wei, Yang Ren, Jun Fan]
+authors: [Ninggui Ma, Chihon Leung, Yuhang Wang, Yaqin Zhang, Shuang Luo, liuhan, Bochun Liang, Changxiong Huang, Zhanhua Wei, yangren, Jun Fan]
 author_notes: []
 date: '2025-06-17T00:00:00Z'
 doi: 10.1002/smtd.202500310

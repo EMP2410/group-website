@@ -1,6 +1,6 @@
 ---
 title: Exceptional impact resistance of a high-entropy alloy governed by abnormally active dislocation behavior
-authors: [Shangshu Wu, Yi Liu, Huiqiang Ying, Zhenduo Wu, Quanwei Tian, Zongde Kou, Song Tang, He ZHU, Sinan Liu, Haiyan He, Tao Feng, Ádám Révész, Yang Ren, Si Lan]
+authors: [Shangshu Wu, Yi Liu, Huiqiang Ying, Zhenduo Wu, Quanwei Tian, Zongde Kou, Song Tang, He ZHU, Sinan Liu, Haiyan He, Tao Feng, Ádám Révész, yangren, Si Lan]
 author_notes: []
 date: '2026-03-05T00:00:00Z'
 doi: 10.1016/j.actamat.2026.122079

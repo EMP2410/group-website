@@ -1,6 +1,6 @@
 ---
 title: Evidence of liquid–liquid phase transition in Zr–Cu–Al melts and its link to glass-forming ability
-authors: [Weixia Dong, Sinan Liu, Zhenduo Wu, Jiale Ma, Yang Ren, Xun‐Li Wang, Si Lan]
+authors: [Weixia Dong, Sinan Liu, Zhenduo Wu, Jiale Ma, yangren, Xun‐Li Wang, Si Lan]
 author_notes: []
 date: '2025-11-10T00:00:00Z'
 doi: 10.1063/5.0299273

@@ -1,6 +1,6 @@
 ---
 title: 'AI in single-atom catalysts: a review of design and applications'
-authors: [Qijun Yu, Ninggui Ma, Chihon Leung, Han Liu, Yang Ren, Zhanhua Wei]
+authors: [Qijun Yu, Ninggui Ma, Chihon Leung, liuhan, yangren, Zhanhua Wei]
 author_notes: []
 date: '2025-02-12T00:00:00Z'
 doi: 10.20517/jmi.2024.78

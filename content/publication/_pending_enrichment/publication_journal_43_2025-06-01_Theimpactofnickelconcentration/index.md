@@ -1,6 +1,6 @@
 ---
 title: The impact of nickel concentration and stacking fault energy on deformation mechanisms in high-purity austenitic Fe-Cr-Ni alloys
-authors: [Tingkun Liu, Semanti Mukhopadhyay, Cheng-Han Li, Tianyi Li, Yang Ren, Prashant Kumar Singh, Arun Devaraj]
+authors: [Tingkun Liu, Semanti Mukhopadhyay, Cheng-Han Li, Tianyi Li, yangren, Prashant Kumar Singh, Arun Devaraj]
 author_notes: []
 date: '2025-04-19T00:00:00Z'
 doi: 10.1016/j.matchar.2025.115046

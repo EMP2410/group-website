@@ -1,6 +1,6 @@
 ---
 title: Quantitatively Mapping Inhomogeneous State of Charge in a Commercial Lithium-Ion Pouch Cell via Energy-Resolved Neutron Imaging
-authors: [Wei Wang, Sijing Liu, Yuewang Yang, Zhaowen Bai, Jie Chen, Zhijian Tan, Jie Yan, Qingyun Hu, Yang Ren, Qi Liu]
+authors: [wangwei, Sijing Liu, Yuewang Yang, baizhaowen, Jie Chen, Zhijian Tan, yanjie, Qingyun Hu, yangren, Qi Liu]
 author_notes: []
 date: '2025-06-23T00:00:00Z'
 doi: 10.1021/acsenergylett.5c01167

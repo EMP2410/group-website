@@ -1,6 +1,6 @@
 ---
 title: Mitigating fast-charging degradation in Ni-rich cathodes via enhancing kinetic-mechanical properties
-authors: [Yali Wen, Yuzhi He, Yu Tang, Siyu Chen, Liuqi Wang, Zhiyong Huang, Wei Wang, Xingyu Wang, Xingjun Li, Yang Ren, Qi Liu]
+authors: [Yali Wen, Yuzhi He, Yu Tang, Siyu Chen, Liuqi Wang, Zhiyong Huang, wangwei, Xingyu Wang, Xingjun Li, yangren, Qi Liu]
 author_notes: []
 date: '2025-04-02T00:00:00Z'
 doi: 10.1016/j.jechem.2025.03.033

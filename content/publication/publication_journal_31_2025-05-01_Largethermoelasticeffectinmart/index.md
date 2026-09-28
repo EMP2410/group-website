@@ -1,6 +1,6 @@
 ---
 title: Large thermoelastic effect in martensitic phase of ferroelastic alloys for high efficiency heat pumping
-authors: [Qiao Li, Zhongzheng Deng, Aslan Ahadi, Kangjie Chu, Jie Yan, Kai Ming Huang, Sixia Hu, Yang Ren, Binbin He, Qingping Sun]
+authors: [Qiao Li, Zhongzheng Deng, Aslan Ahadi, Kangjie Chu, yanjie, Kai Ming Huang, Sixia Hu, yangren, Binbin He, Qingping Sun]
 author_notes: []
 date: '2025-05-15T00:00:00Z'
 doi: 10.1038/s41467-025-59720-3

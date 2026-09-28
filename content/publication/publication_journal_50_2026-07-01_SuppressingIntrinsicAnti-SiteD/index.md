@@ -1,6 +1,6 @@
 ---
 title: Suppressing Intrinsic Anti-Site Defects via Targeted Li-Occupation Unlocks Ultrahigh-Rate Capability in Vanadium-Free NASICON Cathodes
-authors: [Yulun Wu, F Liu, C ZHANG, Chaohong Guan, Yan Liu, Hui Li, Hui Li, Zezhou Lin, Li Xp, J X Zhang, Y. P. Wang, Ye Zhu, Huangxu Li, Huangxu Li, Yang Ren, Haitao Huang]
+authors: [Yulun Wu, F Liu, C ZHANG, Chaohong Guan, Yan Liu, Hui Li, Hui Li, Zezhou Lin, Li Xp, J X Zhang, Y. P. Wang, Ye Zhu, Huangxu Li, Huangxu Li, yangren, Haitao Huang]
 author_notes: []
 date: '2026-07-25T00:00:00Z'
 doi: 10.1002/adma.74230

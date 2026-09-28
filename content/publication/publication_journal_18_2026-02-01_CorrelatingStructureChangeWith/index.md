@@ -1,6 +1,6 @@
 ---
 title: Correlating Structure Change With Magnetic Ordering and Spin Fluctuation During Delithiation of Transition Metal Layered Oxide
-authors: [Mingjian Zhang, Zhefeng Chen, Tongchao Liu, 洪德顺, Longlong Fan, Ziyan Wu, Yang Ren, Yu‐Sheng Chen, Feng Pan]
+authors: [Mingjian Zhang, Zhefeng Chen, Tongchao Liu, 洪德顺, Longlong Fan, Ziyan Wu, yangren, Yu‐Sheng Chen, Feng Pan]
 author_notes: []
 date: '2026-02-08T00:00:00Z'
 doi: 10.1002/anie.202521015

@@ -1,6 +1,6 @@
 ---
 title: Structured liquid-based reconfigurable all-liquid optical fibers
-authors: [Sai Zhao, Yufeng Wang, Xinke Tang, J.Y. Zhang, Weixi Wu, Yuchen Fu, Sai Tak Chu, Yang Ren, Xubo Liu, Xun Guan, Thomas P. Russell, Yu Chai]
+authors: [Sai Zhao, Yufeng Wang, Xinke Tang, J.Y. Zhang, Weixi Wu, Yuchen Fu, Sai Tak Chu, yangren, Xubo Liu, Xun Guan, Thomas P. Russell, Yu Chai]
 author_notes: []
 date: '2025-12-31T00:00:00Z'
 doi: 10.1038/s41467-025-67954-4

@@ -1,6 +1,6 @@
 ---
 title: Unveiling the Origin of Oxygen Framework Stability in Ultra-High Nickel Layered Oxide Cathodes
-authors: [Fangyan Liu, Shihao Li, Chihon Leung, Xiaozhi Jiang, Han Liu, Tianyi Li, Qi Liu, Gang Sun, Zhen‐Bo Wang, Zhian Zhang, Yanqing Lai, Yang Ren, Jiayi Yang]
+authors: [liufangyan, Shihao Li, Chihon Leung, Xiaozhi Jiang, liuhan, Tianyi Li, Qi Liu, Gang Sun, Zhen‐Bo Wang, Zhian Zhang, Yanqing Lai, yangren, yangjiayi]
 author_notes: []
 date: '2025-03-06T00:00:00Z'
 doi: 10.1002/adma.202419856

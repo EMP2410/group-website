@@ -8,7 +8,7 @@ sections:
   - block: slider
     content:
       slides:
-      - title: 👋 Welcome to the group
+      - title: 👋 Welcome to the Group
         content: Take a look at what we're working on...
         align: center
         background:
@@ -18,22 +18,32 @@ sections:
               brightness: 0.7
           position: right
           color: '#666'
-      - title: Lunch & Learn ☕️
-        content: 'Share your knowledge with the group and explore exciting new topics together!'
+      - title: Research Topics
+        content: "We probe **correlated electron systems**, **energy storage materials**, **nanoscience**, and **advanced engineering materials** — using synchrotron X-ray and neutron scattering techniques."
         align: left
         background:
           image:
-            filename: contact.jpg
+            filename: topics.png
             filters:
               brightness: 0.7
           position: center
-          color: '#555'
-      - title: World-Class Semiconductor Lab
-        content: 'Just opened last month!'
+          color: '#666'
+      - title: Our Facilities
+        content: 'State-of-the-art instruments for materials characterization and in-situ measurements.'
+        align: left
+        background:
+          image:
+            filename: lab.png
+            filters:
+              brightness: 0.7
+          position: center
+          color: '#666'
+      - title: 🤝 Join Us / Collaborate
+        content: 'We are always looking for talented students, postdocs, and collaborators. Get in touch!'
         align: right
         background:
           image:
-            filename: welcome.jpg
+            filename: team.png
             filters:
               brightness: 0.5
           position: center
