@@ -3,19 +3,20 @@
 title:
 date: 2022-10-24
 type: landing
+seo:
+  title: EMP group
 
 sections:
   - block: hero
     content:
       title: |
-        Wowchemy
-        Research Group
+        EMP research group @ CityU HK
       image:
-        filename: welcome.jpg
+        filename: lab-photo.png
       text: |
         <br>
-        
-        The **Wowchemy Research Group** has been a center of excellence for Artificial Intelligence research, teaching, and practice since its founding in 2016.
+
+        The **EMP research group @ CityU HK**, led by **Prof. Ren Yang**, is part of the Department of Physics at City University of Hong Kong, and operates the Hong Kong JC STEM Lab of *Energy and Materials Physics*. We investigate the **structure–property relationships** of advanced materials using **synchrotron X-ray and neutron scattering** techniques, with current emphasis on phase transitions, correlated electron systems, engineering materials, nanoparticles, and energy storage and conversion materials.
   
   - block: collection
     content:
@@ -45,7 +46,7 @@ sections:
       columns: '1'
       background:
         image: 
-          filename: coders.jpg
+          filename: coders.png
           filters:
             brightness: 1
           parallax: false
@@ -58,13 +59,12 @@ sections:
 
   - block: collection
     content:
-      title: Latest Preprints
+      title: Latest Publications
       text: ""
       count: 5
       filters:
         folders:
           - publication
-        publication_type: 'article'
     design:
       view: citation
       columns: '1'

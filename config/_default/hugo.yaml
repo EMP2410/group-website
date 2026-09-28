@@ -3,7 +3,7 @@
 # Hugo Documentation: https://gohugo.io/getting-started/configuration/#all-configuration-settings
 # This file is formatted using YAML syntax - learn more at https://learnxinyminutes.com/docs/yaml/
 
-title: CityU Physics EMP group # Website name
+title: E<sub>nergy</sub> M<sub>aterial</sub> P<sub>hysics</sub> # Website name
 baseURL: 'https://EMP2410.github.io/lab-site/' # Website URL
 
 ############################
@@ -26,7 +26,7 @@ pagination:
 enableEmoji: true
 enableRobotsTXT: true
 footnotereturnlinkcontents: <sup>^</sup>
-ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$]
+ignoreFiles: [\.ipynb$, .ipynb_checkpoints$, \.Rmd$, \.Rmarkdown$, _cache$, /_pending_enrichment/]
 permalinks:
   authors: '/author/:slug/'
   tags: '/tag/:slug/'
@@ -38,7 +38,12 @@ outputs:
   section: [HTML, RSS]
 imaging:
   resampleFilter: lanczos
-  quality: 75
+  jpeg:
+    quality: 75
+  png:
+    quality: 75
+  webp:
+    quality: 75
   anchor: smart
 timeout: 600000
 taxonomies:

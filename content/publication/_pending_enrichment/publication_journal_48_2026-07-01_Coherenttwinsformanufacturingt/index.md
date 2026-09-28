@@ -1,0 +1,27 @@
+---
+title: Coherent twins for manufacturing thick lithium-rich battery positive electrodes
+authors: [Guiyang Gao, Jiantao Li, Yuanyuan Liu, Mengjian Fan, Wu Hq, Saichao Li, Xiaolong Zha, Guiyan Zang, Guanyi Wang, Yang Ren, L S Wang, Jie Lin, Kai Zhang, Jun Chen, Dong‐Liang Peng, Qingshui Xie]
+author_notes: []
+date: '2026-07-10T00:00:00Z'
+doi: 10.1038/s41565-026-02221-1
+publishDate: '2026-07-10T00:00:00Z'
+publication_types: [article-journal]
+publication: Nature Nanotechnology
+publication_short: ''
+tags: [publication, journal]
+featured: false
+url_pdf: ''
+url_code: ''
+url_dataset: ''
+url_poster: ''
+url_project: ''
+url_slides: ''
+url_source: ''
+url_video: ''
+image: {caption: '', focal_point: '', preview_only: false}
+projects: []
+slides: ''
+auto_generated: true
+enriched: 2026-09-27 openalex score=1.000
+---
+

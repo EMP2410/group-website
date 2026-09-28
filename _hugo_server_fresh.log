@@ -1,0 +1,22 @@
+Watching for changes in C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/archetypes/{authors,event,post,project,publication,...}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/assets/{css,js,media,scss}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/data/{fonts,i18n,themes}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/i18n, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/layouts/{_default,authors,book,event,landing,...}, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-bootstrap/v5@v5.9.8-0.20241012174104-661cadc17327/static/webfonts, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b/data, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b/functions, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b/templates, C:/Users/11293/AppData/Local/hugo_cache/modules/filecache/modules/pkg/mod/github.com/!hugo!blox/hugo-blox-builder/modules/blox-plugin-netlify@v1.1.2-0.20240509231741-c3d23d929bc6/src/layouts, ... and 4 more
+Watching for config changes in C:\Users\11293\Desktop\group_web\lab-site\config\_default, C:\Users\11293\AppData\Local\hugo_cache\modules\filecache\modules\pkg\mod\github.com\!hugo!blox\hugo-blox-builder\modules\blox-plugin-decap-cms@v0.1.2-0.20231108143325-448ed0e3bd2b\config.yaml, C:\Users\11293\AppData\Local\hugo_cache\modules\filecache\modules\pkg\mod\github.com\!hugo!blox\hugo-blox-builder\modules\blox-plugin-netlify@v1.1.2-0.20240509231741-c3d23d929bc6\config.yaml, C:\Users\11293\AppData\Local\hugo_cache\modules\filecache\modules\pkg\mod\github.com\!hugo!blox\hugo-blox-builder\modules\blox-bootstrap\v5@v5.9.8-0.20241012174104-661cadc17327\hugo.yaml, C:\Users\11293\Desktop\group_web\lab-site\go.mod
+Start building sites … 
+hugo v0.166.0+extended windows/amd64 BuildDate=unknown VendorInfo=conda-forge
+
+
+                  │  EN  
+──────────────────┼──────
+ Pages            │ 1053 
+ Paginator pages  │   61 
+ Non-page files   │  170 
+ Static files     │    9 
+ Processed images │  674 
+ Aliases          │   16 
+ Cleaned          │    0 
+
+Built in 2329 ms
+Environment: "development"
+Serving pages from disk
+Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1) 
+Press Ctrl+C to stop

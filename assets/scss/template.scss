@@ -7,3 +7,86 @@
 .cta-group {
   justify-content: center;
 }
+
+// Remove the border from the CTA button so it reads lighter
+.cta-group .btn {
+  border: 0;
+}
+
+// Import Cinzel (复古拉丁衬线) for site title subscript
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&display=swap');
+
+// Apply Cinzel to navbar brand subscript to keep lowercase letters visually unified
+.navbar-brand sub,
+.universal-wrapper sub {
+  font-family: 'Cinzel', serif;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  font-size: 0.62em;
+}
+
+// Tone down the hero title and lead so the homepage reads less heavy
+.home-section .hero-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.home-section .hero-lead {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+// ============ B. 卡片科研风 ============
+// 让 body 显示微妙 SVG 六边形晶格纹理（呼应 materials physics 主题）
+body {
+  background-color: #f5f7fa;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%231565c0' stroke-width='0.6' stroke-opacity='0.07'%3E%3Cpath d='M40 5l30 17.32v34.64L40 74.28 10 56.96V22.32z'/%3E%3Cpath d='M40 5v34.64M10 22.32l30 17.32 30-17.32M40 74.28V39.64'/%3E%3C/g%3E%3C/svg%3E");
+  background-attachment: fixed;
+}
+
+// 跳过 hero（first-of-type）和 fullscreen block，其余 section 收紧上下间距 + 透明背景
+.home-section:not(:first-of-type):not(.fullscreen) {
+  padding: 70px 0;
+  background: transparent;
+}
+
+// 容器左右内边距放宽，让卡片不贴边
+.home-section:not(:first-of-type):not(.fullscreen) .container {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+// 把内容区变成白底卡片：圆角 + 浅阴影 + 细边框
+.home-section:not(:first-of-type):not(.fullscreen) .container > .row {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 36px 28px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+// 移动端：紧凑一点
+@media (max-width: 768px) {
+  .home-section:not(:first-of-type):not(.fullscreen) {
+    padding: 50px 0;
+  }
+  .home-section:not(:first-of-type):not(.fullscreen) .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .home-section:not(:first-of-type):not(.fullscreen) .container > .row {
+    padding: 24px 18px;
+    border-radius: 10px;
+  }
+}
+
+// CTA 块单独脱掉卡片背景，让按钮坐在 body 纹理上
+// 注意：必须保留 :not(:first-of-type):not(.fullscreen) 以匹配原规则 specificity，
+// 靠源码顺序（写在后面）覆盖，否则 specificity 不够会被原规则压住。
+.home-section:not(:first-of-type):not(.fullscreen):has(.cta-group) .container > .row {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  padding: 0;
+}

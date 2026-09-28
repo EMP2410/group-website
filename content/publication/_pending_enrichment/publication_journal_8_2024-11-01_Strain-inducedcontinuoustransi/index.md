@@ -1,0 +1,29 @@
+---
+title: 'Strain-induced continuous transition from orthorhombic to hexagonal-like phase in Ti-36Zr-6Nb alloy with abnormally high strain hardening/Materials Science & Engineering A: Structural Materials: Properties, Microstructure and Processing'
+authors: ['Yin, T., Chen, H., Chen, S., Ren, Y., Liu, X., Gao, X., Yang, W. & Wang, Y.']
+author_notes: []
+date: '2024-11-01T00:00:00Z'
+doi: 10.1016/j.msea.2024.147284
+publishDate: '2024-11-01T00:00:00Z'
+publication_types: [article-journal]
+publication: Materials Science and Engineering A
+publication_short: ''
+abstract: 'Strain-induced continuous transition from orthorhombic to hexagonal-like phase in Ti-36Zr-6Nb alloy with abnormally high strain hardening/Materials Science & Engineering A: Structural Materials: Properties, Microstructure and Processing by Yin, T., Chen, H., Chen, S., Ren, Y., Liu, X., Gao, X., Yang, W. & Wang, Y.'
+summary: 'Strain-induced continuous transition from orthorhombic to hexagonal-like phase in Ti-36Zr-6Nb alloy with abnormally high strain hardening/Materials Science & Engineering A: Structural Materials: Properties, Microstructure and Processing by Yin, T., Chen, H., Chen, S., Ren, Y., Liu, X., Gao, X., Yang, W. & Wang, Y.'
+tags: [publication, journal]
+featured: false
+url_pdf: ''
+url_code: ''
+url_dataset: ''
+url_poster: ''
+url_project: ''
+url_slides: ''
+url_source: ''
+url_video: ''
+image: {caption: '', focal_point: '', preview_only: false}
+projects: []
+slides: ''
+auto_generated: true
+enriched: 2026-09-27 openalex score=0.821 (B-tier, partial)
+---
+
