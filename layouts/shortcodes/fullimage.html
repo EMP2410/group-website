@@ -1,0 +1,34 @@
+{{/* fullimage: a responsive image that resolves Hugo global resources.
+     Usage:  {{< fullimage src="lab-photo.png" alt="..." class="..." bleed="true" avatar="true" >}}
+     bleed="true"  → width:100vw + margin-left:calc(50% - 50vw) so the image breaks
+                     out of the parent Bootstrap .container and touches both viewport
+                     edges. Useful for hero banners.
+     avatar="true" → renders as a circular profile avatar (160x160, rounded-circle,
+                     profile-avatar class). Pairs with .hero-bio layout in custom.scss.
+     Default (no flags) keeps the image inside the container with img-fluid rounded. */}}
+{{- $src     := .Get "src"  -}}
+{{- $alt     := .Get "alt"  | default "" -}}
+{{- $bleed   := .Get "bleed"   | default "" -}}
+{{- $avatar  := .Get "avatar"  | default "" -}}
+{{- $class   := "" -}}
+{{- $style   := "" -}}
+{{- if eq $avatar "true" -}}
+  {{- $class = "profile-avatar rounded-circle" -}}
+{{- else if eq $bleed "true" -}}
+  {{- $class = .Get "class" | default "rounded" -}}
+  {{- $style = "width:100vw; max-width:none; height:auto; margin-left:calc(50% - 50vw);" -}}
+{{- else -}}
+  {{- $class = .Get "class" | default "img-fluid rounded" -}}
+{{- end -}}
+{{- $img   := resources.Get (path.Join "media" $src) -}}
+{{- if $img -}}
+  {{- if eq $avatar "true" -}}
+    {{- $resized := $img.Resize "320x320" -}}
+    <img src="{{ $resized.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" style="{{ $style | safeCSS }}" loading="lazy" />
+  {{- else -}}
+    {{- $resized := $img.Resize "1600x" -}}
+    <img src="{{ $resized.RelPermalink }}" alt="{{ $alt }}" class="{{ $class }}" style="{{ $style | safeCSS }}" loading="lazy" />
+  {{- end -}}
+{{- else -}}
+  <p class="text-warning">[image not found: {{ $src }}]</p>
+{{- end -}}

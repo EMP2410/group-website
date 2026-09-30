@@ -9,7 +9,7 @@ sections:
     content:
       title: Contact
       subtitle: Prof. Yang REN (任洋)
-      avatar: avatar.jpg
+      avatar: Photo_REN_Yang.jpg
       text: |-
         For research collaborations, postdoctoral or PhD applications,
         media inquiries, or visits to the group, please contact Prof. REN

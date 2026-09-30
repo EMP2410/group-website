@@ -42,6 +42,18 @@ education:
     - course: BEng
       institution: National University of Defense Technology, China
 
+# Awards (custom field, rendered by layouts/partials/blocks/v1/about.html)
+awards:
+  - name: Hong Kong Global STEM Professorship
+    year: "2021"
+  - name: Argonne National Laboratory Board of Governors' Distinguished Performance Award
+    year: "2020"
+  - name: Gopal K. Shenoy Excellence in Beamline Science Award
+    organization: Advanced Photon Source
+    year: "2020"
+  - name: Clarivate Highly Cited Researcher
+    year: "2022, 2023"
+
 # Social/Academic Networking
 # For available icons, see: https://docs.hugoblox.com/getting-started/page-builder/#icons
 #   For an email link, use "fas" icon pack, "envelope" icon, and a link in the
@@ -68,4 +80,4 @@ user_groups:
   - Principal Investigators
 ---
 
-Yang REN is Chair Professor and Head at the Department of Physics, City University of Hong Kong (CityU), and Director of the Hong Kong JC STEM Lab of "Energy and Materials Physics". Prior to joining CityU in 2021, he was a Senior Physicist at Argonne National Laboratory, and a lead beamline scientist at the Advanced Photon Source. He was awarded the Hong Kong Global STEM Professorship (2021), the Argonne National Laboratory Board of Governors' Distinguished Performance Award (2020), and the Gopal K. Shenoy Excellence in Beamline Science Award at the Advanced Photon Source (2020). He received his M.S. in condensed matter physics from the Institute of Physics, Chinese Academy of Sciences, and his Ph.D. in chemical physics from the University of Groningen, The Netherlands. His research interests focus on the structure–property studies of materials by utilizing synchrotron X-ray and neutron scattering and other techniques, including investigations of phase transitions, correlated electron systems, engineering materials, nanoparticles and nanocomposites, and energy storage and conversion materials. He has published nearly 940 peer-reviewed articles in *Nature*, *Science*, *Physical Review Letters* and other prestigious journals, with a Google H-index of 114 and over 51,000 citations. He is a Clarivate Highly Cited Researcher (2022, 2023).
+Yang REN is Chair Professor and Head at the Department of Physics, City University of Hong Kong (CityU), and Director of the Hong Kong JC STEM Lab of "Energy and Materials Physics". Prior to joining CityU in 2021, he was a Senior Physicist at Argonne National Laboratory, and a lead beamline scientist at the Advanced Photon Source. His research interests focus on the structure–property studies of materials by utilizing synchrotron X-ray and neutron scattering and other techniques, including investigations of phase transitions, correlated electron systems, engineering materials, nanoparticles and nanocomposites, and energy storage and conversion materials. He has published nearly 940 peer-reviewed articles in *Nature*, *Science*, *Physical Review Letters* and other prestigious journals, with a Google H-index of 114 and over 51,000 citations.

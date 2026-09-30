@@ -1,7 +1,31 @@
 // Custom site-wide styles
 // Loaded by Hugo Blox via assets/scss/main.scss (@import "custom";)
 
-.contact-avatar {
+/* Translucent frosted-glass navbar with a narrow horizontal gradient
+   (±3° hue wobble around the peach-pink mid-stop). Visually reads as
+   a single soft pink tone with a faint left→right shift. backdrop-filter
+   blur still conveys elevation when the hero image shows through on scroll. */
+.navbar {
+  background: linear-gradient(90deg,
+    rgba(248, 212, 215, 0.72) 0%,
+    rgba(245, 205, 225, 0.72) 50%,
+    rgba(235, 205, 235, 0.72) 100%);
+  backdrop-filter: saturate(180%) blur(14px);
+  -webkit-backdrop-filter: saturate(180%) blur(14px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: none;
+}
+.dark .navbar {
+  background: linear-gradient(90deg,
+    rgba(150, 95, 140, 0.68) 0%,
+    rgba(140, 90, 150, 0.68) 50%,
+    rgba(130, 90, 165, 0.68) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+}
+
+/* Circular profile avatar — used by the Hero bio block (fullimage avatar mode). */
+.profile-avatar {
   display: block;
   width: 240px;
   height: 240px;
@@ -10,4 +34,63 @@
   border-radius: 50%;
   object-fit: cover;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Contact page avatar — show the source photo as its original rectangular
+   shape (no cropping to a circle). */
+.contact-avatar {
+  display: block;
+  width: 240px;
+  height: auto;
+  max-width: 100%;
+  margin: 1.25rem 0 0 0;
+  border-radius: 0;
+  object-fit: contain;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
+}
+
+/* Hero bio: circular avatar floats left, intro text wraps around it
+   via CSS shape-outside. The text hugs the avatar's circular edge
+   instead of sitting in a side-by-side column. */
+.hero-bio {
+  max-width: 880px;
+  margin: 1.25rem auto 0;
+  padding: 0 0.5rem;
+  overflow: hidden;          /* contain the float */
+}
+.hero-bio .profile-avatar {
+  float: left;
+  shape-outside: circle(50%);
+  -webkit-shape-outside: circle(50%);
+  width: 200px;
+  height: 200px;
+  margin: 0.25rem 1.75rem 0.5rem 0;   /* gap between avatar and wrapped text */
+}
+.hero-bio__text {
+  text-align: left;
+  /* no flex — text flows naturally around the floated avatar */
+}
+
+/* Hero section: pull it up 80px so the hero image overlaps the bottom
+   10px of the navbar. Combined with the navbar's translucent backdrop-
+   filter, the hero image shows through the navbar's frosted glass for
+   an immersive header effect. */
+.home-section.wg-markdown.bleed-hero {
+  margin-top: -80px;
+}
+
+/* Narrow selected homepage sections: shrink the inner container so the content
+   sits further from the viewport edges (matches the hero-lead intro width). */
+.home-section.section-narrow .container {
+  max-width: 1040px;
+}
+
+/* Section 3 (coders.png banner) is a markdown block with no body content.
+   Without this rule the empty row renders ~36+36 px of padding as a white
+   strip on top of the bg-image. Hide the empty markdown container/row/col
+   so the section is a pure bg-image banner with only the design padding. */
+.home-section.section-banner-coders .container,
+.home-section.section-banner-coders .row,
+.home-section.section-banner-coders .col-12 {
+  display: none;
 }

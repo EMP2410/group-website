@@ -7,16 +7,28 @@ seo:
   title: EMP group
 
 sections:
-  - block: hero
+  - block: markdown
     content:
-      title: |
-        EMP research group @ CityU HK
-      image:
-        filename: lab-photo.png
+      title:
+      subtitle:
       text: |
-        <br>
+        {{< fullimage src="lab-photo.png" alt="EMP research group @ CityU HK" class="rounded" bleed="true" >}}
 
-        The **EMP research group @ CityU HK**, led by **Prof. Ren Yang**, is part of the Department of Physics at City University of Hong Kong, and operates the Hong Kong JC STEM Lab of *Energy and Materials Physics*. We investigate the **structure–property relationships** of advanced materials using **synchrotron X-ray and neutron scattering** techniques, with current emphasis on phase transitions, correlated electron systems, engineering materials, nanoparticles, and energy storage and conversion materials.
+        <div class="text-center mt-4">
+          <h1 class="hero-title mb-0">EMP research group @ CityU HK</h1>
+        </div>
+
+        <div class="hero-bio">
+          {{< fullimage src="yangren-avatar.jpg" alt="Prof. Ren Yang" avatar="true" >}}
+          <div class="hero-bio__text">
+            The <strong>EMP research group @ CityU HK</strong>, led by <strong>Prof. Ren Yang</strong>, is part of the Department of Physics at City University of Hong Kong, and operates the Hong Kong JC STEM Lab of <em>Energy and Materials Physics</em>. We investigate the <strong>structure–property relationships</strong> of advanced materials using <strong>synchrotron X-ray and neutron scattering</strong> techniques.
+          </div>
+        </div>
+    design:
+      columns: '1'
+      css_class: bleed-hero
+      spacing:
+        padding: ['0', '0', '40px', '0']
   
   - block: collection
     content:
@@ -36,6 +48,7 @@ sections:
     design:
       view: card
       columns: '1'
+      css_class: section-narrow
   
   - block: markdown
     content:
@@ -54,8 +67,8 @@ sections:
           size: cover
           text_color_light: true
       spacing:
-        padding: ['20px', '0', '20px', '0']
-      css_class: fullscreen
+        padding: ['200px', '0', '200px', '0']
+      css_class: section-narrow section-banner-coders
 
   - block: collection
     content:
@@ -68,6 +81,7 @@ sections:
     design:
       view: citation
       columns: '1'
+      css_class: section-narrow
 
   - block: markdown
     content:
@@ -77,4 +91,5 @@ sections:
         {{% cta cta_link="./people/" cta_text="Meet the team →" %}}
     design:
       columns: '1'
+      css_class: section-narrow
 ---

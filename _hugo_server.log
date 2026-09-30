@@ -10,29 +10,247 @@ hugo v0.166.0+extended windows/amd64 BuildDate=unknown VendorInfo=conda-forge
  Paginator pages  │   59 
  Non-page files   │  189 
  Static files     │    9 
- Processed images │  693 
+ Processed images │  691 
  Aliases          │   16 
  Cleaned          │    0 
 
-Built in 1977 ms
+Built in 10046 ms
 Environment: "development"
 Serving pages from disk
+Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
 Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1) 
 Press Ctrl+C to stop
 
 Change detected, rebuilding site (#1).
-2026-09-29 01:01:24.817 +0800
-Source changed /event/_training_10_2026-07-to-2027-01_visiting-scholar-dr-lihua-liu-/_index.md
-Source changed /event/_training_3_2025_visiting-scholar-training-mr-z/_index.md
-Source changed /event/_training_5_2025_visiting-scholar-training-prof/_index.md
-Source changed /event/_training_8_2026-01-to-2026-12_visiting-scholar-dr-yulong-yan/_index.md
-Source changed /event/_training_9_2026-03-to-2027-02_visiting-scholar-dr-yaohui-qu-/_index.md
-Source changed /event
+2026-09-30 19:17:28.069 +0800
+Asset changed /scss/custom.scss
 Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
-Total in 1197 ms
+Total in 242 ms
 
 Change detected, rebuilding site (#2).
-2026-09-29 01:01:26.016 +0800
-Source changed /event
+2026-09-30 19:17:42.569 +0800
+Source changed /_index.md
 Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
-Total in 2469 ms
+Total in 98 ms
+
+Change detected, rebuilding site (#3).
+2026-09-30 19:17:44.570 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 107 ms
+
+Change detected, rebuilding site (#4).
+2026-09-30 19:17:46.569 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 113 ms
+
+Change detected, rebuilding site (#5).
+2026-09-30 19:17:48.570 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 110 ms
+
+Change detected, rebuilding site (#6).
+2026-09-30 19:20:39.569 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 162 ms
+
+Change detected, rebuilding site (#7).
+2026-09-30 19:24:20.078 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 343 ms
+
+Change detected, rebuilding site (#8).
+2026-09-30 19:26:46.570 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 249 ms
+
+Change detected, rebuilding site (#9).
+2026-09-30 19:28:10.070 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 480 ms
+
+Change detected, rebuilding site (#10).
+2026-09-30 19:33:36.069 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 170 ms
+
+Change detected, rebuilding site (#11).
+2026-09-30 19:33:40.569 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 281 ms
+
+Change detected, rebuilding site (#12).
+2026-09-30 19:38:15.570 +0800
+Template changed /shortcodes/fullimage.html
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 60 ms
+
+Change detected, rebuilding site (#13).
+2026-09-30 19:38:18.569 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 377 ms
+
+Change detected, rebuilding site (#14).
+2026-09-30 19:38:21.569 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 138 ms
+
+Change detected, rebuilding site (#15).
+2026-09-30 19:40:02.069 +0800
+Asset changed /media/yangren-avatar.jpg
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 83 ms
+
+Change detected, rebuilding site (#16).
+2026-09-30 19:40:03.570 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 177 ms
+
+Change detected, rebuilding site (#17).
+2026-09-30 19:40:07.069 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 293 ms
+
+Change detected, rebuilding site (#18).
+2026-09-30 19:41:57.579 +0800
+Asset changed /media/photo_ren_yang.jpg
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 79 ms
+
+Change detected, rebuilding site (#19).
+2026-09-30 19:45:28.069 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 288 ms
+
+Change detected, rebuilding site (#20).
+2026-09-30 19:45:30.069 +0800
+Source changed /contact/index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 131 ms
+adding created directory to watchlist C:\Users\11293\Desktop\group_web\lab-site\static\contact
+
+Change of Static files detected, rebuilding site (#21).
+2026-09-30 19:45:54.080 +0800
+Syncing \contact to \
+
+Change detected, rebuilding site (#22).
+2026-09-30 19:47:37.069 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 149 ms
+
+Change detected, rebuilding site (#23).
+2026-09-30 19:47:39.569 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 410 ms
+
+Change detected, rebuilding site (#24).
+2026-09-30 20:05:36.570 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 293 ms
+
+Change detected, rebuilding site (#25).
+2026-09-30 20:13:00.570 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 363 ms
+
+Change detected, rebuilding site (#26).
+2026-09-30 20:15:20.571 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 443 ms
+
+Change detected, rebuilding site (#27).
+2026-09-30 20:16:20.568 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 257 ms
+
+Change detected, rebuilding site (#28).
+2026-09-30 20:43:41.569 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 2877 ms
+
+Change detected, rebuilding site (#29).
+2026-09-30 21:08:43.572 +0800
+Asset changed /media/lab-photo.png~rfd7e7118.tmp
+Asset changed /media/lab-photo.png.~tmp
+Asset changed /media/lab-photo.png
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 398 ms
+
+Change detected, rebuilding site (#30).
+2026-09-30 21:25:33.069 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 673 ms
+
+Change detected, rebuilding site (#31).
+2026-09-30 21:25:36.570 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 241 ms
+
+Change detected, rebuilding site (#32).
+2026-09-30 21:25:38.569 +0800
+Source changed /_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 150 ms
+
+Change detected, rebuilding site (#33).
+2026-09-30 21:27:03.569 +0800
+Asset changed /scss/custom.scss
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 410 ms
+
+Change detected, rebuilding site (#34).
+2026-09-30 21:35:10.069 +0800
+Source changed /authors/yangren/_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 249 ms
+
+Change detected, rebuilding site (#35).
+2026-09-30 21:45:13.570 +0800
+Source changed /authors/yangren/_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 145 ms
+
+Change detected, rebuilding site (#36).
+2026-09-30 21:45:19.569 +0800
+Source changed /authors/yangren/_index.md
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 151 ms
+adding created directory to watchlist C:\Users\11293\Desktop\group_web\lab-site\layouts\partials\blocks
+adding created directory to watchlist C:\Users\11293\Desktop\group_web\lab-site\layouts\partials\blocks\v1
+
+Change detected, rebuilding site (#37).
+2026-09-30 21:45:50.071 +0800
+Template changed /partials/blocks/v1/about.html
+Template added /partials/blocks
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 97 ms
+
+Change detected, rebuilding site (#38).
+2026-09-30 21:45:50.578 +0800
+Template added /partials
+Template added /partials/blocks
+Template added /partials/blocks/v1
+Web Server is available at http://localhost:1313/lab-site/ (bind address 127.0.0.1)
+Total in 43 ms
