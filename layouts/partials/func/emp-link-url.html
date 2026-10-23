@@ -1,0 +1,25 @@
+{{/* emp-link-url: make a hand-written link baseURL-aware.
+
+     Usage: {{ $href := partial "func/emp-link-url.html" "/publication/" }}
+
+     Root-relative paths written in content front matter ("/publication/") are
+     not baseURL-aware: `relURL` leaves a leading-slash path alone, so on a
+     sub-path deploy (baseURL = .../lab-site/) such a link resolves to the
+     domain root and 404s. Here the leading slash is stripped and the rest is
+     handed to `relURL`, which prepends the base path ("/lab-site/publication/").
+
+     Links that already carry the base path are left untouched, so pasting a
+     deployed URL does not produce "/lab-site/lab-site/...". Absolute URLs,
+     protocol-relative URLs ("//host/..."), pure fragments ("#section") and
+     query-only links are returned unchanged. */}}
+{{- $url := . -}}
+{{- $out := $url -}}
+{{- $basePath := (urls.Parse site.BaseURL).Path -}}
+{{- if and (hasPrefix $url "/") (not (hasPrefix $url "//")) -}}
+  {{- if and (ne $basePath "/") (hasPrefix $url $basePath) -}}
+    {{- $out = $url -}}
+  {{- else -}}
+    {{- $out = relURL (strings.TrimPrefix "/" $url) -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}

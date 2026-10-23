@@ -93,7 +93,6 @@ sections:
         <p class="emp-about-intro">The <strong>EMP research group @ CityU HK</strong>, led by <strong>Prof. Ren Yang</strong>, is part of the Department of Physics at City University of Hong Kong, and operates the Hong Kong JC STEM Lab of <em>Energy and Materials Physics</em>.</p>
         <div class="emp-about-body">
         <p>We investigate the <strong>structure–property relationships</strong> of advanced materials using <strong>synchrotron X-ray and neutron scattering</strong> techniques. Our work spans electrochemical energy storage and catalysis, quantum materials, and the structural analysis of cultural heritage objects.</p>
-        <p>Everything runs on open data and open collaboration — our beamline proposals, analysis scripts and code are public, and visitors are always welcome.</p>
         </div>
         {{< empfilm video="part2.mp4" poster="part2.jpg" caption="Inside the Lab — a walkthrough of our instruments, equipment and the people who keep the experiments running." >}}
     design:
@@ -108,12 +107,12 @@ sections:
       text: |
         <p class="emp-about-body">We are a small, hands-on group. Everyone runs their own samples, everyone learns the beamlines, and everyone is encouraged to bring problems that don't fit neatly into a single technique.</p>
         <ul class="emp-team-list">
-        <li><strong>Faculty</strong> — <a href="/authors/yang-ren/">Prof. Ren Yang</a> and visiting faculty collaborators</li>
+        <li><strong>Faculty</strong> — <a href="{{< relref "/authors/yangren" >}}">Prof. Ren Yang</a> and visiting faculty collaborators</li>
         <li><strong>Postdoctoral researchers</strong> — independent project owners who co-supervise students</li>
         <li><strong>PhD students</strong> — MPhil and PhD, in materials physics and chemistry</li>
         <li><strong>Research assistants &amp; visiting students</strong> — short-term projects and exchange placements</li>
         </ul>
-        <p class="emp-team-cta"><a class="emp-cta" href="/contact/">Join our group</a></p>
+        <p class="emp-team-cta"><a class="emp-cta" href="{{< relref "/contact" >}}">Join our group</a></p>
     design:
       columns: '1'
       css_class: section-narrow emp-section

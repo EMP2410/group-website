@@ -57,7 +57,8 @@
         <p class="emp-hero__subtitle">{{ . | $page.RenderString }}</p>
         {{- end }}
         {{- with $slide.link }}
-        <p class="emp-hero__cta"><a href="{{ .url }}">{{ .text }}</a></p>
+        {{- $href := partial "func/emp-link-url.html" .url }}
+        <p class="emp-hero__cta"><a href="{{ $href }}">{{ .text }}</a></p>
         {{- end }}
       </div>
     </div>
