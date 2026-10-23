@@ -204,8 +204,9 @@
   {{ end }}
 
   {{/* RSS Feed */}}
+  {{/* title 属性是机器可读位置，site.Title 的 <sub> 标签会被转义成字面尖括号，剥掉。 */}}
   {{ with .OutputFormats.Get "RSS" }}
-    <link rel="alternate" href="{{ .RelPermalink }}" type="application/rss+xml" title="{{ site.Title }}" />
+    <link rel="alternate" href="{{ .RelPermalink }}" type="application/rss+xml" title="{{ replaceRE "<[^>]+>" "" site.Title }}" />
   {{ end }}
 
   {{ partial "cookie_consent" . }}

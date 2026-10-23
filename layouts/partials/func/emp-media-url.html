@@ -1,0 +1,29 @@
+{{/* emp-media-url: resolve a filename under assets/media/ to a processed URL.
+
+     Usage: {{ $url := partial "func/emp-media-url.html" "tn.png" }}
+
+     SVG is passed through untouched (Hugo cannot resize it). Raster images are
+     re-encoded as webp, downscaled to at most 1920px wide; smaller sources are
+     left at their native width so a hero slide never upscales into blur.
+     Fails the build when the file is missing — a silently empty `url('')` is
+     far harder to spot than a build error. */}}
+{{- $name := . -}}
+{{- $res := "" -}}
+{{- with resources.Get (printf "media/%s" $name) -}}
+  {{- $res = . -}}
+{{- else -}}
+  {{- errorf "emp-media-url: no file `media/%s` under assets/media/" $name -}}
+{{- end -}}
+
+{{- $url := "" -}}
+{{- with $res -}}
+  {{- if eq .MediaType.SubType "svg" -}}
+    {{- $url = .RelPermalink -}}
+  {{- else -}}
+    {{- $w := .Width | default 0 -}}
+    {{- if or (le $w 0) (gt $w 1920) -}}{{- $w = 1920 -}}{{- end -}}
+    {{- $url = (.Resize (printf "%dx q82 webp" $w)).RelPermalink -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return $url -}}

@@ -46,7 +46,8 @@ header:
 
 footer:
   copyright:
-    notice: '© {2026} CityU EMP'
+    # 主题的 site_footer_license.html 替换的是字面量 {year}，写成 {2026} 会原样输出花括号。
+    notice: '© {year} CityU EMP'
     license:
       enable: true
       allow_derivatives: false
@@ -117,3 +118,11 @@ extensions:
 publications:
   date_format: January 2006
   citation_style: apa
+
+# Extra scripts concatenated into the theme bundle by partials/site_js.html.
+# Each entry is a filename (without .js) resolved against assets/js/.
+
+plugins_js:
+  - hero-slider
+  - emp-film
+  - emp-navbar

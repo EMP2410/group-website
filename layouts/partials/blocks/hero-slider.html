@@ -1,0 +1,76 @@
+{{/* Homepage hero: full-viewport slider mixing video and still-image slides.
+
+     Unlike the theme's own `slider` block (a Bootstrap carousel that only
+     understands color / gradient / image backgrounds), this one renders an
+     absolutely-stacked crossfade track so each slide can carry its own video.
+     Slide data lives in front matter under `content.slides`:
+
+       content:
+         slides:
+           - title / subtitle / link{text,url}
+             duration_ms: 11000
+             video:  { filename, poster }
+             background:
+               image: { filename, alt, position, size }
+
+     Video files load lazily: `src` stays empty until the slide activates, and
+     hero-slider.js injects `data-src` at that moment, so a 10-slide track never
+     pulls 10 videos down at once. */}}
+
+{{- $page := .wcPage }}
+{{- $block := .wcBlock }}
+{{- $slides := $block.content.slides | default (slice) -}}
+
+{{- if not $slides -}}
+  {{- errorf "hero-slider: `content.slides` is empty in %s" $page.File.Path -}}
+{{- end -}}
+
+<div class="emp-hero" data-emp-hero>
+  <div class="emp-hero__track">
+    {{- range $i, $slide := $slides }}
+      {{- /* Hugo errors on `nil.filename`, so normalise every optional branch to
+             a dict before reading keys off it. */}}
+      {{- $video := $slide.video | default (dict) }}
+      {{- $bg := $slide.background | default (dict) }}
+      {{- $bgimg := $bg.image | default (dict) }}
+      {{- $isVideo := false }}
+      {{- with $video.filename }}{{ $isVideo = true }}{{ end }}
+      {{- $duration := $slide.duration_ms | default (cond $isVideo 12000 6500) }}
+    <div class="emp-hero__slide{{ if eq $i 0 }} is-active{{ end }}" data-duration="{{ $duration }}">
+      {{- if $isVideo }}
+        {{- $videoRes := resources.Get (printf "media/%s" $video.filename) }}
+        <video class="emp-hero__video"
+               data-src="{{ $videoRes.RelPermalink }}"
+               {{- with $video.poster }} poster="{{ partial "func/emp-media-url.html" . }}"{{ end }}
+               muted loop playsinline preload="none" tabindex="-1" aria-hidden="true"></video>
+      {{- else if $bgimg.filename }}
+        <div class="emp-hero__bg" role="img"
+             aria-label="{{ $bgimg.alt | default (printf "Slide %d" (add $i 1)) }}"
+             style="background-image: url('{{ partial "func/emp-media-url.html" $bgimg.filename }}'); background-position: {{ $bgimg.position | default "center" }}; background-size: {{ $bgimg.size | default "cover" }};"></div>
+      {{- end }}
+
+      <div class="emp-hero__scrim"></div>
+
+      <div class="emp-hero__body">
+        <h2 class="emp-hero__title">{{ $slide.title }}</h2>
+        {{- with $slide.subtitle }}
+        <p class="emp-hero__subtitle">{{ . | $page.RenderString }}</p>
+        {{- end }}
+        {{- with $slide.link }}
+        <p class="emp-hero__cta"><a href="{{ .url }}">{{ .text }}</a></p>
+        {{- end }}
+      </div>
+    </div>
+    {{- end }}
+  </div>
+
+  {{- if gt (len $slides) 1 }}
+  <button class="emp-hero__arrow emp-hero__arrow--prev" type="button" aria-label="Previous slide" data-emp-hero-prev>
+    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <button class="emp-hero__arrow emp-hero__arrow--next" type="button" aria-label="Next slide" data-emp-hero-next>
+    <svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+  </button>
+  <div class="emp-hero__dots" role="group" aria-label="Hero slides"></div>
+  {{- end }}
+</div>

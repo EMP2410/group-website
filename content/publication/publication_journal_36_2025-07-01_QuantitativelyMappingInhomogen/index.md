@@ -11,7 +11,8 @@ publication_short: ''
 abstract: The booming electric vehicle market is fueling demand for higher energy density and enhanced safety in lithium-ion batteries. State of charge (SOC), a critical metric for assessing battery performance, provides insights into the energy status, health, and safety of the battery. Commercial cells often exhibit heterogeneous SOC distributions that are challenging to measure. We employ advanced energy-resolved neutron imaging to achieve quantitative SOC mapping of a commercial 2.5 Ah LiFePO 4 ||graphite pouch cell charged under a controlled temperature field (0–23 °C). Our findings show that higher temperature regions have more LiC₆, indicating higher SOC levels. Synchrotron high-energy X-ray diffraction confirmed this distribution and its correlation with the cathode. A high-throughput analysis of SOC–temperature correlations using polynomial regression on 4000 experimental data points achieved an R₂value of 0.9823, demonstrating robust modeling. This research underscores neutron imaging’s role in nondestructive mapping and machine learning applications for advancing battery detection technologies and improving performance predictions.
 summary: '**_ACS Energy Letters._** (2025-06) The booming electric vehicle market is fueling demand for higher energy density and enhanced safety in lithium-ion batteries. State of charge (SOC), a critical metric for assessing battery performance, provides insights into the energy status, health, and safety of the battery.'
 tags: [publication, journal]
-featured: false
+featured: true
+weight: -3
 url_pdf: https://pubs.acs.org/doi/pdf/10.1021/acsenergylett.5c01167
 url_code: ''
 url_dataset: ''

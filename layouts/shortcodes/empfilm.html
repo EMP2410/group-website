@@ -1,0 +1,37 @@
+{{/* empfilm: a click-to-play 16:9 video frame.
+     Usage:  {{< empfilm video="clip.mp4" poster="poster.jpg" caption="Our 2025 group trip." >}}
+     poster  → shown until play is pressed; omit it to load the <video> directly.
+     video   → required; resolved against assets/media/.
+     caption → optional line rendered under the frame, Markdown allowed. */}}
+{{- $videoSrc := .Get "video" | default "" -}}
+{{- $posterName := .Get "poster" | default "" -}}
+{{- $caption := .Get "caption" | default "" -}}
+
+{{- $videoURL := "" -}}
+{{- with $videoSrc -}}
+  {{- with resources.Get (path.Join "media" .) -}}{{- $videoURL = .RelPermalink -}}{{- end -}}
+{{- end -}}
+
+{{- $posterURL := "" -}}
+{{- with $posterName -}}
+  {{- with resources.Get (path.Join "media" .) -}}{{- $posterURL = .RelPermalink -}}{{- end -}}
+{{- end -}}
+
+{{- if $videoURL -}}
+  <div class="emp-film{{ with $posterURL }} has-poster{{ end }}" data-emp-film>
+    {{- with $posterURL }}
+    <img class="emp-film__poster" src="{{ . }}" alt="" loading="lazy" />
+    {{- end }}
+    <video class="emp-film__video" src="{{ $videoURL }}" playsinline preload="metadata" controls></video>
+    {{- with $posterURL }}
+    <button class="emp-film__play" type="button" data-emp-film-play aria-label="Play video">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor" aria-hidden="true" focusable="false"><path d="M8 5.14v13.72L19 12 8 5.14z"/></svg>
+    </button>
+    {{- end }}
+  </div>
+  {{- with $caption }}
+  <p class="emp-film-caption">{{ . | markdownify }}</p>
+  {{- end }}
+{{- else -}}
+  <p class="text-warning">[video not found: {{ $videoSrc }}]</p>
+{{- end -}}

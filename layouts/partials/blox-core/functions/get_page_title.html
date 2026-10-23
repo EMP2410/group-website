@@ -1,0 +1,12 @@
+{{ $title := "" }}
+{{ with .Params.seo.title }}
+  {{ $title = replace . "{brand}" site.Title }}
+{{ else }}
+  {{ $title = .Title | default site.Title }}
+  {{ if ne $title site.Title }}{{ $title = printf "%s | %s" $title site.Title }}{{ end }}
+{{ end }}
+{{/* 覆盖 blox-core@v0.3.1 的同名 partial。
+     site.Title 里混入了 <sub> 等排版标签（navbar 需要它们），
+     但本 partial 的产物会流进 og:title、JSON-LD 这些机器可读的位置，
+     不剥掉就会显示成字面尖括号。这里统一输出纯文本。 */}}
+{{ return (replaceRE "<[^>]+>" "" $title) }}

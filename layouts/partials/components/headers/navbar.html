@@ -25,7 +25,8 @@
             {{with site.Params.header.image.width}}width="{{.}}"{{end}}
             {{with site.Params.header.image.height}}height="{{.}}"{{end}}>
           {{- else -}}
-            {{- site.Title | safeHTML -}}
+            {{- /* 把标题里的 "&" 包进 .amp，让 custom.scss 能单独淡化它。 */ -}}
+            {{- replace site.Title "&" `<span class="amp">&amp;</span>` | safeHTML -}}
           {{- end -}}
         </a>
       </div>
@@ -46,7 +47,8 @@
           {{with site.Params.header.image.width}}width="{{.}}"{{end}}
           {{with site.Params.header.image.height}}height="{{.}}"{{end}}>
         {{- else -}}
-          {{- site.Title | safeHTML -}}
+          {{- /* 同上，移动端品牌名保持一致。 */ -}}
+          {{- replace site.Title "&" `<span class="amp">&amp;</span>` | safeHTML -}}
         {{- end -}}
         </a>
       </div>

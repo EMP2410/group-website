@@ -1,15 +1,17 @@
 // Custom site-wide styles
 // Loaded by Hugo Blox via assets/scss/main.scss (@import "custom";)
 
-/* Translucent frosted-glass navbar with a narrow horizontal gradient
-   (±3° hue wobble around the peach-pink mid-stop). Visually reads as
-   a single soft pink tone with a faint left→right shift. backdrop-filter
-   blur still conveys elevation when the hero image shows through on scroll. */
+/* Translucent frosted-glass navbar with a CityU-blue horizontal gradient.
+   Light mode: light CityU blue → mid blue → desaturated dark CityU blue.
+   Dark mode: deeper CityU blue tones at lower alpha. The frosted
+   backdrop-filter blur still conveys elevation when the hero image
+   shows through on scroll. Alpha is intentionally low so the page
+   below remains visible. */
 .navbar {
   background: linear-gradient(90deg,
-    rgba(248, 212, 215, 0.72) 0%,
-    rgba(245, 205, 225, 0.72) 50%,
-    rgba(235, 205, 235, 0.72) 100%);
+    rgba(165, 200, 230, 0.58) 0%,
+    rgba(135, 175, 220, 0.58) 50%,
+    rgba(125, 145, 200, 0.58) 100%);
   backdrop-filter: saturate(180%) blur(14px);
   -webkit-backdrop-filter: saturate(180%) blur(14px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -17,11 +19,195 @@
 }
 .dark .navbar {
   background: linear-gradient(90deg,
-    rgba(150, 95, 140, 0.68) 0%,
-    rgba(140, 90, 150, 0.68) 50%,
-    rgba(130, 90, 165, 0.68) 100%);
+    rgba(50, 110, 165, 0.55) 0%,
+    rgba(40, 85, 150, 0.55) 50%,
+    rgba(35, 65, 130, 0.55) 100%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: none;
+}
+
+/* Navbar 品牌名里的 "&" 由 navbar.html 包成 .amp。用 opacity 而非固定灰色，
+   这样它继承 currentColor 后淡化，明暗主题自动适配，也能在半透明渐变背景上
+   透出下层颜色。 */
+.navbar-brand .amp {
+  opacity: 0.45;
+}
+
+/* =========================================================
+   A2. 首页顶部导航栏透明态
+   =========================================================
+   At the top of the homepage the hero video runs full-bleed underneath the
+   sticky navbar, so the frosted panel is the one thing occluding the footage.
+   emp-navbar.js toggles `body.navbar-transparent` while the viewer is within
+   ~100px of the top, and the panel becomes plain white text over the video.
+
+   The faint top-down scrim below is deliberate, not an oversight: the hero's
+   own scrim (see .emp-hero__scrim) is a left-weighted gradient that reaches
+   zero alpha past 78% of the width, while the nav links are right-aligned.
+   Without a little extra shade on the right, white links would wash out
+   whenever the video cuts to a bright frame. It reads as "no background" on
+   dark footage but keeps a legibility floor on bright footage. */
+.navbar {
+  transition: background-color 0.28s ease,
+              backdrop-filter 0.28s ease,
+              -webkit-backdrop-filter 0.28s ease,
+              border-color 0.28s ease;
+}
+
+body.navbar-transparent .navbar {
+  background: linear-gradient(to bottom,
+    rgba(8, 20, 36, 0.55) 0%,
+    rgba(8, 20, 36, 0.25) 60%,
+    rgba(8, 20, 36, 0) 100%);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-bottom-color: transparent;
+
+  /* The scrim above is vertical, and that matters for the 1px border strip.
+     The navbar paints with `background-clip: border-box` but positions the
+     gradient against `background-origin: padding-box`, i.e. 69px of a 70px
+     border-box. With the default `background-repeat: repeat`, that leftover
+     1px row restarts the gradient at its 0% stop — the darkest one — so the
+     video shows through a near-opaque #081428 hairline. A horizontal gradient
+     (the frosted state) repeats seamlessly across a 1px horizontal strip,
+     which is why the artifact only ever appeared in this state.
+     Clipping to the padding box keeps the scrim inside the content area and
+     leaves the border strip genuinely transparent, which is what
+     `border-bottom-color: transparent` above was already asking for. */
+  background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+}
+
+/* Text has to flip to white too. The theme's own `.navbar-light` rules win on
+   specificity for hover/active, so each of those states needs its own override
+   — otherwise hovering a link turns it dark grey (rgba(0,0,0,.7)) over the
+   video. `highlight_active_link` is off in params.yaml, but the active style is
+   covered anyway so enabling it later does not regress this. */
+body.navbar-transparent .navbar-brand,
+body.navbar-transparent #navbar-main .navbar-nav .nav-link,
+body.navbar-transparent .nav-icons .nav-link,
+body.navbar-transparent .navbar-toggler {
+  color: #fff;
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+}
+
+body.navbar-transparent #navbar-main .navbar-nav .nav-link:hover,
+body.navbar-transparent #navbar-main .navbar-nav .nav-link:focus,
+body.navbar-transparent .navbar-brand:hover,
+body.navbar-transparent .nav-icons .nav-link:hover,
+body.navbar-transparent #navbar-main .navbar-nav .nav-link.active {
+  color: #fff;
+  opacity: 0.75;
+}
+
+/* On touch devices :hover sticks after a tap and would leave a menu item
+   permanently dimmed, so only apply it to real pointers. */
+@media (hover: hover) and (pointer: fine) {
+  body.navbar-transparent #navbar-main .navbar-nav .nav-link:hover {
+    opacity: 0.75;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar {
+    transition: none;
+  }
+}
+
+/* Expanded mobile menu. The theme drops the panel out of flow
+   (`.navbar-collapse { position: absolute; top: 50px; width: 100%; z-index: 1031 }`)
+   but hard-codes its fill to an opaque `#fff`, so the panel stops dead against
+   the translucent navbar above it. On the homepage hero that seam measures ~9:1
+   contrast, and the panel's own bottom edge cuts into the video just as hard.
+
+   The panel now borrows the navbar's frosted-glass language — translucent fill
+   plus a stronger blur — so the page reads through it instead of halting at it.
+   `backdrop-filter` needs both the prefixed and unprefixed form, same as above.
+
+   The fill sits at 0.90 rather than the glassier 0.72 it started at. Off the
+   homepage the panel lands on top of body copy, and at 0.72 enough of that copy
+   came through to read as noise interleaved with the menu items. 0.90 still
+   lets the blur and a hint of tone through on a light page, but nothing legible
+   behind it competes with the links. */
+@media (max-width: 991.98px) {
+  .navbar-collapse {
+    background-color: rgba(255, 255, 255, 0.90);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 18px 34px rgba(12, 32, 56, 0.14);
+  }
+
+  .dark .navbar-collapse {
+    background-color: rgba(40, 42, 54, 0.90);
+    border-bottom-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
+  }
+
+  /* The gate below is `:is(.collapsing, .show)`, not plain `.show`, and that is
+     the whole fix for a white flash on open. Bootstrap 4.6 runs the panel's
+     350ms height animation with the classes `collapsing` and NO `show` — `.show`
+     only lands when the transition ends. Gating on `.show` therefore left the
+     panel on its light base fill for the entire animation and then snapped it to
+     the dark scrim, which read as a white panel opening and then turning to
+     glass. `:is(.collapsing, .show)` means "not collapsed", so the scrim is in
+     place from the first painted frame. Only the homepage shows this: on inner
+     pages both branches resolve to the same light fill, so the swap is invisible.
+
+     The panel also pins the navbar's scrim, which otherwise fades to zero at its
+     own bottom edge (it does so to keep the brand text off a dark band) — and
+     that zero stop lands exactly where the panel begins, which is the seam this
+     block exists to remove. One flat alpha closes the join and finally gives the
+     links headroom over bright footage (white text had bottomed out at 4.54:1,
+     0.04 above the AA floor). */
+  body.navbar-transparent:has(.navbar-collapse:is(.collapsing, .show)) .navbar {
+    background: rgba(8, 20, 36, 0.48);
+    /* The `background` shorthand resets background-clip; the padding-box value
+       is what keeps the scrim out of the 1px border strip (see the note above
+       on why the transparent state needs it). */
+    background-clip: padding-box;
+    -webkit-background-clip: padding-box;
+  }
+
+  body.navbar-transparent .navbar-collapse:is(.collapsing, .show) {
+    background-color: rgba(8, 20, 36, 0.48);
+    border-bottom-color: transparent;
+    /* Same reason the light panel carries a shadow: the scrim must not simply
+       stop at the panel's bottom edge, which still measured a 2.4-2.5x
+       luminance jump across one row. A downward shadow in the same hue feathers
+       the edge into the footage instead of cutting it. */
+    box-shadow: 0 16px 30px rgba(8, 20, 36, 0.34);
+  }
+
+  /* The white-text rule further up would otherwise paint these links white on
+     the panel; restore the theme's dark colour for the light panel only. The
+     `:is()` variant below flips them back to white for the scrimmed panel, and
+     carries the same "not collapsed" gate — matching only on `.show` would show
+     dark links on the dark scrim for the length of the opening animation.
+     `#navbar-main` is repeated to tie the white rule's (1 id, 3 class)
+     specificity — a media query adds none of its own, so without the ID these
+     links would stay white-on-white. */
+  body.navbar-transparent #navbar-main .navbar-collapse .nav-link {
+    color: #34495e;
+    text-shadow: none;
+  }
+
+  body.navbar-transparent #navbar-main .navbar-collapse .nav-link:hover,
+  body.navbar-transparent #navbar-main .navbar-collapse .nav-link:focus {
+    color: rgba(0, 0, 0, 0.7);
+    opacity: 1;
+  }
+
+  body.navbar-transparent #navbar-main .navbar-collapse:is(.collapsing, .show) .nav-link {
+    color: #fff;
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.45);
+  }
+
+  body.navbar-transparent #navbar-main .navbar-collapse:is(.collapsing, .show) .nav-link:hover,
+  body.navbar-transparent #navbar-main .navbar-collapse:is(.collapsing, .show) .nav-link:focus {
+    color: #fff;
+    opacity: 0.75;
+  }
 }
 
 /* Circular profile avatar — used by the Hero bio block (fullimage avatar mode). */
@@ -51,7 +237,10 @@
 
 /* Hero bio: circular avatar floats left, intro text wraps around it
    via CSS shape-outside. The text hugs the avatar's circular edge
-   instead of sitting in a side-by-side column. */
+   instead of sitting in a side-by-side column.
+   NOTE: no longer referenced from content/_index.md (superseded by the
+   hero-slider block); kept because the `fullimage` shortcode still emits
+   `.profile-avatar` on author pages. */
 .hero-bio {
   max-width: 880px;
   margin: 1.25rem auto 0;
@@ -71,18 +260,82 @@
   /* no flex — text flows naturally around the floated avatar */
 }
 
-/* Hero section: pull it up 80px so the hero image overlaps the bottom
-   10px of the navbar. Combined with the navbar's translucent backdrop-
-   filter, the hero image shows through the navbar's frosted glass for
-   an immersive header effect. */
-.home-section.wg-markdown.bleed-hero {
-  margin-top: -80px;
+/* ---- Content width scale ------------------------------------------------
+   Every layer of the site caps its own content width in px, chosen for a
+   ~1440px viewport. Past that they all stay frozen while the viewport keeps
+   growing, so at 3840px the reading column is only 27% of the screen. These
+   four variables are the single place that width ladder is defined; the
+   --emp-*-w overrides further down re-step it at 1600/2200/3200px.
+     content  narrow homepage sections + hero lead text
+     section  non-narrow page sections (e.g. /people/ wg-people)
+     inner    .universal-wrapper (post, publication, and other list pages)
+     nav      navbar container, kept at or above the widest body layer so the
+              menu never ends up inset relative to the text below it */
+:root {
+  --emp-content-w: 1040px;
+  --emp-section-w: 1290px;
+  --emp-inner-w: 1000px;
+  --emp-nav-w: 1290px;
 }
 
 /* Narrow selected homepage sections: shrink the inner container so the content
    sits further from the viewport edges (matches the hero-lead intro width). */
 .home-section.section-narrow .container {
-  max-width: 1040px;
+  max-width: var(--emp-content-w);
+}
+
+/* Non-narrow sections (list pages such as /people/ wg-people) otherwise fall
+   back to the theme's 1290px. Exclude the hero: it carries no section-narrow
+   class but its .container is the full-bleed slide track, and capping it
+   would crop the carousel. */
+.home-section:not(.section-narrow):not(.wg-hero-slider) .container {
+  max-width: var(--emp-section-w);
+}
+
+/* The other two caps belong to the theme and are keyed off their own
+   breakpoints, so they need explicit consumers here. */
+@media (min-width: 1001px) {
+  .universal-wrapper {
+    width: var(--emp-inner-w);
+  }
+}
+
+@media (min-width: 1200px) {
+  #navbar-main > .container-xl {
+    max-width: var(--emp-nav-w);
+  }
+}
+
+/* Re-step the ladder on very large viewports. Anything at or below 1599px is
+   untouched, so the 1280/1440 baselines stay byte-for-byte as they are.
+   The navbar grows more slowly than the body on purpose: a wider menu bar
+   buys nothing, and tracking the body width would push the menu items out
+   toward the viewport edge. */
+@media (min-width: 1600px) {
+  :root {
+    --emp-content-w: 1200px;
+    --emp-section-w: 1400px;
+    --emp-inner-w: 1160px;
+    --emp-nav-w: 1400px;
+  }
+}
+
+@media (min-width: 2200px) {
+  :root {
+    --emp-content-w: 1360px;
+    --emp-section-w: 1500px;
+    --emp-inner-w: 1320px;
+    --emp-nav-w: 1500px;
+  }
+}
+
+@media (min-width: 3200px) {
+  :root {
+    --emp-content-w: 1600px;
+    --emp-section-w: 1640px;
+    --emp-inner-w: 1560px;
+    --emp-nav-w: 1640px;
+  }
 }
 
 /* Section 3 (coders.png banner) is a markdown block with no body content.
@@ -93,4 +346,506 @@
 .home-section.section-banner-coders .row,
 .home-section.section-banner-coders .col-12 {
   display: none;
+}
+
+/* Size the section box to the image instead of padding it to a fixed height.
+   coders.png is 3403x1188 (2.864:1) and is NOT a full-bleed photo: it carries
+   real content in both halves (dark/text region x 7.1%-41.7%, photo region
+   x 50%-100%) wrapped in ~150px of pure white top and bottom. The markdown
+   block's `spacing: padding: ['200px','0',...]` renders as an inline
+   `padding:200px 0`, pinning the box to a constant 400px tall, so
+   background-size:cover then crops by whatever the ratio mismatch is:
+     390px  wide -> scale 0.337, shows only 34% of the width (near-blank)
+     1920px wide -> 135px cut off top and bottom, right at the content edge
+     3840px wide -> 470px cut off top and bottom = 40% of the image height
+   Giving the box the image's own ratio makes cover fit exactly, so nothing is
+   cropped at any width. Heights become 136px @390, 503px @1440, 670px @1920.
+   This selector beats the theme's `.home-section { padding: 110px 0 }`, and the
+   block no longer sets `spacing: padding`, so no inline style competes. */
+.home-section.section-banner-coders {
+  padding: 0;
+  aspect-ratio: 3403 / 1188;
+}
+
+/* A 2.864:1 band at full 4K bleed would be 1341px tall - 62% of a 2160px
+   viewport. Cap the bleed instead. Both the image's own margins and the
+   section background are pure white, so the area outside the cap is
+   invisible and the band still reads as full width. */
+@media (min-width: 2200px) {
+  .home-section.section-banner-coders {
+    max-width: 2200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+/* =========================================================
+   A. 首页 Hero 轮播 (hero-slider block)
+   ========================================================= */
+
+/* Own the whole box: 100vh, slide under the fixed navbar so the translucent
+   frosted navbar reads as glass over the footage. `fullscreen` (set in front
+   matter) keeps template.scss's white-card rules from applying. */
+.home-section.wg-hero-slider {
+  position: relative;
+  height: 100vh;
+  min-height: 560px;
+  margin-top: -70px;
+  overflow: hidden;
+  background: #0a1524;
+}
+
+/* The parser always emits an empty .home-section-bg layer; the slides own the
+   background instead. */
+.home-section.wg-hero-slider > .home-section-bg {
+  display: none;
+}
+
+.emp-hero {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.emp-hero__track {
+  position: absolute;
+  inset: 0;
+}
+
+/* Crossfade: every slide is stacked; only the active one is visible. */
+.emp-hero__slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  pointer-events: none;
+}
+
+.emp-hero__slide.is-active {
+  opacity: 1;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+.emp-hero__video,
+.emp-hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* The theme ships a global `video { max-height: 400px }` that would leave a
+     dead band under a full-bleed hero, and caps the About film mid-frame. */
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Ken Burns — still images only. Videos are already moving, so zooming them on
+   top of their own motion reads as a mistake. */
+.emp-hero__bg {
+  transform: scale(1.06);
+  transition: transform 7s linear;
+}
+
+.emp-hero__slide.is-active .emp-hero__bg {
+  transform: scale(1);
+}
+
+/* Two-axis scrim: a vertical wash for the overall mood plus a left-weighted
+   one so the headline stays legible over any frame. */
+.emp-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(8, 20, 36, 0.72) 0%, rgba(8, 20, 36, 0.28) 52%, rgba(8, 20, 36, 0) 78%),
+    linear-gradient(to bottom, rgba(8, 20, 36, 0.5) 0%, rgba(8, 20, 36, 0.2) 38%, rgba(8, 20, 36, 0.8) 100%);
+}
+
+/* Centred without CSS `min()` — Dart Sass parses `min()` as its own function
+   and rejects the mixed-unit `calc()` argument. `left/right: 0` + auto margins
+   is the portable equivalent.
+
+   max-width must match `.home-section.section-narrow .container` above. Both
+   are fixed, so a mismatch doesn't average out — at 1180px the hero headline
+   sat a constant ~70px left of the About/Team/News copy below it, and the gap
+   only shrank on viewports narrower than 1180px. Same reason the gutter below
+   tracks the section padding rather than being hardcoded. */
+.emp-hero__body {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-46%);
+  max-width: var(--emp-content-w);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  color: #fff;
+}
+
+@media (max-width: 575.98px) {
+  .emp-hero__body {
+    padding: 0 1rem;
+  }
+}
+
+/* Staggered rise-in, matching the reference site's 0.3/0.5/0.7s cadence. */
+.emp-hero__title,
+.emp-hero__subtitle,
+.emp-hero__cta {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.emp-hero__title {
+  font-size: clamp(2.1rem, 5.2vw, 3.6rem);
+  font-weight: 700;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  /* Must be explicit: the theme sets `h1..h6 { color: #313131 }`, which beats
+     the white inherited from .emp-hero__body. */
+  color: #fff;
+  text-shadow: 0 4px 22px rgba(0, 0, 0, 0.45);
+  transition-delay: 0.25s;
+}
+
+.emp-hero__subtitle {
+  max-width: 46rem;
+  margin-top: 0.85rem;
+  font-size: clamp(1rem, 1.7vw, 1.25rem);
+  font-weight: 300;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.45);
+  transition-delay: 0.45s;
+}
+
+.emp-hero__subtitle p:last-child {
+  margin-bottom: 0;
+}
+
+.emp-hero__cta {
+  margin-top: 1.1rem;
+  transition-delay: 0.65s;
+}
+
+.emp-hero__cta a {
+  display: inline-block;
+  padding: 0.5rem 1.1rem;
+  font-size: 0.95rem;
+  color: #fff;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  border-radius: 6px;
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.emp-hero__cta a:hover {
+  color: #1d4e89;
+  background: rgba(255, 255, 255, 0.94);
+  text-decoration: none;
+}
+
+.emp-hero__slide.is-active .emp-hero__title,
+.emp-hero__slide.is-active .emp-hero__subtitle,
+.emp-hero__slide.is-active .emp-hero__cta {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.emp-hero__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  font-size: 1.1rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 50%;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.emp-hero__arrow:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.emp-hero__arrow--prev { left: 1.6rem; }
+.emp-hero__arrow--next { right: 1.6rem; }
+
+.emp-hero__dots {
+  position: absolute;
+  bottom: 1.7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  /* Must be >= the expanded dot hit box (see .emp-hero__dot::after), or
+     neighbouring rings overlap and the right-hand dot steals the click. */
+  gap: 24px;
+}
+
+.emp-hero__dot {
+  position: relative;
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.45);
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+/* A 10px dot is far under the 24x24 WCAG 2.2 minimum target. This transparent
+   pseudo-element enlarges the hit area to 34px without changing the visual
+   size. Keep the inset and the .emp-hero__dots gap in sync so rings don't
+   overlap and swallow each other's clicks. */
+.emp-hero__dot::after {
+  content: '';
+  position: absolute;
+  inset: -12px;
+}
+/* `scale(1.25)` on the active dot would also scale its ring back out to 42.5px,
+   re-introducing overlap against the 34px spacing. Scale the ring back down by
+   the inverse so the hit box stays 34px in every state: 34 * 1.25 * 0.8 = 34. */
+.emp-hero__dot.is-active::after {
+  transform: scale(0.8);
+}
+
+.emp-hero__dot:hover {
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.emp-hero__dot.is-active {
+  background: #fff;
+  transform: scale(1.25);
+}
+
+/* Break at the navbar's collapse point, not at 768px. The navbar drops from
+   70px to 50px tall exactly when it collapses at 991.98px, so the hero's
+   negative top margin has to follow it: the old 768px breakpoint left the
+   769-991px band (phone landscape, tablet split view, ~900px tablets) pulling
+   the hero up by 70px under a 50px navbar, pushing 20px of the hero above the
+   viewport and 20px of it below the fold.
+
+   72vh rather than 88vh. Every hero slide is 1920x1080; at 88vh a 390x844
+   phone rendered a 390x743 box, and `cover` against a 16:9 asset in a 0.525
+   box crops 70.5% of the width — roughly a 28% vertical sliver of the frame.
+   72vh gives 390x608, cropping 64%. A tall box is unavoidable on a portrait
+   phone; this just stops eating the extra 6% that pushes subjects off-frame.
+   min-height follows, or short phones snap back up to the taller 560px box. */
+@media (max-width: 991.98px) {
+  .home-section.wg-hero-slider {
+    height: 72vh;
+    min-height: 480px;
+    margin-top: -50px;
+  }
+  .emp-hero__arrow {
+    width: 40px;
+    height: 40px;
+  }
+  .emp-hero__arrow--prev { left: 0.7rem; }
+  .emp-hero__arrow--next { right: 0.7rem; }
+  .emp-hero__dots { bottom: 1.1rem; }
+}
+
+/* =========================================================
+   B. About / Team 段排版（借鉴参考站，配色改用 lab-site 蓝）
+   ========================================================= */
+
+/* The theme stamps `text-center` on every section-heading and defines
+   `.text-center { text-align: center !important }`, so any plain `text-align`
+   here loses the cascade outright — About and Our Team have always rendered
+   centred. Don't fight it: centre the underline under the heading instead.
+   (`justify-content` was inert regardless: .section-heading is a `.col-12`,
+   a block, so it has no flex formatting context to justify within.) */
+.home-section.emp-section .section-heading {
+  margin-bottom: 1.9rem;
+}
+
+.home-section.emp-section .section-heading h1 {
+  position: relative;
+  display: inline-block;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #16233a;
+}
+
+.home-section.emp-section .section-heading h1::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -10px;
+  width: 50px;
+  height: 3px;
+  border-radius: 2px;
+  background: #1d5fa8;
+  transform: translateX(-50%);
+}
+
+.dark .home-section.emp-section .section-heading h1 {
+  color: #eaf1f8;
+}
+
+/* About 引言段：比正文大一档，承担参考站 "about-intro" 的角色 */
+.emp-about-intro {
+  font-size: 1.18rem;
+  line-height: 1.75;
+  color: #16233a;
+}
+
+.emp-about-body {
+  font-size: 1.02rem;
+  line-height: 1.8;
+  color: #4a5567;
+}
+
+.emp-about-body p:last-child {
+  margin-bottom: 0;
+}
+
+.emp-about-body a,
+.emp-about-intro a {
+  color: #1d5fa8;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 16:9 影片框。poster 默认显示，点播放才换成 <video> */
+.emp-film {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  margin-top: 2.2rem;
+  background: #000;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(12, 30, 60, 0.12);
+}
+
+.emp-film__poster,
+.emp-film__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  border: 0;
+}
+
+.emp-film__poster {
+  object-fit: cover;
+}
+
+.emp-film__video {
+  object-fit: contain;
+  display: none;
+}
+
+.emp-film.is-playing .emp-film__poster,
+.emp-film.is-playing .emp-film__play {
+  display: none;
+}
+
+.emp-film.is-playing .emp-film__video {
+  display: block;
+}
+
+.emp-film__play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68px;
+  height: 68px;
+  padding-left: 4px;
+  color: #fff;
+  font-size: 1.5rem;
+  background: rgba(10, 26, 46, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 50%;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.emp-film__play:hover {
+  background: #1d5fa8;
+  transform: translate(-50%, -50%) scale(1.08);
+}
+
+.emp-film-caption {
+  margin-top: 0.8rem;
+  text-align: center;
+  font-size: 0.92rem;
+  color: #6b7280;
+}
+
+.emp-film-caption a {
+  color: #1d5fa8;
+}
+
+/* Team 段的成员分类列表 */
+.emp-team-list {
+  margin: 1rem 0 1.6rem;
+  padding: 0;
+  list-style: none;
+}
+
+.emp-team-list li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 0.45rem;
+  font-size: 1rem;
+  color: #4a5567;
+}
+
+.emp-team-list li::before {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0.62em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #1d5fa8;
+  opacity: 0.55;
+}
+
+.emp-team-cta {
+  margin-top: 1.4rem;
+}
+
+.emp-cta {
+  display: inline-block;
+  padding: 0.55rem 1.4rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  background: #1d5fa8;
+  border-radius: 6px;
+  transition: background 0.25s ease;
+}
+
+.emp-cta:hover {
+  color: #fff;
+  background: #17518f;
+  text-decoration: none;
 }
