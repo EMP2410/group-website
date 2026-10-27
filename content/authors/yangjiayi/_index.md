@@ -1,11 +1,12 @@
 ---
 # Display name
-title: YANG Jiayi
+title: YANG Jiayi
+
 slug: yangjiayi
 
 # Full Name (for SEO)
-first_name: YANG
-last_name: Jiayi
+first_name: Jiayi
+last_name: YANG
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Researchers
-
+  - Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---

@@ -1,0 +1,60 @@
+{{/* Hugo Blox: People (site-local override)
+
+     The theme renders every group as one uniform grid of portrait tiles, which
+     flattens the hierarchy of a large lab. This override keeps the theme's
+     data model -- membership still comes from the `user_groups` front matter of
+     each author page -- but lets every tier of the lab pick its own card
+     style through the `groups` list in content/people/index.md:
+
+       leader - one wide featured card (the lab Director)
+       pi     - cards with affiliation and research interests
+       member - compact tiles (postdocs, students, staff)
+
+     Documentation: https://hugoblox.com/blocks/
+     License: https://github.com/HugoBlox/hugo-blox-builder/blob/main/LICENSE.md */}}
+
+{{/* Initialise */}}
+{{ $page := .wcPage }}
+{{ $block := .wcBlock }}
+{{ $show_social := $block.design.show_social | default false }}
+{{ $show_interests := $block.design.show_interests | default false }}
+{{ $show_organizations := $block.design.show_organizations | default false }}
+{{ $show_role := $block.design.show_role | default true }}
+{{ $show_bio := $block.design.show_bio | default false }}
+{{ $authors := where site.Pages "Section" "authors" }}
+
+<div class="row justify-content-center people-widget emp-people">
+  {{ with $block.content.title }}
+    <div class="section-heading col-12 mb-3 text-center">
+      <h1 class="mb-0">{{ . | markdownify | emojify }}</h1>
+      {{ with $block.content.subtitle }}<p class="mt-1">{{ . | markdownify | emojify }}</p>{{ end }}
+    </div>
+  {{ end }}
+
+  {{ with $block.content.text }}
+    <div class="col-md-12">{{ . | emojify | $page.RenderString }}</div>
+  {{ end }}
+
+  {{ range $block.content.groups }}
+    {{ $group := . }}
+    {{ $members := partial "func/emp-people-group" (dict "authors" $authors "group" $group) }}
+    {{ if $members }}
+      {{ $layout := $group.layout | default "member" }}
+      <div class="col-12 emp-people-group emp-people-group--{{ $layout }}">
+        <h2 class="emp-people-group__title">{{ $group.name | markdownify | emojify }}</h2>
+        <div class="emp-people-grid emp-people-grid--{{ $layout }}">
+          {{ range $members }}
+            {{ partial "func/emp-person-card" (dict
+                "person" .
+                "layout" $layout
+                "show_role" $show_role
+                "show_organizations" (and $show_organizations (ne $layout "member"))
+                "show_social" $show_social
+                "show_interests" (and $show_interests (ne $layout "member"))
+                "show_bio" (and $show_bio (eq $layout "leader"))) }}
+          {{ end }}
+        </div>
+      </div>
+    {{ end }}
+  {{ end }}
+</div>

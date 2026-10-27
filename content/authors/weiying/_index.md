@@ -1,11 +1,12 @@
 ---
 # Display name
-title: WEI Ying
+title: WEI Ying
+
 slug: weiying
 
 # Full Name (for SEO)
-first_name: WEI
-last_name: Ying
+first_name: Ying
+last_name: WEI
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Researchers
-
+  - Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---

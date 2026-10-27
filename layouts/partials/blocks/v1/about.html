@@ -59,8 +59,14 @@
         {{ end }}
       </div>
 
+      {{ $social := slice }}
+      {{ range $person.social }}
+        {{ $entry := . }}
+        {{ if .link }}{{ $social = $social | append $entry }}{{ end }}
+      {{ end }}
+      {{ if $social }}
       <ul class="network-icon" aria-hidden="true">
-        {{ range $person.social }}
+        {{ range $social }}
         {{ $pack := or .icon_pack "fas" }}
         {{ $pack_prefix := $pack }}
         {{ if in (slice "fab" "fas" "far" "fal") $pack }}
@@ -81,6 +87,7 @@
         </li>
         {{ end }}
       </ul>
+      {{ end }}
 
     </div>
   </div>
@@ -124,6 +131,29 @@
       {{ end }}
 
     </div>
+
+    {{/* Custom Experience block (rendered from front matter `experience:` list) */}}
+    {{ with $person.experience }}
+    <div class="row mt-3">
+      <div class="col-12">
+        <div class="section-subheading">{{ i18n "experience" | default "Experience" | markdownify }}</div>
+        <ul class="ul-experience fa-ul mb-0">
+          {{ range . }}
+          <li>
+            <i class="fa-li fas fa-briefcase"></i>
+            <div class="description">
+              <p class="position">
+                {{- .title -}}
+                {{- with .period }} <span class="period">({{ . }})</span>{{ end -}}
+              </p>
+              {{- with .institution }}<p class="institution">{{ . }}</p>{{ end -}}
+            </div>
+          </li>
+          {{ end }}
+        </ul>
+      </div>
+    </div>
+    {{ end }}
 
     {{/* Custom Awards block (rendered from front matter `awards:` list) */}}
     {{ with $person.awards }}

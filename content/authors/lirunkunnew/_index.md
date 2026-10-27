@@ -1,11 +1,12 @@
 ---
 # Display name
-title: LI Runkun (new)
+title: LI Runkun
+
 slug: lirunkunnew
 
 # Full Name (for SEO)
-first_name: LI
-last_name: Runkun (new)
+first_name: Runkun
+last_name: LI
 
 # Username (this should match the folder name)
 authors:
@@ -51,13 +52,12 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---
 
-LI Runkun (new) - PhD student
+LI Runkun - PhD student
 
 <!--more-->
 

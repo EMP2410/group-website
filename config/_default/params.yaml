@@ -47,7 +47,7 @@ header:
 footer:
   copyright:
     # 主题的 site_footer_license.html 替换的是字面量 {year}，写成 {2026} 会原样输出花括号。
-    notice: '© {year} CityU EMP'
+    notice: '© {year} JC STEM Lab of Energy and Materials Physics. All rights reserved.'
     license:
       enable: true
       allow_derivatives: false

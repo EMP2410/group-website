@@ -1,11 +1,12 @@
 ---
 # Display name
-title: LIU Fangyan
+title: LIU Fangyan
+
 slug: liufangyan
 
 # Full Name (for SEO)
-first_name: LIU
-last_name: Fangyan
+first_name: Fangyan
+last_name: LIU
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---

@@ -1,11 +1,12 @@
 ---
 # Display name
-title: ZHANG Yangqian
+title: ZHANG Yangqian
+
 slug: zhangyangqian
 
 # Full Name (for SEO)
-first_name: ZHANG
-last_name: Yangqian
+first_name: Yangqian
+last_name: ZHANG
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---

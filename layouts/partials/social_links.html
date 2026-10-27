@@ -1,0 +1,35 @@
+{{/* Local override of the theme's `social_links` partial.
+
+     The bundled member pages still carry placeholder social entries with an
+     empty `link`. The theme renders those as an icon pointing back to the site
+     root, so entries without a link are skipped here instead. Everything else
+     matches the upstream partial exactly. */}}
+{{ $entries := slice }}
+{{ range .Params.social }}
+  {{ $entry := . }}
+  {{ with .link }}{{ $entries = $entries | append $entry }}{{ end }}
+{{ end }}
+{{ if $entries }}
+<ul class="network-icon" aria-hidden="true">
+  {{ range $entries }}
+    {{ $pack := or .icon_pack "fas" }}
+    {{ $pack_prefix := $pack }}
+    {{ if in (slice "fab" "fas" "far" "fal") $pack }}
+      {{ $pack_prefix = "fa" }}
+    {{ end }}
+    {{ $link := .link }}
+    {{ $scheme := (urls.Parse $link).Scheme }}
+    {{ $target := "" }}
+    {{ if not $scheme }}
+      {{ $link = .link | relLangURL }}
+    {{ else if in (slice "http" "https") $scheme }}
+      {{ $target = "target=\"_blank\" rel=\"noopener\"" }}
+    {{ end }}
+    <li>
+      <a href="{{ $link | safeURL }}" {{ $target | safeHTMLAttr }} aria-label="{{ .icon }}">
+        <i class="{{ $pack }} {{ $pack_prefix }}-{{ .icon }}"></i>
+      </a>
+    </li>
+  {{end}}
+</ul>
+{{ end }}

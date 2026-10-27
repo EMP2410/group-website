@@ -1,0 +1,39 @@
+{{/* Resolves one People group into an ordered list of author pages.
+
+     Params:
+       authors - every page in the `authors` section
+       group   - the group map configured in content/people/index.md:
+                  name    - the heading shown on the page
+                  group   - the value matched against an author's `user_groups`
+                             list (defaults to name)
+                  members - optional explicit list of author folder ids; when
+                            present it fixes the order of the tier and bypasses
+                            the group query
+
+     Returns a slice of pages, ready to be ranged over. The result is always
+     built by appending to an empty slice so that its element type stays the
+     same on both branches. */}}
+{{ $authors := .authors }}
+{{ $group := .group }}
+{{ $key := $group.group | default $group.name }}
+
+{{ $sort_by := $group.sort_by | default "Params.last_name" }}
+{{ $sort_by = partial "blox-core/functions/get_sort_by_parameter" $sort_by }}
+{{ $sort_ascending := $group.sort_ascending | default true }}
+{{ $sort_order := cond $sort_ascending "asc" "desc" }}
+
+{{ $members := slice }}
+{{ with $group.members }}
+  {{ range $id := . }}
+    {{ with site.GetPage (printf "/authors/%s" $id) }}
+      {{ $members = $members | append . }}
+    {{ end }}
+  {{ end }}
+{{ else }}
+  {{ $query := where $authors ".Params.user_groups" "intersect" (slice $key) }}
+  {{ range sort $query $sort_by $sort_order }}
+    {{ $members = $members | append . }}
+  {{ end }}
+{{ end }}
+
+{{ return $members }}

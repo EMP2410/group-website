@@ -1,6 +1,7 @@
 ---
 # Display name
-title: Arkananta RASENDRIYA
+title: Arkananta RASENDRIYA
+
 slug: arkanantarasendriya
 
 # Full Name (for SEO)
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---

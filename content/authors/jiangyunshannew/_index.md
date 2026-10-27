@@ -1,11 +1,12 @@
 ---
 # Display name
-title: JIANG Yunshan (new)
+title: JIANG Yunshan
+
 slug: jiangyunshannew
 
 # Full Name (for SEO)
-first_name: JIANG
-last_name: Yunshan (new)
+first_name: Yunshan
+last_name: JIANG
 
 # Username (this should match the folder name)
 authors:
@@ -51,13 +52,12 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Researchers
-
+  - Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---
 
-JIANG Yunshan (new) - Postdoc (cathodes materials)
+JIANG Yunshan - Postdoc (cathodes materials)
 
 <!--more-->
 

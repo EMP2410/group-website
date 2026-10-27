@@ -1,0 +1,78 @@
+{{/* Renders one person card for the People page.
+
+     The layout argument decides the size of the portrait and how much
+     information is shown:
+       leader - wide card for the lab Director
+       pi     - card for a Principal Investigator
+       member - compact tile for postdocs, students and staff
+
+     Call it with:
+       partial "func/emp-person-card" (dict
+         "person" $page "layout" "pi"
+         "show_role" true "show_organizations" true
+         "show_social" true "show_interests" true "show_bio" false)
+*/}}
+{{ $person := .person }}
+{{ $layout := .layout | default "member" }}
+{{ $show_role := .show_role | default false }}
+{{ $show_organizations := .show_organizations | default false }}
+{{ $show_social := .show_social | default false }}
+{{ $show_interests := .show_interests | default false }}
+{{ $show_bio := .show_bio | default false }}
+
+{{/* Link to the person's own profile page. */}}
+{{ $link := "" }}
+{{ with $person.File }}
+  {{ with site.GetPage (printf "/authors/%s" (path.Base .Dir)) }}
+    {{ $link = .RelPermalink }}
+  {{ end }}
+{{ end }}
+
+{{/* Portrait: Gravatar when enabled, otherwise the `avatar*` page resource
+     that sits next to the profile page. */}}
+{{ $size := "160x160" }}
+{{ if eq $layout "leader" }}{{ $size = "320x320" }}{{ else if eq $layout "pi" }}{{ $size = "240x240" }}{{ end }}
+{{ $src := "" }}
+{{ if site.Params.features.avatar.gravatar }}
+  {{ $src = printf "https://s.gravatar.com/avatar/%s?s=150" (md5 $person.Params.email) }}
+{{ else }}
+  {{ with ($person.Resources.ByType "image").GetMatch "*avatar*" }}
+    {{ $src = (.Fill (printf "%s Center" $size)).RelPermalink }}
+  {{ end }}
+{{ end }}
+
+<article class="emp-person emp-person--{{ $layout }}">
+  {{ with $src }}
+    <a class="emp-person__photo" href="{{ $link | default "#" }}" tabindex="-1" aria-hidden="true">
+      <img class="emp-person__img" src="{{ . }}" alt="{{ $person.Title }}" loading="lazy">
+    </a>
+  {{ end }}
+  <div class="emp-person__body">
+    <h3 class="emp-person__name">{{ with $link }}<a href="{{ . }}">{{ end }}{{ $person.Title }}{{ if $link }}</a>{{ end }}</h3>
+    {{ if $show_role }}
+      {{ with $person.Params.role }}
+        <p class="emp-person__role">{{ . | markdownify | emojify }}</p>
+      {{ end }}
+    {{ end }}
+    {{ if $show_organizations }}
+      {{ range $person.Params.organizations }}
+        <p class="emp-person__org">{{ .name }}</p>
+      {{ end }}
+    {{ end }}
+    {{ if $show_bio }}
+      {{ with $person.Params.bio }}
+        <p class="emp-person__bio">{{ . | markdownify | emojify }}</p>
+      {{ end }}
+    {{ end }}
+    {{ if $show_interests }}
+      {{ with $person.Params.interests }}
+        <ul class="emp-person__interests">
+          {{ range . }}<li>{{ . | markdownify | emojify }}</li>{{ end }}
+        </ul>
+      {{ end }}
+    {{ end }}
+    {{ if $show_social }}
+      {{ partial "social_links" $person }}
+    {{ end }}
+  </div>
+</article>

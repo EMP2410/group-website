@@ -3,7 +3,7 @@
 # Hugo Documentation: https://gohugo.io/getting-started/configuration/#all-configuration-settings
 # This file is formatted using YAML syntax - learn more at https://learnxinyminutes.com/docs/yaml/
 
-title: E<sub>nergy</sub> & M<sub>aterials</sub> P<sub>hysics</sub> # Website name
+title: JC STEM Lab of Energy and Materials Physics # Website name
 baseURL: 'https://EMP2410.github.io/lab-site/' # Website URL
 
 ############################

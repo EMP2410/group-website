@@ -1,11 +1,12 @@
 ---
 # Display name
-title: WANG Wei
+title: WANG Wei
+
 slug: wangwei
 
 # Full Name (for SEO)
-first_name: WANG
-last_name: Wei
+first_name: Wei
+last_name: WANG
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---

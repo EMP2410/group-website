@@ -1,11 +1,12 @@
 ---
 # Display name
-title: YI Xuerui
+title: YI Xuerui
+
 slug: yixuerui
 
 # Full Name (for SEO)
-first_name: YI
-last_name: Xuerui
+first_name: Xuerui
+last_name: YI
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---

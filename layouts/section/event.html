@@ -1,0 +1,69 @@
+{{- define "main" -}}
+
+{{ partial "page_header.html" . }}
+
+{{/* Events are grouped by the `categories` front-matter field rather than by year,
+     so that conferences, seminars, visits, collaborations, student experiments,
+     training and lab setup can be read as separate strands of activity.
+     The order below is the reading order; anything not listed sorts last. */}}
+{{ $rank := dict "conference" 1 "seminar" 2 "visit" 3 "collaboration" 4 "student-experiment" 5 "training" 6 "lab-setup" 7 }}
+{{ $labels := dict
+  "conference" "Conference"
+  "seminar" "Invited Seminar"
+  "visit" "Academic Visit"
+  "collaboration" "Collaboration"
+  "student-experiment" "Student Experiment"
+  "training" "Training & Visiting Scholar"
+  "lab-setup" "Lab Setup & Equipment"
+}}
+
+{{/* `categories` is a taxonomy key, so every event carries it as a list; the
+     first entry is the strand the event belongs to. */}}
+{{ $cats := slice }}
+{{ range .Pages }}
+  {{ $c := index (default (slice "other") .Params.categories) 0 }}
+  {{ if not (in $cats $c) }}{{ $cats = $cats | append $c }}{{ end }}
+{{ end }}
+
+{{ $groups := slice }}
+{{ range $c := $cats }}
+  {{ $r := 99 }}
+  {{ if isset $rank $c }}{{ $r = index $rank $c }}{{ end }}
+  {{ $groups = $groups | append (dict "name" $c "rank" $r) }}
+{{ end }}
+
+<div class="universal-wrapper">
+  <div class="row">
+    <div class="col-lg-12">
+
+      {{ with .Content }}
+      <div class="article-style mb-4">{{ . }}</div>
+      {{ end }}
+
+      {{ range $g := (sort $groups "rank") }}
+        {{ $c := $g.name }}
+        {{ $pages := where $.Pages "Params.categories" "intersect" (slice $c) }}
+        {{ with $pages }}
+        {{/* `mb-5` separates one strand from the next. The theme's compact view
+             only gives `.media.stream-item:not(:last-child)` a bottom margin, so
+             the last entry of a strand would otherwise sit flush against the
+             heading of the following one. */}}
+        <div class="row mb-5" id="event_list_{{ $c }}">
+          <div class="col-lg-2">
+            <h3>{{ or (index $labels $c) (strings.Title $c) }}</h3>
+            <p class="text-muted mb-0">{{ len . }} {{ if eq (len .) 1 }}record{{ else }}records{{ end }}</p>
+          </div>
+          <div class="col-lg-10">
+            {{ range $index, $item := .ByDate.Reverse }}
+              {{ partial "functions/render_view" (dict "page" $ "item" $item "view" ($.Params.view | default "compact") "index" $index) }}
+            {{ end }}
+          </div>
+        </div>
+        {{ end }}
+      {{ end }}
+
+    </div>
+  </div>
+</div>
+
+{{- end -}}

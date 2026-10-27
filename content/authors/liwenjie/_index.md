@@ -1,11 +1,12 @@
 ---
 # Display name
-title: LI Wenjie
+title: LI Wenjie
+
 slug: liwenjie
 
 # Full Name (for SEO)
-first_name: LI
-last_name: Wenjie
+first_name: Wenjie
+last_name: LI
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Researchers
-
+  - Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---

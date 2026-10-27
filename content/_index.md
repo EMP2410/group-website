@@ -4,7 +4,7 @@ title:
 date: 2022-10-24
 type: landing
 seo:
-  title: EMP group
+  title: JC STEM Lab of Energy and Materials Physics
 
 sections:
   # ---------------------------------------------------------------- hero ----
@@ -90,7 +90,7 @@ sections:
       title: About
       subtitle: Who we are and what we work on
       text: |
-        <p class="emp-about-intro">The <strong>EMP research group @ CityU HK</strong>, led by <strong>Prof. Ren Yang</strong>, is part of the Department of Physics at City University of Hong Kong, and operates the Hong Kong JC STEM Lab of <em>Energy and Materials Physics</em>.</p>
+        <p class="emp-about-intro">The <strong>Hong Kong JC STEM Lab of Energy and Materials Physics</strong> is a large CityU laboratory in the Department of Physics at City University of Hong Kong, led by <strong>Prof. Ren Yang</strong> as Lab Director.</p>
         <div class="emp-about-body">
         <p>We investigate the <strong>structure–property relationships</strong> of advanced materials using <strong>synchrotron X-ray and neutron scattering</strong> techniques. Our work spans electrochemical energy storage and catalysis, quantum materials, and the structural analysis of cultural heritage objects.</p>
         </div>
@@ -100,19 +100,23 @@ sections:
       css_class: section-narrow emp-section
 
   # ---------------------------------------------------------------- team ----
+  # The lab is presented here as a large CityU laboratory: leadership first
+  # (Director + Principal Investigators, each linked to their profile page),
+  # then the researcher tiers. The full roster lives on /people/.
   - block: markdown
     content:
       title: Our Team
-      subtitle: Physics, chemistry and materials science, in one room
+      subtitle: One laboratory, four research groups
       text: |
-        <p class="emp-about-body">We are a small, hands-on group. Everyone runs their own samples, everyone learns the beamlines, and everyone is encouraged to bring problems that don't fit neatly into a single technique.</p>
+        <p class="emp-about-body">The Hong Kong JC STEM Lab of <em>Energy and Materials Physics</em> is a large CityU laboratory. Faculty, postdoctoral researchers and students work side by side across four research areas, sharing the same instruments, the same beamtime and the same group meetings.</p>
         <ul class="emp-team-list">
-        <li><strong>Faculty</strong> — <a href="{{< relref "/authors/yangren" >}}">Prof. Ren Yang</a> and visiting faculty collaborators</li>
+        <li><strong>Director</strong> — <a href="{{< relref "/authors/yangren" >}}">Prof. Ren Yang</a>, Chair Professor and Head of the Department of Physics, City University of Hong Kong</li>
+        <li><strong>Principal Investigators</strong> — <a href="{{< relref "/authors/lidanfeng" >}}">Prof. Danfeng Li</a> (oxide heterostructures and low-dimensional superconductivity), <a href="{{< relref "/authors/majunzhang" >}}">Prof. Junzhang Ma</a> (topological and correlated quantum materials) and <a href="{{< relref "/authors/hoiiochun" >}}">Prof. Io Chun Hoi</a> (waveguide quantum electrodynamics)</li>
         <li><strong>Postdoctoral researchers</strong> — independent project owners who co-supervise students</li>
         <li><strong>PhD students</strong> — MPhil and PhD, in materials physics and chemistry</li>
         <li><strong>Research assistants &amp; visiting students</strong> — short-term projects and exchange placements</li>
         </ul>
-        <p class="emp-team-cta"><a class="emp-cta" href="{{< relref "/contact" >}}">Join our group</a></p>
+        <p class="emp-team-cta"><a class="emp-cta" href="{{< relref "/people" >}}">Meet the whole team</a><a class="emp-cta" href="{{< relref "/contact" >}}">Join our group</a></p>
     design:
       columns: '1'
       css_class: section-narrow emp-section

@@ -1,11 +1,12 @@
 ---
 # Display name
-title: LIAO Yaqi
+title: LIAO Yaqi
+
 slug: liaoyaqi
 
 # Full Name (for SEO)
-first_name: LIAO
-last_name: Yaqi
+first_name: Yaqi
+last_name: LIAO
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Researchers
-
+  - Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---

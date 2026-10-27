@@ -1,0 +1,60 @@
+{{/* poster: high-resolution poster image with a truthful responsive srcset.
+
+     Usage:
+       {{< poster src="forum-2026-poster.png" alt="..." caption="..." width="640" id="conference-poster" >}}
+
+     The master image lives in assets/media/ so it can be regenerated at print
+     resolution independently of the page bundle featured image. Renditions are
+     produced with Resize (exact width) rather than Fit, so every `w` descriptor
+     in the srcset matches the real pixel width of the file it points at.
+
+     data-zoom-src points at the largest rendition, which is what medium-zoom
+     loads when the visitor clicks the poster to enlarge it. */}}
+
+{{- $src := .Get "src" | default "forum-2026-poster.png" -}}
+{{- $alt := .Get "alt" | default "Conference poster" -}}
+{{- $caption := .Get "caption" | default "" -}}
+{{- $id := .Get "id" | default (anchorize $caption) -}}
+{{- $displayWidth := int (.Get "width" | default 640) -}}
+{{- if lt $displayWidth 100 -}}{{- $displayWidth = 100 -}}{{- end -}}
+
+{{- $img := resources.Get (path.Join "media" $src) -}}
+{{- if not $img -}}
+  {{- $img = (.Page.Resources.ByType "image").GetMatch $src -}}
+{{- end -}}
+
+{{- if not $img -}}
+  <p class="text-warning">[poster not found: {{ $src }}]</p>
+{{- else -}}
+  {{- $widths := slice 640 960 1280 1920 2560 3600 -}}
+  {{- $srcset := slice -}}
+  {{- $fallback := "" -}}
+  {{- $largest := "" -}}
+  {{- range $w := $widths -}}
+    {{- if le $w $img.Width -}}
+      {{- $r := $img.Resize (printf "%dx webp q90" $w) -}}
+      {{- $srcset = $srcset | append (printf "%s %dw" $r.RelPermalink $w) -}}
+      {{- $largest = $r.RelPermalink -}}
+      {{- if eq $w 1280 -}}{{- $fallback = $r.RelPermalink -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if not $fallback -}}{{- $fallback = $largest -}}{{- end -}}
+  {{- $displayHeight := int (math.Round (div (float (mul $img.Height $displayWidth)) (float $img.Width))) -}}
+  <figure id="figure-{{ $id }}">
+    <div class="d-flex justify-content-center">
+      <div class="w-100" style="max-width: {{ $displayWidth }}px;">
+        <img alt="{{ $alt }}"
+          srcset="{{ delimit $srcset ", " }}"
+          src="{{ $fallback }}"
+          sizes="(max-width: {{ add $displayWidth 20 }}px) 100vw, {{ $displayWidth }}px"
+          width="{{ $displayWidth }}"
+          height="{{ $displayHeight }}"
+          loading="lazy"
+          decoding="async"
+          data-zoomable
+          data-zoom-src="{{ $largest }}">
+      </div>
+    </div>
+    {{- with $caption }}<figcaption>{{ . | markdownify | emojify }}</figcaption>{{ end -}}
+  </figure>
+{{- end -}}

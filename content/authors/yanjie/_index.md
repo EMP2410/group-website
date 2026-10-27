@@ -1,11 +1,12 @@
 ---
 # Display name
-title: YAN Jie
+title: YAN Jie
+
 slug: yanjie
 
 # Full Name (for SEO)
-first_name: YAN
-last_name: Jie
+first_name: Jie
+last_name: YAN
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---

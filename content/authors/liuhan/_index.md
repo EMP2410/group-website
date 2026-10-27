@@ -1,11 +1,12 @@
 ---
 # Display name
-title: LIU Han
+title: LIU Han
+
 slug: liuhan
 
 # Full Name (for SEO)
-first_name: LIU
-last_name: Han
+first_name: Han
+last_name: LIU
 
 # Username (this should match the folder name)
 authors:
@@ -51,8 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Researchers
-
+  - Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---

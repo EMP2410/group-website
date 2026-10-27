@@ -1,11 +1,12 @@
 ---
 # Display name
-title: XUE Haoyuan (new)
+title: XUE Haoyuan
+
 slug: xuehaoyuannew
 
 # Full Name (for SEO)
-first_name: XUE
-last_name: Haoyuan (new)
+first_name: Haoyuan
+last_name: XUE
 
 # Username (this should match the folder name)
 authors:
@@ -51,13 +52,12 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Grad Students
-
+  - PhD Students
 # User-specific content
 weight: 20
 ---
 
-XUE Haoyuan (new) - PhD student
+XUE Haoyuan - PhD student
 
 <!--more-->
 
