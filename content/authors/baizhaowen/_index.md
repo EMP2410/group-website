@@ -16,15 +16,15 @@ authors:
 superuser: false
 
 # Role/position
-role: Postdoc (battery research)
+role: Assistant Researcher, HEPS
 
 # Organizations/Affiliations
 organizations:
-  - name: City University of Hong Kong
+  - name: HEPS
     url: ''
 
 # Short bio (displayed in user profile at end posts)
-bio: Postdoctoral researcher working on Postdoc (battery research).
+bio: Former postdoctoral researcher of the lab, now Assistant Researcher at HEPS.
 
 interests:
   - Postdoc (battery research)
@@ -52,12 +52,12 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Postdoctoral Researchers
+  - Alumni
 # User-specific content
 weight: 10
 ---
 
-BAI Zhaowen - Postdoc (battery research)
+BAI Zhaowen - Assistant Researcher at HEPS
 
 <!--more-->
 

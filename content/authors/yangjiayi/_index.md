@@ -16,15 +16,15 @@ authors:
 superuser: false
 
 # Role/position
-role: Postdoc (solid state electrolyte)
+role: Special Associate Professor, Hangzhou Institute for Advanced Study
 
 # Organizations/Affiliations
 organizations:
-  - name: City University of Hong Kong
+  - name: Hangzhou Institute for Advanced Study
     url: ''
 
 # Short bio (displayed in user profile at end posts)
-bio: Postdoctoral researcher working on Postdoc (solid state electrolyte).
+bio: Former postdoctoral researcher of the lab, now Special Associate Professor at the Hangzhou Institute for Advanced Study.
 
 interests:
   - Postdoc (solid state electrolyte)
@@ -52,12 +52,12 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Postdoctoral Researchers
+  - Alumni
 # User-specific content
 weight: 10
 ---
 
-YANG Jiayi - Postdoc (solid state electrolyte)
+YANG Jiayi - Special Associate Professor at Hangzhou Institute for Advanced Study
 
 <!--more-->
 

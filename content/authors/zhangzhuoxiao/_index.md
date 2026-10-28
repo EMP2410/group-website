@@ -52,7 +52,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - PhD Students
+  - Alumni
 # User-specific content
 weight: 20
 ---
@@ -69,7 +69,7 @@ Preparation and investigation of battery cathodes and solid electrolytes
 
 ## Period
 
-
+09/2021 - 08/2025
 
 ## Degree
 
