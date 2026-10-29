@@ -104,7 +104,7 @@ Additionally, the forum will provide opportunities for students and early-career
 
 ## Forum Details
 
-- **Dates:** 7–11 December 2026 (Day 0 check-in and welcome dinner on 7 December; scientific sessions 8–10 December; optional CSNS tour on 11 December)
+- **Dates:** 7–11 December 2026 (Day 0 check-in and welcome dinner on 7 December; scientific sessions 8–10 December; optional CSNS tour by request on 11 December)
 - **Hosts:** Prof. Ren Yang and Prof. Yin Wen, City University of Hong Kong
 - **Venue:** Eminence Galaxy, Room 11-231, LAU, City University of Hong Kong
 - **Format:** In-person conference
@@ -338,7 +338,7 @@ Talk titles and speakers will be listed here once confirmed.
 
 | Time | Event |
 | --- | --- |
-| To be confirmed | Optional tour to the China Spallation Neutron Source (CSNS), Dongguan |
+| To be confirmed | Optional tour to CSNS by request |
 
 ## Practical Information
 
