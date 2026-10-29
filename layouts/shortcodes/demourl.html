@@ -1,0 +1,12 @@
+{{/* demourl: URL of a file that is served from static/.
+
+     Usage:
+       {{< demourl "demos/crystallography_demo.html" >}}
+
+     Go template actions are no longer executed inside Markdown files, so a
+     path under static/ cannot be resolved with `{{ relURL ... }}` in the
+     page body — it has to come from a shortcode. relURL keeps the baseURL
+     path prefix, which this site needs because it is published under
+     /lab-site/. */}}
+
+{{- relURL (.Get 0) -}}

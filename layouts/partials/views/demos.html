@@ -1,0 +1,25 @@
+{{/* Custom listing view for the Demos section: one screenshot card per demo.
+     The screenshot is read from Params.demo_screenshot (a file below
+     assets/media/) instead of the featured-image mechanism, so the demo pages
+     themselves stay free of a banner image. */}}
+{{- $item := .item -}}
+{{- $link := $item.RelPermalink -}}
+{{- $shot := "" -}}
+{{- with $item.Params.demo_screenshot -}}
+  {{- $shot = resources.GetMatch (path.Join "media" .) -}}
+{{- end -}}
+<div class="emp-demo-card">
+  <a class="emp-demo-card-shot" href="{{ $link }}" aria-label="{{ $item.Title }}">
+    {{- with $shot -}}
+      {{- $img := .Resize "1200x webp" -}}
+      <img src="{{ $img.RelPermalink }}" alt="{{ $item.Title }}" loading="lazy" width="{{ $img.Width }}" height="{{ $img.Height }}">
+    {{- end -}}
+  </a>
+  <div class="emp-demo-card-body">
+    <h3 class="emp-demo-card-title"><a href="{{ $link }}">{{ $item.Title }}</a></h3>
+    {{- with $item.Params.summary -}}
+      <p class="emp-demo-card-sum">{{ . }}</p>
+    {{- end -}}
+    <a class="emp-demo-card-link" href="{{ $link }}">Open the demo &rarr;</a>
+  </div>
+</div>

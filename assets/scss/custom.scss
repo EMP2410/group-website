@@ -1239,3 +1239,163 @@ ul.ul-awards li .description span.award-year {
 .dark ul.ul-awards li .description p.organization {
   color: rgba(255, 255, 255, 0.6);
 }
+
+/* =========================================================
+   Demos — embedded interactive teaching tools
+   =========================================================
+   Each demo is a self-contained HTML app that lives as a page-bundle resource
+   and is shown inline in an iframe. The demo apps are laid out for a full
+   viewport (their own nav bar plus a 100vh body), so the frame is given a
+   fixed desktop height that leaves the app's tab bar and controls visible
+   without scrolling, and a shorter one on phones where vertical space is
+   scarce. The frame is the only element allowed to overflow the article
+   column: the demos are far wider than the reading measure. */
+.emp-demo-frame {
+  display: block;
+  width: 100%;
+  height: 740px;
+  margin: 1.6rem 0 1rem;
+  border: 1px solid #eaeaea;
+  border-radius: 10px;
+  background: #f4f4f9;
+  box-shadow: 0 6px 20px rgba(12, 30, 60, 0.08);
+}
+
+/* The demo apps are far wider than the reading measure, so on the demo pages
+   the frame breaks out of the 1000px article column and is re-centred on the
+   viewport instead. The article column clips its overflow by default, which
+   would cut the frame off, so the clip is lifted on those pages only. */
+body.emp-demo-page .article-style {
+  overflow: visible;
+}
+
+body.emp-demo-page {
+  --emp-demo-w: min(1290px, calc(100vw - 2rem));
+}
+
+body.emp-demo-page .emp-demo-frame {
+  width: var(--emp-demo-w);
+  margin-left: calc(50% - var(--emp-demo-w) / 2);
+}
+
+@media (max-width: 991.98px) {
+  .emp-demo-frame {
+    height: 560px;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .emp-demo-frame {
+    height: 460px;
+    border-radius: 8px;
+  }
+}
+
+.emp-demo-actions {
+  margin: 0 0 1.4rem;
+}
+
+.emp-demo-hint {
+  margin: 0 0 1.6rem;
+  font-size: 0.92rem;
+  line-height: 1.7;
+  color: #6b7280;
+  border-left: 3px solid #eaeaea;
+  padding-left: 0.9rem;
+}
+
+.dark .emp-demo-hint {
+  color: rgba(255, 255, 255, 0.65);
+  border-left-color: rgba(255, 255, 255, 0.15);
+}
+
+/* --- Demos landing page: screenshot cards --------------------------- */
+.emp-demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.6rem;
+  margin: 1.8rem 0 0.4rem;
+}
+
+.emp-demo-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #eaeaea;
+  border-radius: 12px;
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.emp-demo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(12, 30, 60, 0.1);
+}
+
+.emp-demo-card-shot {
+  display: block;
+  line-height: 0;
+  background: #0b0c10;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.emp-demo-card-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.emp-demo-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 1.15rem 1.15rem;
+}
+
+.emp-demo-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.emp-demo-card-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.emp-demo-card-title a:hover {
+  color: #1d5fa8;
+}
+
+.emp-demo-card-sum {
+  margin: 0;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #4a5567;
+}
+
+.emp-demo-card-link {
+  margin-top: auto;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #1d5fa8;
+  text-decoration: none;
+}
+
+.emp-demo-card-link:hover {
+  text-decoration: underline;
+}
+
+.dark .emp-demo-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .emp-demo-card-sum {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.dark .emp-demo-card-title a:hover {
+  color: #7fb4ea;
+}
