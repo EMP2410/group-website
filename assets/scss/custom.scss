@@ -33,6 +33,21 @@
   opacity: 0.45;
 }
 
+/* 品牌名现在是全称 "JC STEM Lab of Energy and Materials Physics"，一行排下来
+   在手机上比视口还宽（375px 视口下文字宽约 411px），整页会被横向撑开。
+   主题在 md 以下把移动端品牌放在绝对定位的 .navbar-brand-mobile-wrapper 里，
+   而 Bootstrap 的 .navbar-brand 是 white-space: nowrap，所以这里放开换行，
+   让名字按容器宽度折行；同时把字号调小一档，保证 320px 的窄屏也是一行或
+   两行而不是溢出。 */
+@media (max-width: 991.98px) {
+  .navbar-brand {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
 /* =========================================================
    A2. 首页顶部导航栏透明态
    =========================================================
@@ -298,6 +313,18 @@ body.navbar-transparent #navbar-main .navbar-nav .nav-link.active {
   .universal-wrapper {
     width: var(--emp-inner-w);
   }
+}
+
+/* Single pages (post, event, publication detail) are wrapped in the theme's
+   .article-container, which the theme caps at 760px, while every list page
+   uses .universal-wrapper at 1000px. The detail pages therefore came out
+   noticeably narrower than the list pages. Put the container on the same
+   ladder and match the side padding so the text edges line up.
+   max-width is used rather than width, so this is safe at any viewport. */
+.article-container {
+  max-width: var(--emp-inner-w);
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 @media (min-width: 1200px) {

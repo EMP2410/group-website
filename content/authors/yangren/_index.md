@@ -78,6 +78,9 @@ social:
   - icon: globe
     icon_pack: fas
     link: 'https://scholars.cityu.edu.hk/en/persons/yangren/'
+  - icon: link
+    icon_pack: fas
+    link: 'https://emp2410.github.io/personal-site/'
   - icon: orcid
     icon_pack: ai
     link: 'https://orcid.org/0000-0001-9831-6035'

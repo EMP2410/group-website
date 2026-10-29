@@ -33,6 +33,10 @@ sections:
         - 'By appointment (please email in advance)'
       appointment_url: ''
       contact_links:
+        - icon: globe
+          icon_pack: fas
+          name: Personal Website
+          link: 'https://emp2410.github.io/personal-site/'
         - icon: graduation-cap
           icon_pack: fas
           name: CityU Scholar Profile

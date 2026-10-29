@@ -18,12 +18,6 @@ image:
 <style>
 /* Page-local styles for the 2026 Neutron Forum event page */
 
-/* Wider article container */
-.article-container,
-body > .container {
-  max-width: 1400px;
-}
-
 /* Speakers: three per row */
 .speakers-grid {
   display: grid;
