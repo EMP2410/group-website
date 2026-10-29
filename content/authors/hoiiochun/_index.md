@@ -86,8 +86,9 @@ email: 'iochoi@cityu.edu.hk'
 highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
-user_groups:
-  - Principal Investigators
+# He leads the Quantum Engineering Laboratory at CityU and is not a member
+# of this lab, so no group is assigned here.
+user_groups: []
 ---
 
 Io Chun Hoi (許耀銓) is Associate Professor in the Department of Physics at City University of Hong Kong, where he leads the Quantum Engineering Laboratory. Born in Macau, China, he received his B.S. in Electrophysics from National Chiao Tung University, Taiwan, in 2007, and his Ph.D. from the Department of Electro-Physics at Chalmers University of Technology, Sweden, in 2013. He was then a postdoctoral researcher in the group of Prof. John Martinis at the University of California, Santa Barbara. Before joining CityU as a Tenured Associate Professor in November 2021, he served on the physics faculty at National Tsing Hua University, Taiwan, from 2015 to 2020. His research focuses on waveguide quantum electrodynamics using superconducting circuits, exploring quantum optical effects of superconducting artificial atoms in one-dimensional waveguides, together with waveguide magnonics. He has authored or co-authored over 30 publications, including a first-authored paper in *Nature Physics*.

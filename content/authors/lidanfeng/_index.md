@@ -1,6 +1,6 @@
 ---
 # Display name
-title: Danfeng LI
+title: Danfeng Denver LI
 slug: lidanfeng
 
 # Username (this should match the folder name)
@@ -15,7 +15,7 @@ last_name: LI
 superuser: false
 
 # Role/position
-role: Associate Professor
+role: Associate Professor and Associate Dean, College of Science
 
 # Organizations/Affiliations
 organizations:

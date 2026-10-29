@@ -28,6 +28,12 @@ sections:
         - name: Principal Investigators
           group: Principal Investigators
           layout: pi
+          members:
+            - lidanfeng
+            - qiliu
+            - majunzhang
+            - yuchai
+            - haixingli
         - name: Postdoctoral Researchers
           group: Postdoctoral Researchers
           layout: member
