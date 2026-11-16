@@ -37,12 +37,23 @@ image:
 /* Avatar must come ABOVE the name (markdown puts name first, figure second) */
 .speakers-grid .speaker-card > figure {
   order: -1;
-  margin: 0 0 0.3rem 0;
+  margin: 0 0 0.1rem 0;
   width: 100%;
 }
 
 .speakers-grid .speaker-card figure {
   margin: 0;
+}
+
+/* Keep the name tight against the avatar (theme paragraph spacing is too airy) */
+.speakers-grid .speaker-card > p {
+  margin: 0.15rem 0 0;
+}
+
+/* Hugo renders a standalone markdown image as <figure><img><figcaption>alt</figcaption>;
+   the name is already printed under the avatar, so drop the duplicate caption. */
+.speakers-grid .speaker-card figure figcaption {
+  display: none;
 }
 
 /* Speaker avatars: people-widget style — uniform circular avatars, max 150px */
@@ -67,7 +78,7 @@ image:
   width: 150px;
   height: 150px;
   max-width: 150px;
-  margin: 0 auto 0.3rem;
+  margin: 0 auto 0.1rem;
   border-radius: 50%;
   background: linear-gradient(135deg, #e8ecef 0%, #c8d0d6 100%);
   color: #4a5560;
@@ -130,147 +141,127 @@ Additionally, the forum will provide opportunities for students and early-career
 
 <div class="speakers-grid">
 
-<div class="speaker-card" data-initial="F">
+<div class="speaker-card" data-initial="H">
 
-**Prof. Frank Gabel** — *Institut Laue-Langevin (ILL), France*
+![Prof. Hesheng Chen](speaker_chen_hesheng.jpg)
 
-[Profile](https://www.ill.eu/for-ill-users/scientific-groups/biology-deuteration-chemistry-and-soft-matter-support/people/frank-gabel)
-
-</div>
-
-<div class="speaker-card">
-
-**Dr. Peter Falus** — *Institut Laue-Langevin (ILL), France*
-
-![Peter Falus](speaker_falus.png) [Profile](https://www.ill.eu/for-ill-users/scientific-groups/spectroscopy/people/peter-falus)
+[**Prof. Hesheng Chen**](https://www.ihep.cas.cn/kydw/yszj/202312/t20231206_6906985.html) — *Institute of High Energy Physics, CAS, China*
 
 </div>
 
-<div class="speaker-card">
+<div class="speaker-card" data-initial="E">
 
-**Prof. Jian Ren Lu** — *The University of Manchester, United Kingdom*
+![Prof. Eduardo Granado Monteiro da Silva](speaker_granado_eduardo.jpg)
 
-![Jian Ren Lu](speaker_lu.webp) [Profile](https://research.manchester.ac.uk/en/persons/j.lu)
-
-</div>
-
-<div class="speaker-card">
-
-**Dr. Mona Sarter** — *ISIS Neutron and Muon Source, United Kingdom*
-
-![Mona Sarter](speaker_sarter.jpg) [Profile](https://www.isis.stfc.ac.uk/Pages/SH25_Mona-Sarter.aspx)
+[**Prof. Eduardo Granado Monteiro da Silva**](https://sites.ifi.unicamp.br/egranado/en/) — *University of Campinas (UNICAMP), Brazil*
 
 </div>
 
-<div class="speaker-card">
+<div class="speaker-card" data-initial="Y">
 
-**Dr. Peixun Li** — *ISIS Neutron and Muon Source, United Kingdom*
+![Prof. Yoji Kobayashi](speaker_kobayashi_yoji.jpg)
 
-![Peixun Li](speaker_li.jpg) [Profile](https://www.isis.stfc.ac.uk/Pages/Dr-Peixun-Li.aspx)
+[**Prof. Yoji Kobayashi**](https://www.kaust.edu.sa/en/study/faculty/yoji-kobayashi) — *KAUST, Saudi Arabia*
+
+</div>
+
+<div class="speaker-card" data-initial="L">
+
+![Prof. Lars Bannenberg](speaker_bannenberg_lars.jpg)
+
+[**Prof. Lars Bannenberg**](https://www.tudelft.nl/en/staff/l.j.bannenberg/) — *Delft University of Technology, Netherlands*
+
+</div>
+
+<div class="speaker-card" data-initial="J">
+
+![Dr. James Steele](speaker_steele_james.jpg)
+
+[**Dr. James Steele**](https://www.materials.ox.ac.uk/people/james-steele) — *University of Oxford, United Kingdom*
+
+</div>
+
+<div class="speaker-card" data-initial="M">
+
+![Dr. Maha Ismail](speaker_ismail_maha.jpg)
+
+[**Dr. Maha Ismail**](https://cicenergigune.com/en/maha-ismail) — *CIC energiGUNE, Spain*
+
+</div>
+
+<div class="speaker-card" data-initial="Y">
+
+![Prof. Yandong Wang](speaker_wang_yandong.jpg)
+
+[**Prof. Yandong Wang**](https://faculty.ustb.edu.cn/YandongWang/zh_CN/jsxx/91939/jsxx/jsxx.htm) — *University of Science and Technology Beijing, China*
+
+</div>
+
+<div class="speaker-card" data-initial="B">
+
+![Prof. Bing Li](speaker_li_bing.jpg)
+
+[**Prof. Bing Li**](http://www.imr.cas.cn/sourcedb/zw/rck/yjy_imr/202512/t20251228_8068501.html) — *Institute of Metal Research, CAS, China*
 
 </div>
 
 <div class="speaker-card" data-initial="S">
 
-**Prof. Sung-Min Choi** — *Korea Advanced Institute of Science and Technology (KAIST), Korea*
+![Prof. Sheng Wang](speaker_wang_sheng.jpg)
 
-[Profile](https://pure.kaist.ac.kr/en/persons/sung-min-choi)
-
-</div>
-
-<div class="speaker-card">
-
-**Prof. Hideki Seto** — *J-PARC / CROSS, Japan*
-
-![Hideki Seto](speaker_seto.jpg) [Profile](https://research.kek.jp/people/seto/profile.html)
+[**Prof. Sheng Wang**](https://ihepwho.ihep.ac.cn/index/info/157) — *China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China*
 
 </div>
 
-<div class="speaker-card">
+<div class="speaker-card" data-initial="L">
 
-**Prof. Koichi Mayumi** — *University of Tokyo, Japan*
+![Prof. Lunhua He](speaker_he_lunhua.jpg)
 
-![Koichi Mayumi](speaker_mayumi.jpg) [Profile](https://www.k.u-tokyo.ac.jp/materials/en/mayumi/)
-
-</div>
-
-<div class="speaker-card">
-
-**Prof. Tatsuro Oda** — *University of Tokyo, Japan*
-
-![Tatsuro Oda](speaker_oda.jpg) [Profile](https://www.u-tokyo.ac.jp/focus/en/people/k0001_04078.html)
+[**Prof. Lunhua He**](https://people.ucas.ac.cn/~0004064) — *Institute of Physics, CAS (CSNS), China*
 
 </div>
 
-<div class="speaker-card">
+<div class="speaker-card" data-initial="P">
 
-**Prof. Takeshi Yamada** — *J-PARC / CROSS, Japan*
+![Prof. Ping Miao](speaker_miao_ping.jpg)
 
-![Takeshi Yamada](speaker_yamada.jpg) [Profile](https://www.scl.kyoto-u.ac.jp/~kanaya2/yamada.html)
-
-</div>
-
-<div class="speaker-card">
-
-**Prof. Limei Xu** — *Peking University, China*
-
-![Limei Xu](speaker_xu.png) [Profile](https://faculty.pku.edu.cn/~niQ7Vj/en/index.htm)
-
-</div>
-
-<div class="speaker-card">
-
-**Dr. Hongyu Guo** — *China Spallation Neutron Source (CSNS), China*
-
-![Hongyu Guo](speaker_guo.jpg) [Profile](https://people.ucas.ac.cn/~GUO?language=en)
-
-</div>
-
-<div class="speaker-card">
-
-**Prof. He Cheng** — *China Spallation Neutron Source (CSNS), China*
-
-![He Cheng](speaker_cheng.jpg) [Profile](https://people.ucas.edu.cn/~chenghe?language=en)
-
-</div>
-
-<div class="speaker-card">
-
-**Prof. Yubin Ke** — *China Spallation Neutron Source (CSNS), China*
-
-![Yubin Ke](speaker_ke.jpg) [Profile](https://people.ucas.ac.cn/~yubinke)
-
-</div>
-
-<div class="speaker-card" data-initial="G">
-
-**Prof. George Sawatzky** — *The University of British Columbia, Canada*
-
-[Profile](https://phas.ubc.ca/users/george-sawatzky)
-
-</div>
-
-<div class="speaker-card" data-initial="T">
-
-**Dr. Taisen Zuo** — *China Spallation Neutron Source (CSNS), China*
-
-[Profile](https://people.ucas.edu.cn/~zuotaisen.ucas.edu.cn)
+[**Prof. Ping Miao**](https://people.ucas.ac.cn/~pingmiao) — *Institute of High Energy Physics, CAS (Dongguan), China*
 
 </div>
 
 <div class="speaker-card" data-initial="H">
 
-**Dr. Hanqiu Jiang** — *China Spallation Neutron Source (CSNS), China*
+[**Prof. Haishan Zhou**](http://www.ipp.cas.cn/rcdw/yjy/) — *Institute of Plasma Physics, CAS, China*
 
-[Profile](https://people.ucas.ac.cn/~jianghanqiu)
+</div>
+
+<div class="speaker-card" data-initial="H">
+
+![Dr. Hongxi Jian](speaker_jian_hongxi.jpg)
+
+[**Dr. Hongxi Jian**](https://people.ucas.ac.cn/~jianhx) — *Institute of High Energy Physics, CAS (Dongguan), China*
+
+</div>
+
+<div class="speaker-card" data-initial="S">
+
+Dr. Shaofei Wang — *CATL 21C Innovation Lab, China*
 
 </div>
 
 <div class="speaker-card" data-initial="X">
 
-**Prof. Xiaocheng Zeng** — *City University of Hong Kong*
+![Prof. Xinhui Lu](speaker_lu_xinhui.jpg)
 
-[Profile](https://www.cityu.edu.hk/mse/people/mse-faculty/zeng-xiaocheng)
+[**Prof. Xinhui Lu**](https://wp.phy.cuhk.edu.hk/teaching-staff/lu-xinhui/) — *The Chinese University of Hong Kong, Hong Kong SAR*
+
+</div>
+
+<div class="speaker-card" data-initial="Q">
+
+![Dr. Qi Liu](speaker_liu_qi.jpg)
+
+[**Dr. Qi Liu**](https://scholars.cityu.edu.hk/en/persons/qiliu63/) — *City University of Hong Kong, Hong Kong SAR*
 
 </div>
 
@@ -278,7 +269,7 @@ Additionally, the forum will provide opportunities for students and early-career
 
 ## Program
 
-Talk titles and speakers will be listed here once confirmed.
+Talk titles and the detailed running order will be listed here once confirmed.
 
 ### Day 0 — Monday, 7 December 2026 (Arrival)
 
