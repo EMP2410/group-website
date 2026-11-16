@@ -36,9 +36,9 @@ The confirmed invited-speaker lineup for the 2026 Forum:
 4. [**Prof. Lars Bannenberg**](https://www.tudelft.nl/en/staff/l.j.bannenberg/) — Delft University of Technology, Netherlands
 5. [**Dr. James Steele**](https://www.materials.ox.ac.uk/people/james-steele) — University of Oxford, United Kingdom
 6. [**Dr. Maha Ismail**](https://cicenergigune.com/en/maha-ismail) — CIC energiGUNE, Spain
-7. [**Prof. Yandong Wang**](https://faculty.ustb.edu.cn/YandongWang/zh_CN/jsxx/91939/jsxx/jsxx.htm) — University of Science and Technology Beijing, China
-8. [**Prof. Bing Li**](http://www.imr.cas.cn/sourcedb/zw/rck/yjy_imr/202512/t20251228_8068501.html) — Institute of Metal Research, CAS, China
-9. [**Prof. Sheng Wang**](https://ihepwho.ihep.ac.cn/index/info/157) — China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China
+7. [**Prof. Sheng Wang**](https://ihepwho.ihep.ac.cn/index/info/157) — China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China
+8. [**Prof. Yandong Wang**](https://faculty.ustb.edu.cn/YandongWang/zh_CN/jsxx/91939/jsxx/jsxx.htm) — University of Science and Technology Beijing, China
+9. [**Prof. Bing Li**](http://www.imr.cas.cn/sourcedb/zw/rck/yjy_imr/202512/t20251228_8068501.html) — Institute of Metal Research, CAS, China
 10. [**Prof. Lunhua He**](https://people.ucas.ac.cn/~0004064) — Institute of Physics, CAS (CSNS), China
 11. [**Prof. Ping Miao**](https://people.ucas.ac.cn/~pingmiao) — Institute of High Energy Physics, CAS (Dongguan), China
 12. [**Prof. Haishan Zhou**](http://www.ipp.cas.cn/rcdw/yjy/) — Institute of Plasma Physics, CAS, China

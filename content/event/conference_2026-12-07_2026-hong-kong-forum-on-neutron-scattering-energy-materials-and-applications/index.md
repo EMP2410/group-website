@@ -189,6 +189,14 @@ Additionally, the forum will provide opportunities for students and early-career
 
 </div>
 
+<div class="speaker-card" data-initial="S">
+
+![Prof. Sheng Wang](speaker_wang_sheng.jpg)
+
+[**Prof. Sheng Wang**](https://ihepwho.ihep.ac.cn/index/info/157) — *China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China*
+
+</div>
+
 <div class="speaker-card" data-initial="Y">
 
 ![Prof. Yandong Wang](speaker_wang_yandong.jpg)
@@ -202,14 +210,6 @@ Additionally, the forum will provide opportunities for students and early-career
 ![Prof. Bing Li](speaker_li_bing.jpg)
 
 [**Prof. Bing Li**](http://www.imr.cas.cn/sourcedb/zw/rck/yjy_imr/202512/t20251228_8068501.html) — *Institute of Metal Research, CAS, China*
-
-</div>
-
-<div class="speaker-card" data-initial="S">
-
-![Prof. Sheng Wang](speaker_wang_sheng.jpg)
-
-[**Prof. Sheng Wang**](https://ihepwho.ihep.ac.cn/index/info/157) — *China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China*
 
 </div>
 
@@ -288,26 +288,26 @@ Talk titles and the detailed running order will be listed here once confirmed.
 | 10:00 – 10:30 | Break and group photo |
 | 10:30 – 11:00 | Talk 2 |
 | 11:00 – 11:30 | Talk 3 |
-| 11:30 – 12:00 | Talk 4 |
+| 11:30 – 12:00 | AOE Kickoff (Chair: Prof. David Srolovitz) |
 | 12:00 – 14:00 | Lunch at campus |
-| 14:00 – 14:30 | Talk 5 |
-| 14:30 – 15:00 | Talk 6 |
-| 15:00 – 15:30 | Talk 7 |
+| 14:00 – 14:30 | Talk 4 |
+| 14:30 – 15:00 | Talk 5 |
+| 15:00 – 15:30 | Talk 6 |
 | 15:30 – 16:00 | Break |
-| 16:00 – 16:30 | Talk 8 |
-| 16:30 – 17:00 | Talk 9 |
-| 17:00 – 17:30 | Talk 10 |
+| 16:00 – 16:30 | Talk 7 |
+| 16:30 – 17:00 | Talk 8 |
+| 17:00 – 17:30 | Talk 9 |
 | 17:30 – 20:00 | Dinner (off campus, invited participants only) |
 
 ### Day 2 — Wednesday, 9 December 2026
 
 | Time | Event |
 | --- | --- |
-| 10:00 – 10:30 | Talk 11 |
+| 10:00 – 10:30 | Talk 10 |
 | 10:30 – 10:45 | Break |
-| 10:45 – 11:15 | Talk 12 |
-| 11:15 – 11:45 | Talk 13 |
-| 11:45 – 12:15 | Talk 14 |
+| 10:45 – 11:15 | Talk 11 |
+| 11:15 – 11:45 | Talk 12 |
+| 11:45 – 12:15 | Talk 13 |
 | 12:15 – 13:45 | Lunch at campus |
 | 13:45 – 20:30 | Lamma Island (南丫島) excursion and seafood dinner |
 
@@ -315,11 +315,11 @@ Talk titles and the detailed running order will be listed here once confirmed.
 
 | Time | Event |
 | --- | --- |
-| 10:00 – 10:30 | Talk 15 |
+| 10:00 – 10:30 | Talk 14 |
 | 10:30 – 10:45 | Break |
-| 10:45 – 11:15 | Talk 16 |
-| 11:15 – 11:45 | Talk 17 |
-| 11:45 – 12:15 | Talk 18 |
+| 10:45 – 11:15 | Talk 15 |
+| 11:15 – 11:45 | Talk 16 |
+| 11:45 – 12:15 | Talk 17 |
 | 12:15 – 14:00 | Lunch at campus |
 | 14:00 – 15:30 | Lab tour |
 | 15:30 – 16:00 | Break |
