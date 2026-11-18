@@ -31,7 +31,7 @@ interests:
 
 education:
   courses:
-    - course: PhD (01/09/2021)
+    - course: PhD
       institution: City University of Hong Kong
       year: 2026
 
@@ -69,11 +69,11 @@ structure study of battery materials
 
 ## Period
 
-
+09/2021 - now
 
 ## Degree
 
-PhD (01/09/2021)
+PhD
 
 ## Anticipated Graduation Date
 

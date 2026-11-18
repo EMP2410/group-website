@@ -45,7 +45,7 @@ education:
 experience:
   - title: Assistant Professor promoted to Associate Professor
     institution: Department of Physics, City University of Hong Kong
-    period: "2021-present"
+    period: "2021 - now"
   - title: Joint Postdoctoral Fellow
     institution: Swiss Light Source, Paul Scherrer Institute and EPFL
     period: "2017-2020"

@@ -31,9 +31,15 @@ interests:
 
 education:
   courses:
-    - course: PhD (01/09/2021)
+    - course: PhD
       institution: City University of Hong Kong
       year: 2025
+
+# Career history (custom field, rendered by layouts/partials/blocks/v1/about.html)
+experience:
+  - title: PhD Student
+    institution: City University of Hong Kong
+    period: "09/2021 - 08/2025"
 
 # Social/Academic Networking
 social:
@@ -52,7 +58,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Alumni
+  - Alumni/Graduated PhD Students
 # User-specific content
 weight: 20
 ---
@@ -73,8 +79,4 @@ Preparation and investigation of battery cathodes and solid electrolytes
 
 ## Degree
 
-PhD (01/09/2021)
-
-## Anticipated Graduation Date
-
-30/08/2025
+PhD

@@ -48,6 +48,8 @@
           {{- end -}}
         </h2>
 
+        {{ with $person.name_cn }}<p class="portrait-title-cn">{{ . }}</p>{{ end }}
+
         {{ with $person.role }}<h3>{{ . | markdownify | emojify }}</h3>{{ end }}
 
         {{ range $person.organizations }}

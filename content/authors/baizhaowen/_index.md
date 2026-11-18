@@ -35,6 +35,15 @@ education:
       institution: City University of Hong Kong
       year: 2022
 
+# Career history (custom field, rendered by layouts/partials/blocks/v1/about.html)
+experience:
+  - title: Assistant Researcher
+    institution: HEPS
+    period: "2026 - now"
+  - title: Postdoctoral Researcher
+    institution: City University of Hong Kong
+    period: "03/2022 - 04/2026"
+
 # Social/Academic Networking
 social:
   - icon: envelope
@@ -52,7 +61,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Alumni
+  - Alumni/Former Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---
@@ -74,6 +83,3 @@ Postdoc (battery research)
 ## Degree
 
 PhD
-
-## Anticipated Graduation Date
-

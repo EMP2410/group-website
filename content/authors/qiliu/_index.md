@@ -42,7 +42,7 @@ education:
 experience:
   - title: Professor
     institution: Department of Physics, City University of Hong Kong
-    period: "2026-present"
+    period: "2026 - now"
   - title: Associate Professor
     institution: Department of Physics, City University of Hong Kong
     period: "2023-2026"

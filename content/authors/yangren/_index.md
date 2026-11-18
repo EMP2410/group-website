@@ -50,10 +50,10 @@ education:
 experience:
   - title: Chair Professor and Head of the Department
     institution: Department of Physics, City University of Hong Kong
-    period: "2021-present"
+    period: "2021 - now"
   - title: Chair Professor
     institution: Department of Materials Science and Engineering, City University of Hong Kong
-    period: "2021-present"
+    period: "2021 - now"
   - title: Senior Physicist and Lead Beamline Scientist
     institution: Advanced Photon Source, Argonne National Laboratory
     period: "Prior to 2021"

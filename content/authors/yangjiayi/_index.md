@@ -35,6 +35,15 @@ education:
       institution: City University of Hong Kong
       year: 2022
 
+# Career history (custom field, rendered by layouts/partials/blocks/v1/about.html)
+experience:
+  - title: Special Associate Professor
+    institution: Hangzhou Institute for Advanced Study
+    period: "2025 - now"
+  - title: Postdoctoral Researcher
+    institution: City University of Hong Kong
+    period: "09/2022 - 10/2025"
+
 # Social/Academic Networking
 social:
   - icon: envelope
@@ -52,7 +61,7 @@ highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
 user_groups:
-  - Alumni
+  - Alumni/Former Postdoctoral Researchers
 # User-specific content
 weight: 10
 ---
@@ -74,6 +83,3 @@ Postdoc (solid state electrolyte)
 ## Degree
 
 PhD
-
-## Anticipated Graduation Date
-

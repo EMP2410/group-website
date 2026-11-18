@@ -68,11 +68,8 @@ Postdoc (energy conversion)
 
 ## Period
 
-01/2023 - 01/2026
+01/2023 - now
 
 ## Degree
 
 PhD
-
-## Anticipated Graduation Date
-

@@ -69,11 +69,8 @@ Postdoc (cathodes materials)
 
 ## Period
 
-09/2025 - 09/2026
+09/2025 - now
 
 ## Degree
 
 PhD
-
-## Anticipated Graduation Date
-

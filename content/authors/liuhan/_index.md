@@ -69,11 +69,8 @@ Postdoc (composite polymer electrolytes)
 
 ## Period
 
-12/2023 - 07/2026
+12/2023 - now
 
 ## Degree
 
 PhD
-
-## Anticipated Graduation Date
-

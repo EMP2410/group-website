@@ -31,7 +31,7 @@ interests:
 
 education:
   courses:
-    - course: PhD (01/09/2023)
+    - course: PhD
       institution: City University of Hong Kong
       year: 2027
 
@@ -69,11 +69,11 @@ Preparation and investigation of the gel solid-state electrolyte in lithium-meta
 
 ## Period
 
-
+09/2023 - now
 
 ## Degree
 
-PhD (01/09/2023)
+PhD
 
 ## Anticipated Graduation Date
 

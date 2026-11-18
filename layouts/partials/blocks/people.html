@@ -10,6 +10,12 @@
        pi     - cards with affiliation and research interests
        member - compact tiles (postdocs, students, staff)
 
+     A group may also carry nested `groups:` (the Alumni group). A
+     sub-group is drawn one heading level below its parent, as an
+     `emp-people-subgroup__title`, and its members are resolved with the
+     same exact-match rule, so a sub-group's name must appear verbatim in
+     the `user_groups` list of the profiles it holds.
+
      Documentation: https://hugoblox.com/blocks/
      License: https://github.com/HugoBlox/hugo-blox-builder/blob/main/LICENSE.md */}}
 
@@ -23,6 +29,29 @@
 {{ $show_bio := $block.design.show_bio | default false }}
 {{ $authors := where site.Pages "Section" "authors" }}
 
+{{/* Resolve the configured groups into renderable units.
+     A group is either flat (it has members of its own) or a parent that
+     holds nested `groups` (Alumni). A sub-group is resolved with the same
+     `func/emp-people-group` partial and is drawn one heading level below
+     its parent, so every unit carries the level it should be rendered at. */}}
+{{ $units := slice }}
+{{ range $block.content.groups }}
+  {{ $group := . }}
+  {{ $layout := $group.layout | default "member" }}
+  {{ $members := partial "func/emp-people-group" (dict "authors" $authors "group" $group) }}
+  {{ if or $members $group.groups }}
+    {{ $units = $units | append (dict "name" $group.name "level" 2 "layout" $layout "members" $members) }}
+  {{ end }}
+  {{ range $group.groups }}
+    {{ $sub := . }}
+    {{ $sub_layout := $sub.layout | default $layout }}
+    {{ $sub_members := partial "func/emp-people-group" (dict "authors" $authors "group" $sub) }}
+    {{ if $sub_members }}
+      {{ $units = $units | append (dict "name" $sub.name "level" 3 "layout" $sub_layout "members" $sub_members) }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
 <div class="row justify-content-center people-widget emp-people">
   {{ with $block.content.title }}
     <div class="section-heading col-12 mb-3 text-center">
@@ -35,26 +64,28 @@
     <div class="col-md-12">{{ . | emojify | $page.RenderString }}</div>
   {{ end }}
 
-  {{ range $block.content.groups }}
-    {{ $group := . }}
-    {{ $members := partial "func/emp-people-group" (dict "authors" $authors "group" $group) }}
-    {{ if $members }}
-      {{ $layout := $group.layout | default "member" }}
-      <div class="col-12 emp-people-group emp-people-group--{{ $layout }}">
-        <h2 class="emp-people-group__title">{{ $group.name | markdownify | emojify }}</h2>
-        <div class="emp-people-grid emp-people-grid--{{ $layout }}">
-          {{ range $members }}
+  {{ range $units }}
+    {{ $unit := . }}
+    <div class="col-12 emp-people-group emp-people-group--{{ $unit.layout }}{{ if eq $unit.level 3 }} emp-people-group--sub{{ end }}">
+      {{ if eq $unit.level 2 }}
+        <h2 class="emp-people-group__title">{{ $unit.name | markdownify | emojify }}</h2>
+      {{ else }}
+        <h3 class="emp-people-subgroup__title">{{ $unit.name | markdownify | emojify }}</h3>
+      {{ end }}
+      {{ with $unit.members }}
+        <div class="emp-people-grid emp-people-grid--{{ $unit.layout }}">
+          {{ range . }}
             {{ partial "func/emp-person-card" (dict
                 "person" .
-                "layout" $layout
+                "layout" $unit.layout
                 "show_role" $show_role
-                "show_organizations" (and $show_organizations (ne $layout "member"))
+                "show_organizations" (and $show_organizations (ne $unit.layout "member"))
                 "show_social" $show_social
-                "show_interests" (and $show_interests (ne $layout "member"))
-                "show_bio" (and $show_bio (eq $layout "leader"))) }}
+                "show_interests" (and $show_interests (ne $unit.layout "member"))
+                "show_bio" (and $show_bio (eq $unit.layout "leader"))) }}
           {{ end }}
         </div>
-      </div>
-    {{ end }}
+      {{ end }}
+    </div>
   {{ end }}
 </div>

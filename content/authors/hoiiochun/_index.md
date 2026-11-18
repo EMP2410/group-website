@@ -47,7 +47,7 @@ education:
 experience:
   - title: Associate Professor (Tenured)
     institution: Department of Physics, City University of Hong Kong
-    period: "2021-present"
+    period: "2021 - now"
   - title: Assistant Professor promoted to Associate Professor
     institution: Department of Physics, National Tsing Hua University, Taiwan
     period: "2015-2020"

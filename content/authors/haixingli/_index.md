@@ -45,7 +45,7 @@ education:
 experience:
   - title: Assistant Professor
     institution: Department of Physics, City University of Hong Kong
-    period: "2021-present"
+    period: "2021 - now"
   - title: Charles H. Revson Senior Fellow in Biomedical Sciences
     institution: Columbia University, USA
     period: "2019-2021"

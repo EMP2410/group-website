@@ -48,7 +48,7 @@ education:
 experience:
   - title: Assistant Professor promoted to Associate Professor
     institution: Department of Physics, City University of Hong Kong
-    period: "2020-present"
+    period: "2020 - now"
   - title: Postdoctoral Researcher
     institution: Lawrence Berkeley National Laboratory, USA
     period: "2019-2020"

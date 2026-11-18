@@ -69,11 +69,8 @@ Postdoc (alloy materials)
 
 ## Period
 
-09/2024 - 09/2025
+09/2024 - now
 
 ## Degree
 
 PhD
-
-## Anticipated Graduation Date
-

@@ -69,11 +69,8 @@ Postdoc (solid state electrolyte)
 
 ## Period
 
-02/2025 - 02/2026
+02/2025 - now
 
 ## Degree
 
 PhD
-
-## Anticipated Graduation Date
-

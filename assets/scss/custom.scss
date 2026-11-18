@@ -923,6 +923,25 @@ body.navbar-transparent #navbar-main .navbar-nav .nav-link.active {
   border-bottom: 2px solid #1d5fa8;
 }
 
+/* ---- Nested sub-groups (e.g. Alumni) ----
+   A parent group is followed by its sub-groups, which are one step below
+   it in the hierarchy: smaller, quieter, and marked by a left rule
+   instead of the full-width underline used by the group titles. */
+.emp-people-group--sub {
+  margin-top: 1.25rem;
+}
+
+.emp-people-subgroup__title {
+  margin: 0 0 0.85rem;
+  padding-left: 0.6rem;
+  font-size: 0.86rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #4b5563;
+  border-left: 3px solid #1d5fa8;
+}
+
 .emp-people-grid {
   display: grid;
   gap: 1.25rem;
@@ -1164,6 +1183,10 @@ body.navbar-transparent #navbar-main .navbar-nav .nav-link.active {
   color: #e5e7eb;
 }
 
+.dark .emp-people-subgroup__title {
+  color: #cbd5e1;
+}
+
 .dark .emp-person--leader,
 .dark .emp-person--pi {
   background: rgba(255, 255, 255, 0.04);
@@ -1398,4 +1421,49 @@ body.emp-demo-page .emp-demo-frame {
 
 .dark .emp-demo-card-title a:hover {
   color: #7fb4ea;
+}
+
+/* =========================================================
+   Chinese names
+   =========================================================
+   The member form collects an English name (surname first) and a
+   Chinese name (surname first). The Chinese name is stored in the
+   `name_cn` front matter field and printed right under the English
+   one so visitors can recognise a member by either spelling.
+
+   Both variants follow the scale of the block they sit in: the
+   personal page, the People leader card, the PI card and the
+   compact member tile each shrink the Chinese name together with
+   the English one. The Chinese name stays a supporting line, so it
+   is set one step quieter than the name above it. */
+.portrait-title-cn {
+  margin: 0.2rem 0 0;
+  font-size: 1.05rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: #4a5567;
+}
+
+.emp-person__name-cn {
+  margin: 0 0 0.15rem;
+  font-size: 0.8rem;
+  font-weight: 400;
+  line-height: 1.35;
+  color: #6b7280;
+}
+
+.emp-person--leader .emp-person__name-cn {
+  font-size: 0.95rem;
+}
+
+.emp-person--member .emp-person__name-cn {
+  font-size: 0.74rem;
+}
+
+.dark .portrait-title-cn {
+  color: #cbd5e1;
+}
+
+.dark .emp-person__name-cn {
+  color: #94a3b8;
 }

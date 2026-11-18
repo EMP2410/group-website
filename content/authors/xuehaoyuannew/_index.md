@@ -31,7 +31,7 @@ interests:
 
 education:
   courses:
-    - course: PhD (01/09/2026)
+    - course: PhD
       institution: City University of Hong Kong
       year: 2030
 
@@ -69,11 +69,11 @@ Preparation and investigation of vanadium-based cation disordered rocksalt mater
 
 ## Period
 
-
+09/2026 - now
 
 ## Degree
 
-PhD (01/09/2026)
+PhD
 
 ## Anticipated Graduation Date
 
