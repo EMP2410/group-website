@@ -103,7 +103,14 @@ image:
     width: 9rem;
     white-space: nowrap;
   }
-  
+
+  /* Long event title: a smaller size keeps it on two lines, and the natural
+     greedy wrap then breaks after "Scattering:" (so no text-wrap: balance here,
+     which would re-balance the two lines into a different split). */
+  .pub .article-container h1 {
+    font-size: clamp(1.5rem, 3.6vw, 1.9rem);
+  }
+
   </style>
 <!--more-->
 
@@ -115,8 +122,8 @@ Additionally, the forum will provide opportunities for students and early-career
 
 ## Forum Details
 
-- **Dates:** 7–11 December 2026 (Day 0 check-in and welcome dinner on 7 December; scientific sessions 8–10 December; optional CSNS tour by request on 11 December)
-- **Hosts:** Prof. Ren Yang and Prof. Yin Wen, City University of Hong Kong
+- **Dates:** 7–11 December 2026 (check-in and welcome dinner on 7 December; scientific sessions 8–10 December; optional CSNS tour by request on 11 December)
+- **Hosts:** Prof. Yang Ren, City University of Hong Kong and Prof. Wen Yin, CSNS
 - **Venue:** Eminence Galaxy, Room 11-231, LAU, City University of Hong Kong
 - **Format:** In-person conference
 - **Language:** English
@@ -125,7 +132,7 @@ Additionally, the forum will provide opportunities for students and early-career
 
 [Download the poster (PDF, A0)](poster.pdf)
 
-{{< poster src="forum-2026-poster.png" alt="Conference poster of the 2026 Hong Kong Forum on Neutron Scattering: Energy Materials and Applications" caption="2026 Hong Kong Forum on Neutron Scattering — conference poster. Click to enlarge." width="640" id="conference-poster" >}}
+{{< poster src="forum-2026-poster.jpg" alt="Conference poster of the 2026 Hong Kong Forum on Neutron Scattering: Energy Materials and Applications" caption="2026 Hong Kong Forum on Neutron Scattering — conference poster. Click to enlarge." width="640" id="conference-poster" >}}
 
 ## Focus Areas
 
@@ -217,7 +224,7 @@ Additionally, the forum will provide opportunities for students and early-career
 
 ![Prof. Lunhua He](speaker_he_lunhua.jpg)
 
-[**Prof. Lunhua He**](https://people.ucas.ac.cn/~0004064) — *Institute of Physics, CAS (CSNS), China*
+[**Prof. Lunhua He**](https://people.ucas.ac.cn/~0004064) — *China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China*
 
 </div>
 
@@ -225,21 +232,23 @@ Additionally, the forum will provide opportunities for students and early-career
 
 ![Prof. Ping Miao](speaker_miao_ping.jpg)
 
-[**Prof. Ping Miao**](https://people.ucas.ac.cn/~pingmiao) — *Institute of High Energy Physics, CAS (Dongguan), China*
+[**Prof. Ping Miao**](https://people.ucas.ac.cn/~pingmiao) — *China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China*
 
 </div>
 
 <div class="speaker-card" data-initial="H">
 
-[**Prof. Haishan Zhou**](http://www.ipp.cas.cn/rcdw/yjy/) — *Institute of Plasma Physics, CAS, China*
+![Prof. Xunxiang Hu](speaker_hu_xunxiang.jpg)
+
+[**Prof. Xunxiang Hu**](https://physics.scu.edu.cn/info/1029/3608.htm) — *Sichuan University, China*
 
 </div>
 
 <div class="speaker-card" data-initial="H">
 
-![Dr. Hongxi Jian](speaker_jian_hongxi.jpg)
+![Prof. Wang Hay Kan](speaker_jian_hongxi.jpg)
 
-[**Dr. Hongxi Jian**](https://people.ucas.ac.cn/~jianhx) — *Institute of High Energy Physics, CAS (Dongguan), China*
+[**Prof. Wang Hay Kan**](https://people.ucas.ac.cn/~jianhx) — *China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China*
 
 </div>
 
@@ -254,14 +263,6 @@ Dr. Shaofei Wang — *CATL 21C Innovation Lab, China*
 ![Prof. Xinhui Lu](speaker_lu_xinhui.jpg)
 
 [**Prof. Xinhui Lu**](https://wp.phy.cuhk.edu.hk/teaching-staff/lu-xinhui/) — *The Chinese University of Hong Kong, Hong Kong SAR*
-
-</div>
-
-<div class="speaker-card" data-initial="Q">
-
-![Dr. Qi Liu](speaker_liu_qi.jpg)
-
-[**Dr. Qi Liu**](https://scholars.cityu.edu.hk/en/persons/qiliu63/) — *City University of Hong Kong, Hong Kong SAR*
 
 </div>
 
@@ -282,32 +283,31 @@ Talk titles and the detailed running order will be listed here once confirmed.
 
 | Time | Event |
 | --- | --- |
-| 09:00 – 09:15 | Opening remarks |
-| 09:15 – 09:30 | Welcome remarks |
-| 09:30 – 10:00 | Talk 1 |
-| 10:00 – 10:30 | Break and group photo |
-| 10:30 – 11:00 | Talk 2 |
-| 11:00 – 11:30 | Talk 3 |
+| 09:30 – 09:45 | Opening remarks |
+| 09:45 – 10:00 | Welcome remarks |
+| 10:00 – 10:30 | Talk 1 |
+| 10:30 – 11:00 | Break and group photo |
+| 11:00 – 11:30 | Talk 2 |
 | 11:30 – 12:00 | AOE Kickoff (Chair: Prof. David Srolovitz) |
 | 12:00 – 14:00 | Lunch at campus |
-| 14:00 – 14:30 | Talk 4 |
-| 14:30 – 15:00 | Talk 5 |
-| 15:00 – 15:30 | Talk 6 |
+| 14:00 – 14:30 | Talk 3 |
+| 14:30 – 15:00 | Talk 4 |
+| 15:00 – 15:30 | Talk 5 |
 | 15:30 – 16:00 | Break |
-| 16:00 – 16:30 | Talk 7 |
-| 16:30 – 17:00 | Talk 8 |
-| 17:00 – 17:30 | Talk 9 |
+| 16:00 – 16:30 | Talk 6 |
+| 16:30 – 17:00 | Talk 7 |
+| 17:00 – 17:30 | Talk 8 |
 | 17:30 – 20:00 | Dinner (off campus, invited participants only) |
 
 ### Day 2 — Wednesday, 9 December 2026
 
 | Time | Event |
 | --- | --- |
-| 10:00 – 10:30 | Talk 10 |
-| 10:30 – 10:45 | Break |
-| 10:45 – 11:15 | Talk 11 |
-| 11:15 – 11:45 | Talk 12 |
-| 11:45 – 12:15 | Talk 13 |
+| 10:00 – 10:30 | Talk 9 |
+| 10:30 – 11:00 | Talk 10 |
+| 11:00 – 11:15 | Break |
+| 11:15 – 11:45 | Talk 11 |
+| 11:45 – 12:15 | Talk 12 |
 | 12:15 – 13:45 | Lunch at campus |
 | 13:45 – 20:30 | Lamma Island (南丫島) excursion and seafood dinner |
 
@@ -315,11 +315,11 @@ Talk titles and the detailed running order will be listed here once confirmed.
 
 | Time | Event |
 | --- | --- |
-| 10:00 – 10:30 | Talk 14 |
-| 10:30 – 10:45 | Break |
-| 10:45 – 11:15 | Talk 15 |
-| 11:15 – 11:45 | Talk 16 |
-| 11:45 – 12:15 | Talk 17 |
+| 10:00 – 10:30 | Talk 13 |
+| 10:30 – 11:00 | Talk 14 |
+| 11:00 – 11:15 | Break |
+| 11:15 – 11:45 | Talk 15 |
+| 11:45 – 12:15 | Talk 16 |
 | 12:15 – 14:00 | Lunch at campus |
 | 14:00 – 15:30 | Lab tour |
 | 15:30 – 16:00 | Break |
@@ -355,17 +355,17 @@ Talk titles and the detailed running order will be listed here once confirmed.
 
 ## Forum Registration
 
-Please scan the QR code below to complete the Tencent Docs information form. **Registration is free of charge.**
+Please scan the QR code below to complete the participants information form. **Registration is free of charge.**
 
-![Registration QR code](registration_qr.png)
+![Registration QR code](registration_code.png)
 
-If you cannot scan the code, please fill in the form via the link: [Tencent Docs — Information Collection Form](https://docs.qq.com/form/page/DQWVabUVzbVdFbGhF).
+If you cannot scan the code, please fill in the form via the link: [2026 HK Forum on Neutron Scattering – Participants Information](https://forms.cloud.microsoft.com/Pages/ResponsePage.aspx?id=g84JIeR9cUSR_yBT-Qof2f1gHscHcgNMo0n294rAUQ5UM0dERjFEU0E0UkJJWUFGN0FGTlpGNEEyWC4u)
 
 ## Host and Sponsors
 
 
 
-**Host:** Prof. Ren Yang and Prof. Yin Wen, City University of Hong Kong.
+**Host:** Prof. Yang Ren, City University of Hong Kong and Prof. Wen Yin, CSNS.
 
 
 
@@ -383,7 +383,7 @@ City University of Hong Kong
 
 Tat Chee Avenue, Kowloon, Hong Kong
 
-Email: [syxiao5-c@my.cityu.edu.hk](mailto:syxiao5-c@my.cityu.edu.hk)
+Email: [wwang345@cityu.edu.hk（Dr. Wei Wang）](mailto:wwang345@cityu.edu.hk)
 
 
 

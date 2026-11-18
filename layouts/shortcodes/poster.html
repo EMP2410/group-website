@@ -1,7 +1,7 @@
 {{/* poster: high-resolution poster image with a truthful responsive srcset.
 
      Usage:
-       {{< poster src="forum-2026-poster.png" alt="..." caption="..." width="640" id="conference-poster" >}}
+       {{< poster src="forum-2026-poster.jpg" alt="..." caption="..." width="640" id="conference-poster" >}}
 
      The master image lives in assets/media/ so it can be regenerated at print
      resolution independently of the page bundle featured image. Renditions are
@@ -11,7 +11,7 @@
      data-zoom-src points at the largest rendition, which is what medium-zoom
      loads when the visitor clicks the poster to enlarge it. */}}
 
-{{- $src := .Get "src" | default "forum-2026-poster.png" -}}
+{{- $src := .Get "src" | default "forum-2026-poster.jpg" -}}
 {{- $alt := .Get "alt" | default "Conference poster" -}}
 {{- $caption := .Get "caption" | default "" -}}
 {{- $id := .Get "id" | default (anchorize $caption) -}}

@@ -21,10 +21,11 @@ fuel cells, hydrogen storage, energy conversion materials and nuclear energy. Th
 students and early-career scientists in Hong Kong and the wider region a chance to learn the
 fundamentals and applications of neutron scattering.
 
-- **Dates:** 7–11 December 2026
+- **Dates:** 7–11 December 2026 (check-in and welcome dinner on 7 December; scientific sessions 8–10 December; optional CSNS tour by request on 11 December)
+- **Hosts:** Prof. Yang Ren, City University of Hong Kong and Prof. Wen Yin, CSNS
 - **Venue:** Eminence Galaxy, Room 11-231, LAU, City University of Hong Kong
 - **Format:** In-person conference, in English
-- **Registration:** Free of charge
+- **Registration:** Free of charge — [2026 HK Forum on Neutron Scattering – Participants Information](https://forms.cloud.microsoft.com/Pages/ResponsePage.aspx?id=g84JIeR9cUSR_yBT-Qof2f1gHscHcgNMo0n294rAUQ5UM0dERjFEU0E0UkJJWUFGN0FGTlpGNEEyWC4u)
 
 ## Invited speakers
 
@@ -39,13 +40,12 @@ The confirmed invited-speaker lineup for the 2026 Forum:
 7. [**Prof. Sheng Wang**](https://ihepwho.ihep.ac.cn/index/info/157) — China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China
 8. [**Prof. Yandong Wang**](https://faculty.ustb.edu.cn/YandongWang/zh_CN/jsxx/91939/jsxx/jsxx.htm) — University of Science and Technology Beijing, China
 9. [**Prof. Bing Li**](http://www.imr.cas.cn/sourcedb/zw/rck/yjy_imr/202512/t20251228_8068501.html) — Institute of Metal Research, CAS, China
-10. [**Prof. Lunhua He**](https://people.ucas.ac.cn/~0004064) — Institute of Physics, CAS (CSNS), China
-11. [**Prof. Ping Miao**](https://people.ucas.ac.cn/~pingmiao) — Institute of High Energy Physics, CAS (Dongguan), China
-12. [**Prof. Haishan Zhou**](http://www.ipp.cas.cn/rcdw/yjy/) — Institute of Plasma Physics, CAS, China
-13. [**Dr. Hongxi Jian**](https://people.ucas.ac.cn/~jianhx) — Institute of High Energy Physics, CAS (Dongguan), China
+10. [**Prof. Lunhua He**](https://people.ucas.ac.cn/~0004064) — China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China
+11. [**Prof. Ping Miao**](https://people.ucas.ac.cn/~pingmiao) — China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China
+12. [**Prof. Xunxiang Hu**](https://physics.scu.edu.cn/info/1029/3608.htm) — Sichuan University, China
+13. [**Prof. Wang Hay Kan**](https://people.ucas.ac.cn/~jianhx) — China Spallation Neutron Source (CSNS), Institute of High Energy Physics, CAS, China
 14. Dr. Shaofei Wang — CATL 21C Innovation Lab, China
 15. [**Prof. Xinhui Lu**](https://wp.phy.cuhk.edu.hk/teaching-staff/lu-xinhui/) — The Chinese University of Hong Kong, Hong Kong SAR
-16. [**Dr. Qi Liu**](https://scholars.cityu.edu.hk/en/persons/qiliu63/) — City University of Hong Kong, Hong Kong SAR
 
 The scientific programme and the registration details are listed on the forum page.
 
