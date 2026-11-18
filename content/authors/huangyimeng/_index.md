@@ -51,8 +51,9 @@ email: ''
 highlight_name: false
 
 # Organizational groups that you belong to (for People widget)
-user_groups:
-  - Postdoctoral Researchers
+# No group for now: removed from the Postdoctoral Researchers tier on
+# the People page, while the profile itself stays online.
+user_groups: []
 # User-specific content
 weight: 10
 ---
