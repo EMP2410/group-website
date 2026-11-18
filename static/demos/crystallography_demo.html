@@ -2,7 +2,6 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Crystallography & XRD Refinement Demo</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
@@ -50,112 +49,177 @@
     });
     </script>
     <style>
-        /* The demo is embedded in the site page as well as opened on its own, so the
-           sizing rules must be predictable: with the default content-box model every
-           `width: 100%` panel grows by its own padding and pokes out of the frame. */
-        *, *::before, *::after { box-sizing: border-box; }
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-        #app { display: flex; flex-direction: column; height: 100vh; min-height: 100vh; }
-        
+        #app { display: flex; flex-direction: column; height: 100vh; }
+
         /* 导航栏 */
-        nav { background: #2c3e50; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.6rem 1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 100; position: relative; }
-        nav h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; min-width: 0; flex-wrap: wrap; }
+        nav { background: #2c3e50; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 100; position: relative; }
+        nav h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
         .nav-buttons button { background: transparent; border: 1px solid rgba(255,255,255,0.5); color: white; padding: 6px 12px; cursor: pointer; margin-left: 10px; border-radius: 4px; transition: all 0.3s; }
         .nav-buttons button:hover { background: rgba(255,255,255,0.1); }
         .nav-buttons button.active { background: #3498db; border-color: #3498db; font-weight: bold; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
-        
+
         .main-content { flex: 1; position: relative; overflow: hidden; }
-        .page-container { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-            display: flex; padding: 20px; gap: 20px; box-sizing: border-box; 
+        .page-container {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; padding: 20px; gap: 20px; box-sizing: border-box;
             background: #f4f4f9;
         }
-        
-        .panel-left { width: 320px; flex: 0 0 320px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 2; min-width: 0; }
-        .panel-center { flex: 1 1 0%; display: flex; flex-direction: column; gap: 15px; min-width: 0; }
-        
-        /* 主视图：3D 晶体 + XRD 图谱并排
-           flex 基准必须为 0：画布内部是按像素尺寸绘制的，若基准为 auto，
-           画布尺寸会反过来决定分配结果，把 XRD 图谱挤成一条缝。 */
-        .demo-split { display: flex; gap: 15px; flex: 1 1 0%; min-height: 0; }
-        .demo-split > * { min-width: 0; }
-        
+
+        .panel-left { width: 340px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 2; }
+        .panel-center { flex: 1; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+
         .control-group { border-bottom: 1px solid #eee; padding-bottom: 15px; }
         .control-group:last-child { border-bottom: none; }
         .control-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #2c3e50; }
         .control-group select, .control-group input[type=range] { width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd; }
         .value-display { font-family: 'Consolas', monospace; color: #e74c3c; float: right; font-weight: bold; }
-        
-        #canvas-container { flex: 1 1 0%; min-width: 0; background: #1a1a1a; border-radius: 8px; position: relative; min-height: 300px; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); overflow: hidden; }
-        
+
+        #canvas-container { flex: 0 0 auto; width: 100%; height: var(--struct, 360px); background: #1a1a1a; border-radius: 8px; position: relative; box-shadow: inset 0 0 20px rgba(0,0,0,0.5); overflow: hidden; }
+        #canvas-container canvas { display: block; }
+        #plane-tag { position: absolute; left: 10px; top: 10px; z-index: 5; background: rgba(0,0,0,0.62); color: #d6eaf8; border-left: 3px solid #3498db; padding: 6px 10px; border-radius: 4px; font-family: Consolas, monospace; font-size: 0.75rem; line-height: 1.55; pointer-events: none; display: none; }
+        #plane-tag b { color: #5dade2; }
+
         /* 公式栏 */
         .formula-box { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; font-size: 1.2rem; position: relative; border-left: 5px solid #3498db; z-index: 50; }
-        .interactive-formula span { cursor: help; border-bottom: 2px solid rgba(52, 152, 219, 0.3); padding: 0 2px; transition: background 0.2s; border-radius: 3px; position: relative; }
-        .interactive-formula span:hover { background: #eaf2f8; color: #2980b9; border-bottom-color: #2980b9; }
-        
+        /* 统计量的说明不单独占一行公式栏，而是把 tooltip 能力直接挂到数值前的符号上 */
+        .interactive-formula span, .stat-item small .sym { cursor: help; border-bottom: 2px solid rgba(52, 152, 219, 0.3); padding: 0 2px; transition: background 0.2s; border-radius: 3px; position: relative; }
+        .interactive-formula span:hover, .stat-item small .sym:hover { background: #eaf2f8; color: #2980b9; border-bottom-color: #2980b9; }
+
         /* Tooltip 向下弹出 */
-        .interactive-formula span::after {
+        .interactive-formula span::after, .stat-item small .sym::after {
             content: attr(data-desc);
             position: absolute; top: 120%; left: 50%; transform: translateX(-50%);
             background: rgba(44, 62, 80, 0.95); color: white; padding: 8px 12px; border-radius: 4px;
             font-size: 0.85rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
-        .interactive-formula span::before {
+        .interactive-formula span::before, .stat-item small .sym::before {
             content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
             border-width: 5px; border-style: solid; border-color: transparent transparent rgba(44, 62, 80, 0.95) transparent;
             opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 2000;
         }
-        .interactive-formula span:hover::after, .interactive-formula span:hover::before { opacity: 1; top: 110%; }
+        .interactive-formula span:hover::after, .interactive-formula span:hover::before,
+        .stat-item small .sym:hover::after, .stat-item small .sym:hover::before { opacity: 1; top: 110%; }
 
         /* 统计与图表 */
-        .refine-stats { display: flex; justify-content: space-around; background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-        .stat-item { text-align: center; }
-        .stat-item small { color: #7f8c8d; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 1px; }
-        .stat-item strong { display: block; font-size: 1.8rem; color: #2c3e50; margin-top: 5px; }
-        .good-fit { color: #27ae60 !important; } 
+        /* Rwp / Rp / χ² 压成同一行紧凑文字（"Rwp = 12.34%"），把纵向空间让给 Rietveld 图 */
+        .refine-stats { display: flex; justify-content: center; align-items: baseline; gap: 30px; background: white; padding: 5px 14px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; z-index: 60; }
+        .stat-item { display: inline-flex; align-items: baseline; gap: 4px; white-space: nowrap; }
+        .stat-item small { color: #4a5568; font-size: 1.2rem; letter-spacing: 0.5px; }
+        .stat-item small .sym { border-bottom-color: rgba(52, 152, 219, 0.55); }
+        .stat-item strong { font-size: 1.8rem; color: #2c3e50; }
+        .stat-item .unit { color: #7f8c8d; font-size: 0.95rem; }
+        .good-fit { color: #27ae60 !important; }
         .ok-fit { color: #f39c12 !important; }
         .bad-fit { color: #e74c3c !important; }
-        
+
         button.action-btn { background: #27ae60; color: white; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 6px; font-weight: bold; margin-top: 10px; transition: background 0.2s; font-size: 1rem; box-shadow: 0 2px 5px rgba(39, 174, 96, 0.3); }
         button.action-btn:hover { background: #219150; transform: translateY(-1px); }
         button.action-btn:disabled { background: #95a5a6; cursor: not-allowed; box-shadow: none; transform: none; }
         button.action-btn.secondary { background: #3498db; box-shadow: 0 2px 5px rgba(52, 152, 219, 0.3); }
         button.action-btn.secondary:hover { background: #2980b9; }
 
-        #chart-container, #refine-chart-container { flex: 1 1 0%; min-width: 0; background: white; border-radius: 8px; padding: 0; min-height: 300px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        #refine-chart-container { flex: 1; background: white; border-radius: 8px; padding: 10px; min-height: 300px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        /* demo1 衍射图谱：固定 16:9 横向宽条（宽明显大于高度），而不是撑满整列高度 */
+        .demo1-container #chart-container {
+            flex: 0 1 auto; width: 100%; box-sizing: border-box;
+            aspect-ratio: 16 / 9; max-height: 100%; min-height: 0;
+            margin: 0 auto; background: white; border-radius: 8px; padding: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* 反射列表（图谱右侧的独立一栏，通栏高度、内部滚动） */
+        .refl-panel { width: 100%; min-width: 0; min-height: 0; display: flex; flex-direction: column; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); overflow: hidden; }
+        .refl-head { padding: 9px 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+        .refl-head h4 { margin: 0; font-size: 0.95rem; color: #2c3e50; white-space: nowrap; }
+        .refl-head span { font-size: 0.72rem; color: #7f8c8d; font-family: Consolas, monospace; white-space: nowrap; }
+        .refl-table-wrap { flex: 1; overflow-y: auto; overflow-x: hidden; }
+        table.refl-table { width: 100%; border-collapse: collapse; font-size: 0.73rem; table-layout: fixed; }
+        table.refl-table col.c-hkl { width: 20%; } table.refl-table col.c-d { width: 15%; }
+        table.refl-table col.c-2t { width: 16%; } table.refl-table col.c-int { width: 15%; }
+        table.refl-table col.c-f2 { width: 13%; } table.refl-table col.c-st { width: 21%; }
+        table.refl-table th { position: sticky; top: 0; background: #f8f9fa; color: #2c3e50; font-weight: 600; padding: 5px 2px; border-bottom: 1px solid #e8e8e8; z-index: 1; line-height: 1.25; white-space: nowrap; }
+        table.refl-table td { padding: 4px 2px; text-align: center; border-bottom: 1px solid #f4f4f4; font-family: Consolas, monospace; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        table.refl-table td.hkl { font-weight: bold; }
+        table.refl-table td.int { color: #e74c3c; font-weight: bold; }
+        table.refl-table tbody tr { cursor: pointer; transition: background 0.15s; }
+        table.refl-table tbody tr:hover { background: #eaf2f8; }
+        table.refl-table tbody tr.sel { background: #d6eaf8; box-shadow: inset 3px 0 0 #2980b9; }
+        table.refl-table tbody tr.extinct td { color: #b3b3b3; }
+        table.refl-table tbody tr.extinct td.hkl { text-decoration: line-through; }
+        table.refl-table tbody tr.degen td.hkl::after { content: "†"; color: #f39c12; font-weight: bold; }
+        .refl-foot { padding: 7px 12px; border-top: 1px solid #eee; font-size: 0.72rem; color: #7f8c8d; line-height: 1.5; }
+        .refl-foot .warn { color: #e74c3c; font-weight: bold; }
+        .badge { display: inline-block; padding: 1px 7px; border-radius: 10px; font-size: 0.68rem; font-family: 'Segoe UI', sans-serif; }
+        .badge.on { background: #e8f8f5; color: #27ae60; }
+        .badge.off { background: #fdedec; color: #e74c3c; }
+
+        /* 精修参数行 */
+        .param-row { margin-bottom: 12px; }
+        .param-row:last-child { margin-bottom: 0; }
+        .param-row label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.82rem; font-weight: 600; color: #2c3e50; margin-bottom: 5px; }
+        .param-row .vd { font-family: Consolas, monospace; color: #e74c3c; font-weight: bold; }
+        .param-row input[type=range] { width: 100%; accent-color: #3498db; }
+        .param-row .rng { font-size: 0.68rem; color: #b2bec3; font-family: Consolas, monospace; }
+        /* 精修参数前的勾选框：勾上才参与自动精修 */
+        .param-row .plabel { display: inline-flex; align-items: center; gap: 6px; }
+        .param-row input[type=checkbox].refine-check { width: 15px; height: 15px; margin: 0; accent-color: #3498db; cursor: pointer; flex: 0 0 auto; }
+        .param-row.off label { color: #a8b0b8; }
+        .param-row.off .vd { color: #b2bec3; }
+        .param-row.off input[type=range] { opacity: 0.4; }
+        .param-row.off .rng { color: #d5d8dc; }
+        .refine-status { margin-top: 8px; font-size: 0.78rem; color: #2c3e50; background: #eaf2f8; padding: 6px 9px; border-radius: 4px; font-family: Consolas, monospace; line-height: 1.5; }
+    #conv-chart-container { height: 118px; margin-top: 8px; background: white; border-radius: 6px; padding: 3px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+        /* Plotly 2.x 自身不注入 .plot-container 的高度规则，这层 div 会算成 0 高，
+           SVG 只能靠绝对定位溢出显示（收敛曲线图因此会溢出 .panel-left 的滚动区）。
+           补上等价的官方规则，让图表真正撑满容器。 */
+        #conv-chart-container .plot-container { height: 100%; width: 100%; }
+        .refine-note { font-size: 0.78rem; color: #7f8c8d; line-height: 1.55; margin-top: 8px; }
+
+        /* ===== Demo 1 布局：顶部参数栏 + 三栏工作区(结构图 | 宽幅图谱 | 反射列表) ===== */
+        .demo1-container {
+            flex-direction: column; gap: 10px; padding: 12px 16px;
+            /* 结构示意框边长：同时受视口宽/高约束，保证正方形且不撑破布局 */
+            --struct: clamp(320px, min(52vh, 27vw), 560px);
+            /* 反射列表栏宽 */
+            --reflw: clamp(300px, 23vw, 420px);
+        }
+        .param-bar {
+            flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 8px 22px;
+            background: #fff; padding: 10px 16px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .param-bar .pb-title { font-size: 0.92rem; font-weight: 700; color: #2c3e50; padding-bottom: 4px; white-space: nowrap; }
+        .param-bar .pb-item { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+        .param-bar .pb-item > label { font-size: 0.78rem; font-weight: 600; color: #2c3e50; margin: 0; display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+        .param-bar .pb-item > label b { color: #e74c3c; font-family: Consolas, monospace; font-weight: bold; }
+        .param-bar select, .param-bar input[type=range] { padding: 3px; border-radius: 4px; border: 1px solid #ddd; }
+        .param-bar select { min-width: 150px; }
+        .param-bar input[type=range] { width: 148px; accent-color: #3498db; }
+        .param-bar .pb-rule { flex: 1 1 260px; min-width: 210px; }
+        .param-bar .pb-rule p { margin: 0; font-size: 0.8rem; color: #2c3e50; line-height: 1.45; }
+        .demo1-body {
+            flex: 1 1 auto; min-height: 0;
+            display: grid;
+            grid-template-columns: var(--struct) minmax(0, 1fr) var(--reflw);
+            gap: 12px; align-items: stretch;
+        }
+        .demo1-left { min-width: 0; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+        .demo1-mid { min-width: 0; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+        .demo1-left .formula-box { font-size: 1rem; padding: 10px; }
+        .demo1-hint { font-size: 0.8rem; color: #7f8c8d; background: #fffdf3; padding: 9px 11px; border-radius: 6px; border-left: 4px solid #f39c12; line-height: 1.5; }
+        .demo1-hint strong { color: #f39c12; }
+        @media (max-width: 1150px) {
+            .demo1-container { overflow-y: auto; }
+            .demo1-body { grid-template-columns: minmax(0, 1fr); grid-auto-rows: min-content; }
+            .demo1-left { width: 100%; }
+            .demo1-container #canvas-container { width: min(100%, 46vh); height: auto; aspect-ratio: 1 / 1; margin: 0 auto; }
+            .demo1-hint { margin-top: 12px; }
+            .demo1-container #chart-container { height: 340px; min-height: 340px; aspect-ratio: auto; flex: 0 0 auto; }
+            .refl-panel { min-height: 300px; }
+        }
 
         .fade-enter-active, .fade-leave-active { transition: opacity 0.3s ease; }
         .fade-enter, .fade-leave-to { opacity: 0; }
-        
-        /* ---------- 响应式：适应嵌入页面的窄容器 ---------- */
-        /* 中等宽度：收窄控制面板，给 3D 视图和图谱留出空间 */
-        @media (max-width: 1100px) {
-            .page-container { padding: 14px; gap: 14px; }
-            .panel-left { flex: 0 0 260px; width: 260px; padding: 14px; gap: 12px; }
-            .panel-center { gap: 12px; }
-            .demo-split { gap: 12px; }
-            nav { padding: 0.7rem 0.9rem; }
-            nav h1 { font-size: 1.05rem; }
-        }
-        
-        /* 窄屏：控制面板置顶，3D 视图与图谱改为上下堆叠并允许纵向滚动 */
-        @media (max-width: 860px) {
-            .page-container { flex-direction: column; overflow-y: auto; }
-            .panel-left { flex: 0 0 auto; width: 100%; overflow-y: visible; }
-            .panel-center { flex: 0 0 auto; }
-            .demo-split { flex: 0 0 auto; flex-direction: column; }
-            .demo-split > #canvas-container, .demo-split > #chart-container { flex: 0 0 auto; height: 300px; }
-            #chart-container, #refine-chart-container { min-height: 300px; }
-            .formula-box { font-size: 1rem; padding: 12px; }
-            .stat-item strong { font-size: 1.4rem; }
-            nav h1 { font-size: 0.95rem; }
-            .nav-buttons button { padding: 5px 9px; margin-left: 6px; font-size: 0.85rem; }
-        }
-        
-        @media (max-width: 520px) {
-            .demo-split > #canvas-container, .demo-split > #chart-container { height: 240px; }
-            .refine-stats { flex-wrap: wrap; gap: 8px; }
-        }
     </style>
 </head>
 <body>
@@ -173,10 +237,10 @@
 
     <div class="main-content">
         <transition name="fade">
-        <div class="page-container" v-show="mode === 'demo1'">
-            <div class="panel-left">
-                <h3>🛠️ {{ t('params') }}</h3>
-                <div class="control-group">
+        <div class="page-container demo1-container" v-show="mode === 'demo1'">
+            <div class="param-bar">
+                <div class="pb-title">🛠️ {{ t('params') }}</div>
+                <div class="pb-item">
                     <label>{{ t('structure') }}</label>
                     <select v-model="d1.structure" @change="updateStructure">
                         <option value="sc">{{ t('sc') }}</option>
@@ -184,38 +248,84 @@
                         <option value="fcc">{{ t('fcc') }}</option>
                     </select>
                 </div>
-                <div class="control-group">
-                    <label>{{ t('lattice_a') }} (Å) <span class="value-display">{{ d1.a }}</span></label>
+                <div class="pb-item">
+                    <label>{{ t('lattice_a') }} (Å) <b>{{ d1.a.toFixed(1) }}</b></label>
                     <input type="range" v-model.number="d1.a" min="2.0" max="8.0" step="0.1" @input="updateStructure">
                 </div>
-                <div class="control-group">
-                    <label>{{ t('wavelength') }} (Å) <span class="value-display">{{ d1.lambda }}</span></label>
+                <div class="pb-item">
+                    <label>{{ t('wavelength') }} (Å) <b>{{ d1.lambda.toFixed(2) }}</b></label>
                     <input type="range" v-model.number="d1.lambda" min="0.1" max="2.5" step="0.01" @input="updateXRD">
                 </div>
-                <div class="control-group">
-                    <label>{{ t('peak_width') }} (FWHM)</label>
+                <div class="pb-item">
+                    <label>{{ t('peak_width') }} <b>{{ d1.fwhm.toFixed(2) }}°</b></label>
                     <input type="range" v-model.number="d1.fwhm" min="0.1" max="1.0" step="0.05" @input="updateXRD">
                 </div>
-                <div style="margin-top:auto; font-size:0.85rem; color:#7f8c8d; background:#f8f9fa; padding:10px; border-radius:4px; border-left:3px solid #f39c12;">
-                    <strong>Hint:</strong> {{ t('d1_hint') }}
+                <div class="pb-item pb-rule">
+                    <label>{{ t('rule_title') }}</label>
+                    <p>{{ reflRule }}</p>
                 </div>
             </div>
 
-            <div class="panel-center">
-                <div class="formula-box">
-                    <div class="interactive-formula">
-                        <strong>Bragg's Law: </strong>
-                        <span :data-desc="t('desc_n')">n</span>
-                        <span :data-desc="t('desc_lambda')">&lambda;</span>
-                        = 2
-                        <span :data-desc="t('desc_d')">d<sub>hkl</sub></span>
-                        sin
-                        <span :data-desc="t('desc_theta')">&theta;</span>
+            <div class="demo1-body">
+                <div class="demo1-left">
+                    <div id="canvas-container">
+                        <div id="plane-tag"></div>
+                    </div>
+                    <div class="formula-box">
+                        <div class="interactive-formula">
+                            <strong>{{ t('bragg_law') }}</strong>
+                            <span :data-desc="t('desc_n')">n</span>
+                            <span :data-desc="t('desc_lambda')">&lambda;</span>
+                            = 2
+                            <span :data-desc="t('desc_d')">d<sub>hkl</sub></span>
+                            sin
+                            <span :data-desc="t('desc_theta')">&theta;</span>
+                        </div>
                     </div>
                 </div>
-                <div class="demo-split">
-                    <div id="canvas-container"></div>
+                <div class="demo1-mid">
                     <div id="chart-container"></div>
+                    <div class="demo1-hint">
+                        💡 <strong>{{ t('hint') }}</strong> {{ t('d1_hint') }}
+                    </div>
+                </div>
+                <div class="refl-panel">
+                    <div class="refl-head">
+                        <h4>📋 {{ t('refl_title') }}</h4>
+                        <span>{{ t('refl_count') }} {{ nAllowedRefl }}/{{ reflList.length }}</span>
+                    </div>
+                    <div class="refl-table-wrap">
+                        <table class="refl-table">
+                            <colgroup>
+                                <col class="c-hkl"><col class="c-d"><col class="c-2t">
+                                <col class="c-int"><col class="c-f2"><col class="c-st">
+                            </colgroup>
+                            <thead><tr>
+                                <th>{{ t('th_hkl') }}</th>
+                                <th>{{ t('th_d') }}</th>
+                                <th>{{ t('th_2t') }}</th>
+                                <th>{{ t('th_int') }}</th>
+                                <th>{{ t('th_f2') }}</th>
+                                <th>{{ t('th_status') }}</th>
+                            </tr></thead>
+                            <tbody>
+                                <tr v-for="r in reflList" :key="r.key"
+                                    :class="{ sel: r.key === selReflKey, extinct: !r.allowed, degen: r.degenerate.length > 0 }"
+                                    @click="selectRefl(r)">
+                                    <td class="hkl" :title="r.allowed ? r.tooltip : t('st_extinct')">{{ r.hkl }}</td>
+                                    <td>{{ r.d.toFixed(3) }}</td>
+                                    <td>{{ r.twoTheta.toFixed(2) }}</td>
+                                    <td class="int">{{ r.allowed ? (r.relI * 100).toFixed(1) : '0' }}</td>
+                                    <td>{{ r.F2 }}</td>
+                                    <td><span class="badge" :class="r.allowed ? 'on' : 'off'">{{ r.allowed ? t('st_allowed') : t('st_extinct') }}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="refl-foot">
+                        <span v-if="reflMsg" class="warn">{{ reflMsg }}</span>
+                        <span v-else>{{ t('refl_hint') }}<br>{{ t('refl_footnote') }}</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -226,18 +336,18 @@
             <div class="panel-left">
                 <h3>📉 {{ t('refine_panel') }}</h3>
                 <div class="control-group">
-                    <p style="font-size:0.9rem; line-height:1.5;">{{ t('step1_desc') }}</p>
+                    <p style="font-size:0.84rem; line-height:1.4; margin-bottom:8px;">{{ t('step1_desc') }}</p>
                     <button class="action-btn" @click="importDataFromDemo1">
                         {{ t('import_data') }}
                     </button>
-                    <div v-if="d2.hasData" style="margin-top:10px; padding:8px; background:#e8f8f5; color:#27ae60; border-radius:4px; font-size:0.85rem; display:flex; align-items:center;">
-                        <span style="font-size:1.2rem; margin-right:5px;">✓</span> 
-                        <div>{{ t('data_imported') }}<br><small>Target: {{ d1.structure.toUpperCase() }}, a={{ d1.a }}</small></div>
+                    <div v-if="d2.hasData" style="margin-top:8px; padding:6px 8px; background:#e8f8f5; color:#27ae60; border-radius:4px; font-size:0.8rem; display:flex; align-items:center;">
+                        <span style="font-size:1.05rem; margin-right:5px;">✓</span>
+                        <div>{{ t('data_imported') }} · {{ d2.selectedModel.toUpperCase() }}, a={{ d2.param_a.toFixed(3) }} Å</div>
                     </div>
                 </div>
                 <div class="control-group" v-if="d2.hasData">
                     <label>{{ t('select_model') }}</label>
-                    <select v-model="d2.selectedModel" @change="updateRefinement">
+                    <select v-model="d2.selectedModel" @change="onManualParam">
                         <option value="sc">{{ t('sc') }}</option>
                         <option value="bcc">{{ t('bcc') }}</option>
                         <option value="fcc">{{ t('fcc') }}</option>
@@ -245,54 +355,74 @@
                     <p style="font-size:0.8rem; color:#e74c3c; margin-top:5px;">⚠️ {{ t('model_hint') }}</p>
                 </div>
                 <div class="control-group" v-if="d2.hasData">
-                    <label>{{ t('adjust_a') }} <span class="value-display">{{ d2.param_a.toFixed(4) }} Å</span></label>
-                    <input type="range" v-model.number="d2.param_a" min="2.0" max="8.0" step="0.001" @input="updateRefinement">
-                    <button class="action-btn secondary" @click="autoRefine" :disabled="isRefining">
-                        {{ isRefining ? 'Refining...' : t('auto_refine') }}
-                    </button>
-                </div>
+                    <label>{{ t('refine_params') }}</label>
+                    <div class="param-row" :class="{ off: !d2.refineSel.a }">
+                        <label>
+                            <span class="plabel">
+                                <input type="checkbox" class="refine-check" v-model="d2.refineSel.a" :title="t('refine_sel_hint')">
+                                {{ t('adjust_a') }}
+                            </span>
+                            <span class="vd">{{ d2.param_a.toFixed(4) }} Å</span>
+                        </label>
+                        <input id="refine-slider-a" type="range" v-model.number="d2.param_a" min="2.0" max="8.0" step="0.0005" @input="onManualParam">
+                        <div class="rng">2.0 – 8.0 Å</div>
+                    </div>
+                    <div class="param-row" :class="{ off: !d2.refineSel.zero }">
+                        <label>
+                            <span class="plabel">
+                                <input type="checkbox" class="refine-check" v-model="d2.refineSel.zero" :title="t('refine_sel_hint')">
+                                {{ t('param_zero') }}
+                            </span>
+                            <span class="vd">{{ d2.param_zero.toFixed(3) }}°</span>
+                        </label>
+                        <input id="refine-slider-zero" type="range" v-model.number="d2.param_zero" min="-0.5" max="0.5" step="0.001" @input="onManualParam">
+                        <div class="rng">−0.5 – +0.5 °</div>
+                    </div>
+                    <div class="param-row" :class="{ off: !d2.refineSel.bg }">
+                        <label>
+                            <span class="plabel">
+                                <input type="checkbox" class="refine-check" v-model="d2.refineSel.bg" :title="t('refine_sel_hint')">
+                                {{ t('param_bg') }}
+                            </span>
+                            <span class="vd">{{ d2.param_bg.toFixed(0) }}</span>
+                        </label>
+                        <input id="refine-slider-bg" type="range" v-model.number="d2.param_bg" min="0" max="3000" step="5" @input="onManualParam">
+                        <div class="rng">0 – 3000 counts</div>
+                    </div>
+                                        <button class="action-btn" @click="autoRefine" :disabled="isRefining">
+                                            {{ isRefining ? t('refining') : t('auto_refine') }}
+                                        </button>
+                                        <div v-if="refineStatus" class="refine-status">{{ refineStatus}}</div>
+                                        <div id="conv-chart-container" v-if="d2.hasData"></div>
+                                        <p class="refine-note">{{ t('conv_note') }}<br>{{ t('refine_note') }}</p>
+                                    </div>
                 <div class="control-group" v-if="d2.hasData">
-                    <label>Optimization Algorithm</label>
+                    <label>{{ t('opt_algo') }}</label>
                     <select v-model="d2.algo">
                         <option value="hill">{{ t('algo_hill') }}</option>
                         <option value="anneal">{{ t('algo_anneal') }}</option>
                         <option value="gradient">{{ t('algo_gradient') }}</option>
                     </select>
                 </div>
-
-                <div class="control-group" v-if="d2.hasData">
-                    <label>{{ t('adjust_a') }} <span class="value-display">{{ d2.param_a.toFixed(4) }} Å</span></label>
-                </div>
             </div>
 
             <div class="panel-center">
-                <div class="formula-box" style="border-left-color: #e74c3c;">
-                    <div class="interactive-formula">
-                        <strong>Stats: </strong>
-                        <span :data-desc="t('desc_rwp')">R<sub>wp</sub></span>,
-                        <span :data-desc="t('desc_rp')">R<sub>p</sub></span>,
-                        <span :data-desc="t('desc_chi2')">&chi;<sup>2</sup></span>
-                    </div>
-                </div>
+                <!-- 统计量的说明不再单独占一条公式栏，改为悬停数值前的符号时弹出提示 -->
                 <div class="refine-stats">
-                    <div class="stat-item">
-                        <small>R<sub>wp</sub> (%)</small>
-                        <strong :class="getFitClass(d2.rwp)">
-                            {{ d2.hasData ? d2.rwp : '--' }}
-                        </strong>
-                    </div>
-                    <div class="stat-item">
-                        <small>R<sub>p</sub> (%)</small>
-                        <strong :class="getFitClass(d2.rp)">
-                            {{ d2.hasData ? d2.rp : '--' }}
-                        </strong>
-                    </div>
-                    <div class="stat-item">
-                        <small>Chi<sup>2</sup></small>
-                        <strong :class="getChi2Class(d2.chi2)">
-                            {{ d2.hasData ? d2.chi2 : '--' }}
-                        </strong>
-                    </div>
+                    <span class="stat-item">
+                        <small><span class="sym" :data-desc="t('desc_rwp')">R<sub>wp</sub></span> =</small>
+                        <strong :class="getFitClass(d2.rwp)">{{ d2.hasData ? d2.rwp : '--' }}</strong>
+                        <span class="unit">%</span>
+                    </span>
+                    <span class="stat-item">
+                        <small><span class="sym" :data-desc="t('desc_rp')">R<sub>p</sub></span> =</small>
+                        <strong :class="getFitClass(d2.rp)">{{ d2.hasData ? d2.rp : '--' }}</strong>
+                        <span class="unit">%</span>
+                    </span>
+                    <span class="stat-item">
+                        <small><span class="sym" :data-desc="t('desc_chi2')">&chi;<sup>2</sup></span> =</small>
+                        <strong :class="getChi2Class(d2.chi2)">{{ d2.hasData ? d2.chi2 : '--' }}</strong>
+                    </span>
                 </div>
                 <div id="refine-chart-container"></div>
             </div>
@@ -308,7 +438,9 @@
             mode: 'demo1',
             lang: 'zh',
             isRefining: false,
-            
+            refineStatus: '',
+            reflMsg: '',
+
             texts: {
                 zh: {
                     title: '晶体学原理与XRD精修教学',
@@ -322,7 +454,22 @@
                     lattice_a: '晶胞参数 a',
                     wavelength: 'X射线波长 λ',
                     peak_width: '峰宽 (FWHM)',
-                    d1_hint: '悬停在红色的衍射峰上，可查看对应的晶面指数(hkl)。',
+                    bragg_law: '布拉格定律:',
+                    hint: '提示:',
+                    stats: '统计量',
+                    opt_algo: '优化算法',
+                    model_current: '当前拟合模型',
+                    d1_hint: '悬停在红色的衍射峰上，可查看对应的晶面指数(hkl)；点击右侧反射列表中的任意一行，可在图谱中定位该峰，并在左侧 3D 结构中显示该晶面与法线。',
+                    rule_title: '系统消光规律',
+                    rule_sc: '简单立方：无系统消光，任何 (hkl) 都可能出现，|F|² = 1。',
+                    rule_bcc: '体心立方：h+k+l 为偶数才出现，故 (100)、(111) 消失，出现时 |F|² = 4。',
+                    rule_fcc: '面心立方：h,k,l 全奇或全偶才出现，故 (100)、(110) 消失，出现时 |F|² = 16。',
+                    refl_title: '反射列表',
+                    refl_count: '出现/总数',
+                    refl_hint: '灰显行为被系统消光的晶面族；点击任意一行可在图谱中定位对应峰位。',
+                    refl_footnote: '† 表示该族与另一晶面族间距相同（2θ 重合），二者强度相加形成最终峰。',
+                    th_hkl: 'hkl', th_d: 'd (Å)', th_2t: '2θ (°)', th_int: 'I/I₀', th_f2: '|F|²', th_status: '状态',
+                    st_allowed: '出现', st_extinct: '消光',
                     desc_n: '衍射级数 (整数)',
                     desc_lambda: 'X射线波长 (埃)',
                     desc_d: '晶面间距 (与晶胞参数有关)',
@@ -330,20 +477,44 @@
                     desc_rwp: '加权图谱残差 (权重考虑了计数统计)',
                     desc_rp: '图谱残差 (绝对误差之和/观测值之和)',
                     desc_chi2: '拟合优度 (Goodness of Fit)，理想值接近1',
-                    desc_w: '权重因子 (通常为 1/Yobs)',
-                    desc_yobs: '观测强度 (实验数据)',
-                    desc_ycalc: '计算强度 (理论模型)',
                     refine_panel: '精修控制台',
-                    step1_desc: '第一步：点击下方按钮，将 Tab 1 中模拟的图谱导入作为“实验观测数据”。',
-                    import_data: '⬇️ 导入模拟数据',
-                    data_imported: '数据已加载',
-                    select_model: '选择拟合模型',
-                    model_hint: '如果结构模型选错，峰位永远无法对齐，Rwp 无法下降。',
-                    adjust_a: '精修晶胞参数',
+                            step1_desc: 'Tab 1 的模拟图谱已自动导入为“实验观测数据”（含泊松噪声）；改动 Tab 1 后可重新导入。',
+                            import_data: '🔄 重新导入模拟数据',
+                            data_imported: '数据已加载',                    select_model: '选择拟合模型',
+                    model_hint: '结构模型选错 → 峰位无法对齐，Rwp 降不下来。',
+                    refine_params: '精修参数',
+                    refine_sel_hint: '勾选后该参数才参与自动拟合',
+                    refine_none_sel: '请至少勾选一个精修参数',
+                    adjust_a: '晶胞参数 a',
+                    param_zero: '仪器零点偏移 2θ₀',
+                    param_bg: '背景强度',
                     auto_refine: '✨ 自动拟合 (真实算法)',
+                    refining: '拟合中...',
+                    refine_note: '观测按计数统计（泊松噪声 σ=√Y），真值下 χ² ≈ 1。',
                     algo_hill: '变步长爬山法 (Hill Climbing)',
                     algo_anneal: '模拟退火 (Simulated Annealing)',
                     algo_gradient: '梯度下降 (Gradient Descent)',
+                    axis_2t: '2θ (°)',
+                    axis_int: '强度 (计数)',
+                    axis_diff: '差值 (计数)',
+                    legend_obs: 'Y_obs 观测',
+                    legend_calc: 'Y_calc 计算',
+                    legend_diff: '差值 (Y_obs − Y_calc)',
+                    diff_formula: '差值 = Y_obs − Y_calc',
+                    conv_title: '收敛过程（Rwp 随迭代变化）',
+                    conv_x: '迭代次数',
+                    conv_y: 'Rwp (%)',
+                    conv_empty: '尚未开始优化 —— 点击「自动精修」查看逐步收敛',
+                    conv_note: '每步记录一次 Rwp（对数轴）：越陡下降越快，变平即收敛。',
+                    refine_done: '优化完成',
+                    rietveld_plot: 'Rietveld 图',
+                    plane_title: '晶面',
+                    plane_normal: '法线',
+                    plane_d: '间距',
+                    chart_title_sim: '模拟 XRD 图谱 (含 hkl 提示)',
+                    waiting_data: '请先导入数据',
+                    waiting_title: '等待数据...',
+                    extinct_msg: '该晶面族被系统消光 (|F|²=0)，不会出现在图谱中。'
                 },
                 en: {
                     title: 'Crystallography & Refinement Demo',
@@ -356,8 +527,23 @@
                     fcc: 'Face Centered (FCC)',
                     lattice_a: 'Lattice Param a',
                     wavelength: 'Wavelength λ',
-                    peak_width: 'Peak Width',
-                    d1_hint: 'Hover over the red peaks to see the Miller Indices (hkl).',
+                    peak_width: 'Peak Width (FWHM)',
+                    bragg_law: "Bragg's Law:",
+                    hint: 'Hint:',
+                    stats: 'Stats',
+                    opt_algo: 'Optimization Algorithm',
+                    model_current: 'Current Model',
+                    d1_hint: 'Hover over the red peaks to see the Miller Indices (hkl); click a row of the reflection list to locate its peak and display that plane with its normal in the 3D cell.',
+                    rule_title: 'Systematic Absences',
+                    rule_sc: 'Simple cubic: no systematic absences, every (hkl) is possible, |F|² = 1.',
+                    rule_bcc: 'Body-centered: h+k+l must be even, so (100) and (111) are absent; |F|² = 4 when allowed.',
+                    rule_fcc: 'Face-centered: h,k,l all odd or all even, so (100) and (110) are absent; |F|² = 16 when allowed.',
+                    refl_title: 'Reflections',
+                    refl_count: 'Allowed/Total',
+                    refl_hint: 'Greyed rows are systematically extinct; click any row to locate its peak in the pattern.',
+                    refl_footnote: '† marks a family sharing the same spacing as another family (degenerate 2θ); their intensities add up in the final peak.',
+                    th_hkl: 'hkl', th_d: 'd (Å)', th_2t: '2θ (°)', th_int: 'I/I₀', th_f2: '|F|²', th_status: 'Status',
+                    st_allowed: 'Allowed', st_extinct: 'Extinct',
                     desc_n: 'Diffraction Order',
                     desc_lambda: 'X-ray Wavelength',
                     desc_d: 'Interplanar Spacing',
@@ -365,55 +551,111 @@
                     desc_rwp: 'Weighted Profile Residual',
                     desc_rp: 'Profile Residual (Unweighted)',
                     desc_chi2: 'Goodness of Fit (Ideal is ~1.0)',
-                    desc_w: 'Weighting Factor',
-                    desc_yobs: 'Observed Intensity',
-                    desc_ycalc: 'Calculated Intensity',
                     refine_panel: 'Refinement Console',
-                    step1_desc: 'Step 1: Import simulated pattern from Tab 1 as "Observed Data".',
-                    import_data: '⬇️ Import Data',
-                    data_imported: 'Data Loaded',
-                    select_model: 'Select Model',
-                    model_hint: 'Wrong space group implies peaks will never match.',
-                    adjust_a: 'Refine Parameter',
+                            step1_desc: 'The pattern from Tab 1 is auto-imported as "Observed Data" (Poisson noise included); re-import after changing Tab 1.',
+                            import_data: '🔄 Re-import Data',
+                            data_imported: 'Data Loaded',                    select_model: 'Select Model',
+                    model_hint: 'Wrong space group → peaks cannot align; Rwp stalls.',
+                    refine_params: 'Refinement Parameters',
+                    refine_sel_hint: 'Only checked parameters are refined',
+                    refine_none_sel: 'Please check at least one parameter to refine',
+                    adjust_a: 'Lattice Parameter a',
+                    param_zero: 'Zero Shift 2θ₀',
+                    param_bg: 'Background',
                     auto_refine: '✨ Auto Fit (Real Algo)',
+                    refining: 'Refining...',
+                    refine_note: 'Counting statistics (Poisson σ=√Y) ⇒ χ² ≈ 1 at truth.',
                     algo_hill: 'Hill Climbing (Variable Step)',
                     algo_anneal: 'Simulated Annealing',
                     algo_gradient: 'Gradient Descent',
+                    axis_2t: '2Theta (deg)',
+                    axis_int: 'Intensity (Counts)',
+                    axis_diff: 'Difference (counts)',
+                    legend_obs: 'Y_obs observed',
+                    legend_calc: 'Y_calc calculated',
+                    legend_diff: 'Difference (Y_obs − Y_calc)',
+                    diff_formula: 'Difference = Y_obs − Y_calc',
+                    conv_title: 'Convergence (Rwp vs iteration)',
+                    conv_x: 'Iteration',
+                    conv_y: 'Rwp (%)',
+                    conv_empty: 'No optimization yet — click "Auto Refine" to watch it converge',
+                    conv_note: 'Rwp per iteration (log scale): steeper = faster, flat = converged.',
+                    refine_done: 'Refinement finished',
+                    rietveld_plot: 'Rietveld Plot',
+                    plane_title: 'Plane',
+                    plane_normal: 'Normal',
+                    plane_d: 'Spacing',
+                    chart_title_sim: 'Simulated Pattern (with hkl)',
+                    waiting_data: 'Please Import Data',
+                    waiting_title: 'Waiting for data...',
+                    extinct_msg: 'This family is systematically extinct (|F|² = 0) and cannot appear in the pattern.'
                 }
             },
 
             d1: { structure: 'sc', a: 4.0, lambda: 1.54, fwhm: 0.3 },
-            // 新增 rp 和 chi2 变量
-            d2: { hasData: false, obsData: {x:[], y:[], noiseOnly:[]}, selectedModel: 'sc', param_a: 3.5, rwp: 0, rp: 0, chi2: 0, algo: 'hill' },
-            three: { scene: null, camera: null, renderer: null, atoms: [], lines: null, animationId: null },
-            resizeObserver: null,
-            scheduleResize: null,
-            resizeRaf: null
+            reflList: [], selReflKey: null,
+            // 精修状态：a / 仪器零点偏移 / 背景 三参数联合精修
+            d2: {
+                hasData: false,
+                obsData: { x: [], y: [] },
+                selectedModel: 'sc',
+                param_a: 3.5,
+                param_zero: 0,
+                param_bg: 1000,
+                rwp: 0, rp: 0, chi2: 0,
+                conv: [], convIt: 0,
+                algo: 'hill',
+                // 参与自动精修的参数开关：只勾选的参数会在优化过程中被调整，
+                // 未勾选的参数在精修期间保持当前值不变
+                refineSel: { a: true, zero: true, bg: true },
+                // 迭代过程中每隔多少步刷新一次 Rietveld 主图。
+                // 2~5 比较合适：太密会把 Plotly.react 的开销压过优化本身，太疏则看不出曲线在动。
+                liveEvery: 2
+            },
+            three: { scene: null, camera: null, renderer: null, atoms: [], lines: null, planeGroup: null, visualSize: 1.65, animationId: null }
+        },
+        computed: {
+            // 列表中"出现"的反射数目（消光的仍保留在表中，仅置灰）
+            nAllowedRefl: function() {
+                return this.reflList.filter(function(r) { return r.allowed; }).length;
+            },
+            // 当前结构的系统消光规律说明
+            reflRule: function() {
+                const map = { sc: 'rule_sc', bcc: 'rule_bcc', fcc: 'rule_fcc' };
+                return this.t(map[this.d1.structure] || 'rule_sc');
+            }
         },
         watch: {
             mode(newVal) {
                 this.$nextTick(() => {
-                    if (newVal !== 'demo1' && !this.d2.hasData) this.drawEmptyRefineChart();
-                    this.resizePlots();
-                    if(this.scheduleResize) this.scheduleResize();
+                    this.resizeThree();
+                    if (newVal === 'demo1') {
+                        Plotly.Plots.resize('chart-container');
+                    } else {
+                        // 首次进入精修页：自动把 Tab 1 模拟的图谱导入为观测数据，
+                        // 否则页面停在「请先导入数据」的空白状态，看不到观测/计算/差值的三层结构
+                        if (!this.d2.hasData) this.importDataFromDemo1();
+                        else { this.updateRefinement(); this.drawConvChart(); }
+                        Plotly.Plots.resize('refine-chart-container');
+                    }
                 });
             }
         },
         methods: {
             t(key) { return this.texts[this.lang][key]; },
-            toggleLang() { 
-                this.lang = this.lang === 'zh' ? 'en' : 'zh'; 
-                this.updateXRD(); 
-                if(this.d2.hasData) this.updateRefinement();
-                else if(this.mode === 'demo2') this.drawEmptyRefineChart();
+            toggleLang() {
+                this.lang = this.lang === 'zh' ? 'en' : 'zh';
+                this.updateXRD();
+                if (this.d2.hasData) this.updateRefinement();
+                else if (this.mode === 'demo2') this.drawEmptyRefineChart();
             },
             switchMode(m) { this.mode = m; },
-            
+
             // 通用的样式判定
             getFitClass(val) {
                 if (!this.d2.hasData) return '';
                 const r = parseFloat(val);
-                if (r < 5.0) return 'good-fit'; 
+                if (r < 5.0) return 'good-fit';
                 if (r < 15) return 'ok-fit';
                 return 'bad-fit';
             },
@@ -426,198 +668,210 @@
                 return 'bad-fit';
             },
 
-            // --- Three.js setup ---
-            initThree() {
-                const container = document.getElementById('canvas-container');
-                if(!container) return;
-                this.three.scene = new THREE.Scene();
-                this.three.scene.background = new THREE.Color(0x1a1a1a);
-                this.three.camera = new THREE.PerspectiveCamera(45, container.offsetWidth / container.offsetHeight, 0.1, 100);
-                this.three.camera.position.set(3.5, 3.5, 4.5);
-                this.three.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-                this.three.renderer.setSize(container.offsetWidth, container.offsetHeight);
-                container.appendChild(this.three.renderer.domElement);
-                const controls = new THREE.OrbitControls(this.three.camera, this.three.renderer.domElement);
-                controls.enableDamping = true;
-                this.three.scene.add(new THREE.AmbientLight(0x404040, 1.5));
-                const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-                dirLight.position.set(5, 5, 5);
-                this.three.scene.add(dirLight);
-                this.bindResize(container);
-                this.animate();
-                this.updateStructure();
+            // ================= 物理内核 =================
+            // 洛伦兹-偏振因子 LP(θ) = (1 + cos²2θ) / (sin²θ · cosθ)
+            lpFactor(thetaRad) {
+                const s = Math.sin(thetaRad), c = Math.cos(thetaRad);
+                return (1 + Math.pow(Math.cos(2 * thetaRad), 2)) / (s * s * c);
             },
-            // 容器尺寸变化时重算 3D 相机比例与图谱尺寸；
-            // 只监听 window 的 resize 在嵌入 iframe 时会漏掉布局变化，
-            // 导致画布按旧尺寸拉伸，晶体看起来被压扁变形。
-            bindResize(container) {
-                const apply = () => {
-                    if(!this.three.camera || !this.three.renderer) return;
-                    const w = container.offsetWidth, h = container.offsetHeight;
-                    if(w > 0 && h > 0) {
-                        this.three.camera.aspect = w / h;
-                        this.three.camera.updateProjectionMatrix();
-                        this.three.renderer.setSize(w, h);
-                    }
-                    this.resizePlots();
-                };
-                const schedule = () => {
-                    if(this.resizeRaf) cancelAnimationFrame(this.resizeRaf);
-                    this.resizeRaf = requestAnimationFrame(() => { this.resizeRaf = null; apply(); });
-                };
-                this.scheduleResize = schedule;
-                window.addEventListener('resize', schedule);
-                if(window.ResizeObserver) {
-                    this.resizeObserver = new ResizeObserver(schedule);
-                    this.resizeObserver.observe(container);
-                    const refine = document.getElementById('refine-chart-container');
-                    if(refine) this.resizeObserver.observe(refine);
+            // 结构因子 F(hkl)（单原子散射因子 f = 1，所有原子等价）
+            // SC: F = 1；BCC: F = 1 + (−1)^(h+k+l)；FCC: F = 1 + (−1)^(h+k) + (−1)^(h+l) + (−1)^(k+l)
+            structureFactor(h, k, l, structure) {
+                const st = structure || this.d1.structure;
+                if (st === 'bcc') return 1 + Math.pow(-1, h + k + l);
+                if (st === 'fcc') return 1 + Math.pow(-1, h + k) + Math.pow(-1, h + l) + Math.pow(-1, k + l);
+                return 1;
+            },
+            // |F|²（为 0 即系统消光）
+            structureFactorSquared(h, k, l, structure) {
+                const F = this.structureFactor(h, k, l, structure);
+                return F * F;
+            },
+            // 系统消光判定：SC 无消光；BCC 需 h+k+l 为偶数；FCC 需 h,k,l 全奇或全偶
+            isAllowedReflection(h, k, l, structure) {
+                const st = structure || this.d1.structure;
+                if (st === 'bcc') return ((h + k + l) % 2 === 0);
+                if (st === 'fcc') {
+                    const par = [h % 2, k % 2, l % 2];
+                    return (par.every(p => p === 0) || par.every(p => p !== 0));
                 }
+                return true;
             },
-            // 安全地调整 Plotly 图谱尺寸：图谱未创建或容器隐藏时跳过
-            resizePlots() {
-                try {
-                    const id = this.mode === 'demo1' ? 'chart-container' : 'refine-chart-container';
-                    const el = document.getElementById(id);
-                    if(el && el.offsetWidth > 0 && el.data) Plotly.Plots.resize(el);
-                } catch(e) { /* 图谱尚未就绪时忽略 */ }
+            // 晶面族重数（立方晶系，代表元 h ≥ k ≥ l）
+            //   含 0 指标: {h00} = 6    {hh0} = 12   {hk0} = 24
+            //   不含 0   : {hkl} = 48   {hhh} = 8    {hhl} = 24（含 h==k≠l 与 k==l≠h 两种）
+            planeMultiplicity(h, k, l) {
+                if (l === 0) {
+                    if (k === 0) return 6;        // {h00}
+                    if (h === k) return 12;       // {hh0}
+                    return 24;                   // {hk0}
+                }
+                const distinct = new Set([h, k, l]).size;
+                if (distinct === 3) return 48;   // {hkl}
+                if (distinct === 1) return 8;    // {hhh}
+                return 24;                       // {hhl}
             },
-            animate() {
-                this.three.animationId = requestAnimationFrame(this.animate);
-                this.three.renderer.render(this.three.scene, this.three.camera);
-            },
-            updateStructure() {
-                const scene = this.three.scene;
-                this.three.atoms.forEach(a => scene.remove(a));
-                this.three.atoms = [];
-                if(this.three.lines) scene.remove(this.three.lines);
-                const type = this.d1.structure;
-                const visualSize = 2.0; 
-                const atomGeo = new THREE.SphereGeometry(0.25, 32, 32);
-                const atomMat = new THREE.MeshPhongMaterial({ color: 0x3498db, shininess: 80 });
-                const addAtom = (x, y, z) => {
-                    const mesh = new THREE.Mesh(atomGeo, atomMat);
-                    mesh.position.set((x-0.5)*visualSize, (y-0.5)*visualSize, (z-0.5)*visualSize);
-                    scene.add(mesh);
-                    this.three.atoms.push(mesh);
-                };
-                for(let x=0; x<=1; x++) for(let y=0; y<=1; y++) for(let z=0; z<=1; z++) addAtom(x, y, z);
-                if (type === 'bcc') addAtom(0.5, 0.5, 0.5);
-                else if (type === 'fcc') [[0.5,0.5,0], [0.5,0.5,1], [0.5,0,0.5], [0.5,1,0.5], [0,0.5,0.5], [1,0.5,0.5]].forEach(p => addAtom(...p));
-                const boxGeo = new THREE.BoxGeometry(visualSize, visualSize, visualSize);
-                const edges = new THREE.EdgesGeometry(boxGeo);
-                this.three.lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xbdc3c7 }));
-                scene.add(this.three.lines);
-                this.updateXRD();
-            },
-
-            // --- XRD 物理核心计算 (含 hkl 映射) ---
-            calculatePattern(a, structure, lambda, fwhm, addNoise = false) {
-                const hklList = []; 
-                const uniquePeaksMap = new Map();
-                const maxIndex = 4;
-                
-                for(let h=0; h<=maxIndex; h++) {
-                    for(let k=0; k<=maxIndex; k++) {
-                        for(let l=0; l<=maxIndex; l++) {
-                            if(h==0 && k==0 && l==0) continue;
-                            let allowed = false;
-                            const sum = h+k+l;
-                            if (structure === 'sc') allowed = true;
-                            else if (structure === 'bcc') allowed = (sum % 2 === 0);
-                            else if (structure === 'fcc') {
-                                const par = [h%2, k%2, l%2];
-                                allowed = (par.every(p => p===0) || par.every(p => p!==0));
-                            }
-                            if (allowed) {
-                                const d = a / Math.sqrt(h*h + k*k + l*l);
-                                const sinTheta = lambda / (2*d);
-                                if (sinTheta <= 0.98) {
-                                    const thetaRad = Math.asin(sinTheta);
-                                    const twoTheta = 2 * thetaRad * (180/Math.PI);
-                                    let multiplicity = 6;
-                                    const distinct = new Set([h,k,l]).size;
-                                    if(distinct===1) multiplicity = 8; 
-                                    else if(distinct===3) multiplicity = 48; 
-                                    else multiplicity = 24; 
-                                    
-                                    const lp = (1 + Math.pow(Math.cos(2*thetaRad), 2)) / (Math.pow(Math.sin(thetaRad), 2) * Math.cos(thetaRad));
-                                    const intensity = multiplicity * lp * 10; 
-
-                                    if(twoTheta > 0.1 && twoTheta < 110) {
-                                        hklList.push({ twoTheta, intensity });
-
-                                        const key = Math.round(twoTheta * 100);
-                                        if(!uniquePeaksMap.has(key)) {
-                                            uniquePeaksMap.set(key, {
-                                                twoTheta: twoTheta,
-                                                intensity: intensity, 
-                                                label: `(${h}${k}${l})`
-                                            });
-                                        } else {
-                                            const existing = uniquePeaksMap.get(key);
-                                            existing.intensity += intensity;
-                                        }
-                                    }
-                                }
-                            }
+            // 枚举所有晶面族代表元（h ≥ k ≥ l ≥ 0）
+            enumerateFamilies(maxIndex) {
+                const out = [];
+                for (let h = 0; h <= maxIndex; h++) {
+                    for (let k = 0; k <= h; k++) {
+                        for (let l = 0; l <= k; l++) {
+                            if (h === 0 && k === 0 && l === 0) continue;
+                            out.push({ h: h, k: k, l: l, n2: h * h + k * k + l * l });
                         }
                     }
                 }
+                return out;
+            },
+            // Box–Muller 高斯随机数（用于泊松计数统计噪声）
+            gaussRand() {
+                let u = 0, v = 0;
+                while (u === 0) u = Math.random();
+                while (v === 0) v = Math.random();
+                return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+            },
+            // 计算粉末衍射图谱
+            //   opts: { addNoise, zeroShift, background, maxIndex }
+            // 每个晶面族是一条独立的粉末线；同一 2θ 处的多个族强度自然叠加。
+            calculatePattern(a, structure, lambda, fwhm, opts) {
+                const o = opts || {};
+                const zeroShift = o.zeroShift || 0;
+                const background = (o.background !== undefined && o.background !== null) ? o.background : 1000;
+                const maxIndex = o.maxIndex || 4;
+                const lines = [];
+
+                this.enumerateFamilies(maxIndex).forEach(function(fam) {
+                    const d = a / Math.sqrt(fam.n2);
+                    const sinT = lambda / (2 * d);
+                    if (sinT <= 0 || sinT >= 0.98) return;
+                    const theta = Math.asin(sinT);
+                    const twoTheta = 2 * theta * 180 / Math.PI;
+                    if (twoTheta <= 0.1 || twoTheta >= 110) return;
+                    const F2 = this.structureFactorSquared(fam.h, fam.k, fam.l, structure);
+                    if (F2 <= 0) return;                       // 系统消光 → 该族无衍射
+                    const mult = this.planeMultiplicity(fam.h, fam.k, fam.l);
+                    const lp = this.lpFactor(theta);
+                    lines.push({
+                        h: fam.h, k: fam.k, l: fam.l,
+                        hkl: '(' + fam.h + ' ' + fam.k + ' ' + fam.l + ')',
+                        d: d, twoTheta: twoTheta,
+                        twoThetaCalc: twoTheta - zeroShift,      // 仪器零点偏移：整体平移峰位
+                        mult: mult, F2: F2, lp: lp,
+                        intensity: mult * lp * F2 * 10
+                    });
+                }, this);
 
                 // 生成曲线
-                const x = [];
-                const y = [];
+                const x = [], y = [];
                 const step = 0.05;
-                
-                // 提高背景
-                const background = 1000; 
-
-                for(let i=0; i<=100; i+=step) {
+                const addNoise = !!o.addNoise;
+                const fwhm2 = fwhm * fwhm;
+                for (let i = 0; i <= 100; i += step) {
                     x.push(i);
                     let sumI = 0;
-                    hklList.forEach(peak => {
-                        const val = peak.intensity * Math.exp( -2.77 * Math.pow(i - peak.twoTheta, 2) / Math.pow(fwhm, 2) );
-                        sumI += val;
-                    });
-                    
-                    sumI += background;
-
-                    if (addNoise) {
-                        // 1. 基底随机震荡
-                        const baseNoise = (Math.random() - 0.5) * 15;
-                        // 2. 信号泊松噪声
-                        const poissonNoise = (Math.random() - 0.5) * 2.0 * Math.sqrt(sumI);
-                        sumI += baseNoise + poissonNoise;
+                    for (let j = 0; j < lines.length; j++) {
+                        const L = lines[j];
+                        const dd = i - L.twoThetaCalc;
+                        sumI += L.intensity * Math.exp(-2.77 * dd * dd / fwhm2);
                     }
-                    
+                    sumI += background;
+                    if (addNoise) {
+                        // 计数统计：σ = √Y（泊松近似）
+                        sumI += this.gaussRand() * Math.sqrt(Math.max(sumI, 1));
+                    }
                     y.push(sumI);
                 }
 
-                // 处理 Tooltip 数据
+                // 峰标记（每个晶面族一个，便于对照 hkl / 族重数 / |F|²）
                 const peakMarkers = { x: [], y: [], text: [] };
-                uniquePeaksMap.forEach(p => {
-                    peakMarkers.x.push(p.twoTheta);
-                    peakMarkers.y.push(p.intensity * 1.05 + background); 
-                    peakMarkers.text.push(`hkl: ${p.label}<br>2θ: ${p.twoTheta.toFixed(2)}°`);
+                lines.forEach(function(L) {
+                    peakMarkers.x.push(L.twoThetaCalc);
+                    peakMarkers.y.push(L.intensity + background);
+                    peakMarkers.text.push(
+                        'hkl: ' + L.hkl + '<br>' +
+                        '2θ: ' + L.twoThetaCalc.toFixed(2) + '°<br>' +
+                        'd: ' + L.d.toFixed(4) + ' Å<br>' +
+                        'mult: ' + L.mult + ' &nbsp; |F|²: ' + L.F2 + '<br>' +
+                        'I: ' + L.intensity.toFixed(1)
+                    );
                 });
 
-                return { x, y, peakMarkers };
+                return { x: x, y: y, lines: lines, peakMarkers: peakMarkers };
             },
 
+            // --- 反射列表（与模拟图谱同源） ---
+            // 每个晶面族一行；强度 = 族重数 × LP × |F|²（不再对同 n² 的族二次求和）
+            computeReflections() {
+                const a = this.d1.a, lam = this.d1.lambda, st = this.d1.structure;
+                const rows = [];
+                this.enumerateFamilies(4).forEach(function(fam) {
+                    const d = a / Math.sqrt(fam.n2);
+                    const sinT = lam / (2 * d);
+                    if (sinT <= 0 || sinT >= 0.98) return;
+                    const theta = Math.asin(sinT);
+                    const twoTheta = 2 * theta * 180 / Math.PI;
+                    if (twoTheta <= 0.1 || twoTheta >= 110) return;
+                    const F2 = this.structureFactorSquared(fam.h, fam.k, fam.l, st);
+                    const allowed = F2 > 0;
+                    const mult = this.planeMultiplicity(fam.h, fam.k, fam.l);
+                    const lp = this.lpFactor(theta);
+                    rows.push({
+                        key: fam.h + ',' + fam.k + ',' + fam.l,
+                        h: fam.h, k: fam.k, l: fam.l,
+                        hkl: '(' + fam.h + ' ' + fam.k + ' ' + fam.l + ')',
+                        d: d, invD: 1 / d, twoTheta: twoTheta,
+                        mult: mult, F2: F2, lp: lp,
+                        intensity: allowed ? mult * lp * F2 * 10 : 0,
+                        allowed: allowed
+                    });
+                }, this);
+                rows.sort(function(x, y) { return x.twoTheta - y.twoTheta; });
+                const maxI = rows.reduce(function(m, r) { return Math.max(m, r.intensity); }, 0);
+                rows.forEach(function(r) {
+                    r.relI = maxI > 0 ? r.intensity / maxI : 0;
+                    // 同一 2θ 的其它晶面族（间距简并）
+                    r.degenerate = rows.filter(function(o) {
+                        return o !== r && Math.abs(o.twoTheta - r.twoTheta) < 0.01;
+                    }).map(function(o) { return o.hkl; });
+                    r.tooltip = 'I/I₀ = ' + (r.relI * 100).toFixed(1) + '%  |  mult = ' + r.mult +
+                        '  |  |F|² = ' + r.F2 + (r.degenerate.length ? '  |  同 2θ: ' + r.degenerate.join(', ') : '');
+                });
+                this.reflList = rows;
+                // 结构或晶格常数变化后，原先选中的反射可能已不存在
+                const self = this;
+                if (this.selReflKey && !rows.some(function(r) { return r.key === self.selReflKey; })) {
+                    this.selReflKey = null;
+                }
+            },
+            // 点击列表行：在图谱中高亮对应衍射峰 + 在 3D 中显示该晶面（再次点击取消）
+            selectRefl(r) {
+                if (!r.allowed) {
+                    this.reflMsg = this.t('extinct_msg');
+                    const self = this;
+                    if (this._reflMsgTimer) clearTimeout(this._reflMsgTimer);
+                    this._reflMsgTimer = setTimeout(function() { self.reflMsg = ''; }, 3200);
+                    return;
+                }
+                this.reflMsg = '';
+                this.selReflKey = (this.selReflKey === r.key) ? null : r.key;
+                this.updateXRD();
+                this.updatePlaneVisual();
+            },
+
+            // ================= 图谱绘制 =================
             updateXRD() {
-                const data = this.calculatePattern(this.d1.a, this.d1.structure, this.d1.lambda, this.d1.fwhm, true);
-                
+                this.computeReflections();
+                const data = this.calculatePattern(this.d1.a, this.d1.structure, this.d1.lambda, this.d1.fwhm, { addNoise: true });
+
                 const traceLine = {
                     x: data.x, y: data.y, mode: 'lines',
                     line: { color: '#e74c3c', width: 1.5 },
                     name: 'Intensity',
                     hoverinfo: 'none'
                 };
-
                 const traceMarkers = {
-                    x: data.peakMarkers.x,
-                    y: data.peakMarkers.y,
+                    x: data.peakMarkers.x, y: data.peakMarkers.y,
                     mode: 'markers',
                     marker: { size: 10, color: 'rgba(0,0,0,0)' },
                     text: data.peakMarkers.text,
@@ -625,118 +879,362 @@
                     showlegend: false
                 };
 
+                // 选中的反射 → 高亮标记（trace 数量恒定，便于使用 Plotly.react）
+                const self = this;
+                const sel = this.selReflKey
+                    ? this.reflList.filter(function(r) { return r.key === self.selReflKey; })[0]
+                    : null;
+                let selY = 0;
+                if (sel) {
+                    let bi = 0, bd = Infinity;
+                    for (let i = 0; i < data.x.length; i++) {
+                        const dd = Math.abs(data.x[i] - sel.twoTheta);
+                        if (dd < bd) { bd = dd; bi = i; }
+                    }
+                    selY = data.y[bi];
+                }
+                const traceSel = {
+                    x: sel ? [sel.twoTheta] : [],
+                    y: sel ? [selY] : [],
+                    mode: 'markers',
+                    marker: { size: 18, color: 'rgba(52,152,219,0.18)', symbol: 'circle-open', line: { width: 2.5, color: '#2980b9' } },
+                    text: sel ? ['hkl: ' + sel.hkl + '<br>2θ: ' + sel.twoTheta.toFixed(2) + '°<br>d: ' + sel.d.toFixed(4) + ' Å'] : [],
+                    hoverinfo: 'text',
+                    showlegend: false
+                };
+
                 const layout = {
-                    title: this.lang === 'zh' ? '模拟 XRD 图谱 (含 hkl 提示)' : 'Simulated Pattern (with hkl)',
-                    xaxis: { title: '2Theta (deg)' },
-                    yaxis: { title: 'Intensity (Counts)' },
+                    title: this.t('chart_title_sim'),
+                    xaxis: { title: this.t('axis_2t'), range: [0, 100] },
+                    yaxis: { title: this.t('axis_int') },
                     margin: { t: 40, r: 20, b: 50, l: 60 },
                     showlegend: false,
                     hovermode: 'closest'
                 };
-                Plotly.newPlot('chart-container', [traceLine, traceMarkers], layout, {responsive: true, displayModeBar: false});
+                if (sel) {
+                    layout.shapes = [{
+                        type: 'line',
+                        x0: sel.twoTheta, x1: sel.twoTheta, y0: 0, y1: 1, yref: 'paper',
+                        line: { color: '#2980b9', width: 1.5, dash: 'dot' }
+                    }];
+                }
+                Plotly.react('chart-container', [traceLine, traceMarkers, traceSel], layout, { responsive: true, displayModeBar: false });
             },
 
-            // --- Demo 2 逻辑 ---
+            // ================= Demo 2：精修 =================
             drawEmptyRefineChart() {
                 const layout = {
-                    title: this.lang === 'zh' ? '等待数据...' : 'Waiting for data...',
-                    xaxis: { title: '2Theta (deg)', range: [0, 100] },
+                    title: this.t('waiting_title'),
+                    xaxis: { title: this.t('axis_2t'), range: [0, 100] },
                     yaxis: { showticklabels: false, range: [0, 100] },
                     margin: { t: 40, r: 20, b: 40, l: 40 },
                     annotations: [{
-                        text: this.lang === 'zh' ? '请先导入数据' : 'Please Import Data',
+                        text: this.t('waiting_data'),
                         xref: 'paper', yref: 'paper', x: 0.5, y: 0.5, showarrow: false,
                         font: { size: 20, color: '#95a5a6' }
                     }]
                 };
-                Plotly.newPlot('refine-chart-container', [], layout, {responsive: true, displayModeBar: false});
+                Plotly.react('refine-chart-container', [], layout, { responsive: true, displayModeBar: false });
             },
 
             importDataFromDemo1() {
-                const data = this.calculatePattern(this.d1.a, this.d1.structure, this.d1.lambda, this.d1.fwhm, true);
+                const data = this.calculatePattern(this.d1.a, this.d1.structure, this.d1.lambda, this.d1.fwhm, { addNoise: true });
                 this.d2.obsData = { x: data.x, y: data.y };
                 this.d2.hasData = true;
-                this.d2.param_a = this.d1.a + 0.3; 
-                this.d2.selectedModel = this.d1.structure; 
+                this.d2.param_a = Math.round((this.d1.a + 0.05) * 1000) / 1000;   // 轻微偏离真值，便于演示精修过程
+                this.d2.param_zero = 0;
+                this.d2.param_bg = 1000;
+                this.d2.selectedModel = this.d1.structure;
                 this.updateRefinement();
+                this.resetConv();
             },
 
-            updateRefinement() {
-                if (!this.d2.hasData) return;
-
-                // 计算理论模型 (无随机噪声)
-                const calc = this.calculatePattern(this.d2.param_a, this.d2.selectedModel, this.d1.lambda, this.d1.fwhm, false);
-                
-                const yObs = this.d2.obsData.y;
-                const yCalc = calc.y;
-                const diff = [];
-                
-                let sNum = 0, sDen = 0; // for Rwp
-                let sAbsDiff = 0, sSumObs = 0; // for Rp
-
-                for(let i=0; i<yObs.length; i++) {
+            // 精修参数向量（a / 零点偏移 / 背景）
+            getParams() {
+                return { a: this.d2.param_a, zero: this.d2.param_zero, bg: this.d2.param_bg };
+            },
+            setParams(p) {
+                this.d2.param_a = p.a;
+                this.d2.param_zero = p.zero;
+                this.d2.param_bg = p.bg;
+            },
+            // 目标函数：加权图谱残差 Rwp（无量纲小数）
+            refineObjective(p) {
+                const calc = this.calculatePattern(p.a, this.d2.selectedModel, this.d1.lambda, this.d1.fwhm, {
+                    zeroShift: p.zero, background: p.bg, addNoise: false
+                });
+                const yObs = this.d2.obsData.y, yCalc = calc.y;
+                let sNum = 0, sDen = 0;
+                for (let i = 0; i < yObs.length; i++) {
                     const d = yObs[i] - yCalc[i];
-                    diff.push(d - 2000); 
-
-                    // 权重 w = 1/Yobs
-                    const w = 1 / (yObs[i] > 10 ? yObs[i] : 10);
-                    
-                    // Rwp
-                    sNum += w * (d * d);
-                    sDen += w * (yObs[i] * yObs[i]);
-                    
-                    // Rp
-                    sAbsDiff += Math.abs(d);
+                    const y = yObs[i] > 1 ? yObs[i] : 1;
+                    sNum += d * d / y;             // 泊松权重 w = 1/σ², σ = √Y
+                    sDen += yObs[i] * yObs[i] / y;
+                }
+                return sDen > 0 ? Math.sqrt(sNum / sDen) : 1;
+            },
+            // 完整指标（Rwp / Rp / χ² / 差值曲线）
+            computeRefineMetrics(calc) {
+                const yObs = this.d2.obsData.y, yCalc = calc.y;
+                const diff = [];
+                let sNum = 0, sDen = 0, sAbs = 0, sSumObs = 0;
+                for (let i = 0; i < yObs.length; i++) {
+                    const d = yObs[i] - yCalc[i];
+                    diff.push(d);
+                    const y = yObs[i] > 1 ? yObs[i] : 1;
+                    const w = 1 / y;
+                    sNum += w * d * d;
+                    sDen += w * yObs[i] * yObs[i];
+                    sAbs += Math.abs(d);
                     sSumObs += yObs[i];
                 }
-                
-                this.d2.rwp = (Math.sqrt(sNum/sDen) * 100).toFixed(2);
-                this.d2.rp = ((sAbsDiff / sSumObs) * 100).toFixed(2);
-                const dof = yObs.length;
-                this.d2.chi2 = (sNum / dof).toFixed(2);
+                // 自由度 = 数据点数 − 实际参与精修的参数数
+                const nSel = (this.d2.refineSel.a ? 1 : 0) + (this.d2.refineSel.zero ? 1 : 0) + (this.d2.refineSel.bg ? 1 : 0);
+                const dof = Math.max(1, yObs.length - nSel);
+                return {
+                    rwp: sDen > 0 ? Math.sqrt(sNum / sDen) : 1,
+                    rp: sSumObs > 0 ? sAbs / sSumObs : 1,
+                    chi2: sNum / dof,
+                    diff: diff
+                };
+            },
 
-                const traceObs = { 
-                    x: this.d2.obsData.x, y: yObs, 
-                    mode: 'markers', marker: {size: 2, color:'black'}, 
-                    name: 'Y_obs', hoverinfo: 'none'
+            // immediate=true 时同步绘制：实时刷新（优化迭代中）用这个，
+            // 不走 $nextTick 排队，避免高频调用时多次 react 堆在一起、画出来的还是旧参数
+            updateRefinement(immediate) {
+                if (!this.d2.hasData) return;
+                const p = this.getParams();
+                const calc = this.calculatePattern(p.a, this.d2.selectedModel, this.d1.lambda, this.d1.fwhm, {
+                    zeroShift: p.zero, background: p.bg, addNoise: false
+                });
+                const m = this.computeRefineMetrics(calc);
+
+                this.d2.rwp = (m.rwp * 100).toFixed(2);
+                this.d2.rp = (m.rp * 100).toFixed(2);
+                this.d2.chi2 = m.chi2.toFixed(3);
+
+                const traceObs = {
+                    x: this.d2.obsData.x, y: this.d2.obsData.y,
+                    mode: 'markers', marker: { size: 2, color: 'black' },
+                    name: this.t('legend_obs'), hoverinfo: 'none'
                 };
-                const traceCalc = { 
-                    x: calc.x, y: yCalc, 
-                    mode: 'lines', line: {color:'#e74c3c', width: 1.5}, 
-                    name: 'Y_calc', hoverinfo: 'none'
+                const traceCalc = {
+                    x: calc.x, y: calc.y,
+                    mode: 'lines', line: { color: '#e74c3c', width: 1.5 },
+                    name: this.t('legend_calc'), hoverinfo: 'none'
                 };
-                
                 const traceCalcMarkers = {
                     x: calc.peakMarkers.x, y: calc.peakMarkers.y,
                     mode: 'markers', marker: { size: 10, color: 'rgba(0,0,0,0)' },
                     text: calc.peakMarkers.text, hoverinfo: 'text', showlegend: false
                 };
-
-                const traceDiff = { 
-                    x: calc.x, y: diff, 
-                    mode: 'lines', line: {color:'#3498db', width: 1}, 
-                    name: 'Diff', hoverinfo: 'none'
+                // ================= 差值曲线 =================
+                // 差值曲线只有一条，定义就是 Y_obs − Y_calc，不做任何二次加工。
+                //
+                // 画法用连续折线而不是散点：2θ 采样步长 0.05°，衍射峰半宽 0.3°，
+                // 所以一个峰在面板里只占约 3 px。若按散点画，2001 个点挤在 1000 px 宽内
+                // （点距 0.5 px），视觉上会连成一条实心的"噪声带"，看不出残差长什么样。
+                // 折线则是一根真正的曲线：峰位错配处的 ±2900 counts 尖刺是几像素宽、
+                // 近乎垂直的一段，看得清清楚楚；背景区则是一条贴近零线的抖动线。
+                //
+                // 这里不复用 computeRefineMetrics 返回的 m.diff，而是就地按索引重算一遍，
+                // 避免两边长度不一致时 Plotly 静默截断。
+                const obsY = this.d2.obsData.y, calcY = calc.y;
+                const nDiff = Math.min(obsY.length, calcY.length);
+                const diffY = new Array(nDiff);
+                let nBad = 0;
+                for (let i = 0; i < nDiff; i++) {
+                    const v = obsY[i] - calcY[i];
+                    // 非有限值会让 Plotly 整条 path 断掉，甚至把 y 轴量程算成 NaN，
+                    // 结果就是差值区一片空白。这里就地兜底成 0，并统计个数便于排查。
+                    if (isFinite(v)) diffY[i] = v; else { diffY[i] = 0; nBad++; }
+                }
+                const absDiff = [];
+                for (let i = 0; i < nDiff; i++) absDiff.push(Math.abs(diffY[i]));
+                absDiff.sort(function(a, b) { return a - b; });
+                const maxAbs = absDiff.length ? absDiff[absDiff.length - 1] : 0;
+                const obsSorted = obsY.slice().sort(function(a, b) { return a - b; });
+                const bgLevel = obsSorted[Math.floor(obsSorted.length / 2)];   // 背景强度中位数
+                const sigma = Math.sqrt(Math.max(isFinite(bgLevel) ? bgLevel : 0, 1));  // 泊松噪声 σ=√Y
+                // 轴上限：最大残差 ×1.05 兜底，另加 4σ 下限，保证精修后噪声带也占得住面板
+                let diffRange = Math.max((isFinite(maxAbs) ? maxAbs : 0) * 1.05, 4 * sigma, 1);
+                if (!isFinite(diffRange) || diffRange <= 0) diffRange = 1;
+                const traceDiff = {
+                    x: this.d2.obsData.x.slice(0, nDiff), y: diffY,
+                    mode: 'lines',
+                    // simplify:false —— 别让 Plotly 简化折线。每个衍射峰在差值里只有
+                    // 几像素宽，简化算法会把这种尖刺削成缓坡，残差看着就像消失了。
+                    line: { color: '#1f4e79', width: 2, simplify: false },
+                    connectgaps: true,
+                    xaxis: 'x2', yaxis: 'y2',
+                    name: this.t('legend_diff'), hoverinfo: 'none'
                 };
 
                 const layout = {
-                    title: 'Rietveld Plot',
-                    xaxis: { title: '2Theta' },
-                    yaxis: { title: 'Intensity' },
-                    margin: { t: 40, r: 10, b: 50, l: 60 },
-                    legend: { x: 0.8, y: 1 },
-                    hovermode: 'closest',
-                    shapes: [{ type: 'line', x0: 10, x1: 90, y0: -2000, y1: -2000, line: {color:'gray', dash:'dash', width:1} }]
-                };
 
-                Plotly.react('refine-chart-container', [traceObs, traceCalc, traceDiff, traceCalcMarkers], layout);
+                                    title: this.t('rietveld_plot'),
+
+                                    margin: { t: 40, r: 42, b: 50, l: 60 },
+
+                                    legend: { x: 0.72, y: 1 },
+
+                                    hovermode: 'closest',
+
+                                    // 上区：观测点 + 计算曲线
+
+                                    xaxis: { range: [0, 100], domain: [0, 1], anchor: 'y', showticklabels: false, ticks: '' },
+
+                                    yaxis: { title: this.t('axis_int'), domain: [0.36, 1], anchor: 'x' },
+
+                                    // 下区：差值曲线（独立 x 轴，与主轴范围联动，刻度标签放在最下方）
+
+                                    xaxis2: { domain: [0, 1], anchor: 'y2', matches: 'x', title: this.t('axis_2t') },
+
+                                    // 差值区唯一的纵轴：线性刻度，量程自适应到最大残差
+
+                                                        yaxis2: {
+
+                                                            title: this.t('axis_diff'), domain: [0, 0.28], anchor: 'x2',
+
+                                                            range: [-diffRange, diffRange], showgrid: false, zeroline: false, nticks: 6,
+
+                                                            tickfont: { size: 9 }
+
+                                                        },
+
+                                                                        // 差值区参考线：只保留零线
+
+                                                                        shapes: [
+
+                                                                            { type: 'line', x0: 0, x1: 100, y0: 0, y1: 0, xref: 'x2', yref: 'y2', line: { color: '#5d6d7e', dash: 'dash', width: 1.2 } }
+
+                                                                        ],
+
+                                    
+
+                                                                        // 差值区角注：写明这条曲线的定义 + 版本标记（便于确认页面已刷新到最新代码）
+
+                                                                                            annotations: [
+
+                                                                                                {
+
+                                                                                                    text: this.t('diff_formula') + '  ·  v3' + (nBad > 0 ? '  [' + nBad + ' invalid]' : ''),
+
+                                                                                                    xref: 'x2', yref: 'y2', x: 99, y: diffRange * 0.93,
+
+                                                                                                    xanchor: 'right', yanchor: 'top', showarrow: false,
+
+                                                                                                    font: { size: 9, color: '#7f8c8d' }
+
+                                                                                                }
+
+                                                                                            ]
+
+                                                    };
+
+                                    
+
+                                                    const traces = [traceObs, traceCalc, traceDiff, traceCalcMarkers];
+                const host = document.getElementById('refine-chart-container');
+                if (!host) return;
+
+                // 渲染自检：差值曲线必须真的落成一条 path。
+                // 容器刚从 v-show 切出来、尺寸还是 0 时，Plotly 会画出一张空图且不会自己补画，
+                // 结果下半区就是一片空白。这里检查不到就 resize 后重画一次。
+                const draw = function () {
+                    Plotly.react(host, traces, layout, { responsive: true, displayModeBar: false })
+                        .then(function () {
+                            const paths = host.querySelectorAll('g.trace path');
+                            for (let i = 0; i < paths.length; i++) {
+                                if ((paths[i].getAttribute('style') || '').indexOf('31, 78, 121') >= 0) return;
+                            }
+                            Plotly.Plots.resize(host);
+                            Plotly.react(host, traces, layout, { responsive: true, displayModeBar: false });
+                        });
+                };
+                if (this.mode === 'demo2' && !immediate) this.$nextTick(draw); else draw();
             },
 
-            // --- 这是一个真正的拟合算法 ---
-            async autoRefine() {
-                if(!this.d2.hasData) return;
-                this.isRefining = true;
-                //this.d2.selectedModel = this.d1.structure; // 强制修正模型
+            // ================= 优化过程的收敛记录 =================
+            // 每迭代一步记录一次 Rwp 并实时重绘收敛曲线（对数纵轴），
+            // 让「到底有没有在迭代、收敛得怎么样」一眼可见，而不是一眨眼给出结果
+            resetConv() {
+                this.d2.conv = [];
+                this.d2.convIt = 0;
+                this.drawConvChart();
+            },
+            pushConv(rwp, params) {
+                this.d2.convIt += 1;
+                this.d2.conv.push({ it: this.d2.convIt, rwp: rwp });
+                // 把当前迭代点的参数同步回界面：滑块读数、Rwp/Rp/χ²、拟合曲线一起跟着走，
+                // 这样拟合过程是"看得见"的，而不是跑完几百步才一次性蹦出结果
+                if (params) this.setParams(params);
+                // 收敛曲线每 2 步重绘一次，避免 Plotly.react 拖慢迭代节奏
+                if (this.d2.convIt % 2 === 1) this.drawConvChart();
+                // Rietveld 主图限频刷新（默认每 liveEvery=2 步一次）。
+                // 与上面的收敛曲线错开奇偶，凑巧每步只触发一次 Plotly.react，开销可控。
+                if (this.d2.convIt % this.d2.liveEvery === 0) this.updateRefinement(true);
+            },
+            drawConvChart() {
+                const el = document.getElementById('conv-chart-container');
+                if (!el) {
+                    // 容器由 v-if="d2.hasData" 控制，Vue 尚未 patch 时取不到 —— 有限次重试
+                    if (this.mode === 'demo2' && this.d2.hasData) {
+                        this._convRetry = (this._convRetry || 0) + 1;
+                        if (this._convRetry <= 3) {
+                            const self = this;
+                            this.$nextTick(function() { self.drawConvChart(); });
+                        }
+                    }
+                    return;
+                }
+                this._convRetry = 0;
+                if (!this.d2.hasData) return;
+                const conv = this.d2.conv;
+                const traces = conv.length ? [{
+                    x: conv.map(c => c.it),
+                    y: conv.map(c => Math.max(c.rwp, 1e-3)),
+                    type: 'scatter', mode: 'lines+markers',
+                    line: { color: '#8e44ad', width: 1.8 },
+                    marker: { size: 3, color: '#8e44ad' },
+                    hovertemplate: 'iter %{x}<br>Rwp %{y:.3f}%<extra></extra>',
+                    name: 'Rwp'
+                }] : [];
+                const layout = {
+                    title: { text: this.t('conv_title'), font: { size: 12 } },
+                    margin: { t: 24, b: 26, l: 42, r: 10 },
+                    showlegend: false, hovermode: 'closest',
+                    xaxis: { title: { text: this.t('conv_x'), font: { size: 10 } }, tickfont: { size: 9 } },
+                    yaxis: { title: { text: this.t('conv_y'), font: { size: 10 } }, type: 'log', tickfont: { size: 9 } }
+                };
+                if (!conv.length) {
+                    layout.annotations = [{
+                        text: this.t('conv_empty'), xref: 'paper', yref: 'paper', x: 0.5, y: 0.5,
+                        showarrow: false, font: { size: 11, color: '#95a5a6' }
+                    }];
+                }
+                Plotly.react(el, traces, layout, { responsive: true, displayModeBar: false });
+            },
 
+            // 手动拖动参数或切换模型后，观测-计算关系已经改变，
+            // 旧的收敛历史不再对应当前状态，必须清空并重画空态曲线
+            onManualParam() {
+                this.resetConv();
+                this.updateRefinement();
+            },
+
+            // ================= 真实拟合算法 =================
+            async autoRefine() {
+                if (!this.d2.hasData) return;
+                this.isRefining = true;
+                this.refineStatus = '';
+                this.resetConv();
+                // 一个参数都没勾选时无从精修，直接拦下
+                if (!this.d2.refineSel.a && !this.d2.refineSel.zero && !this.d2.refineSel.bg) {
+                    this.isRefining = false;
+                    this.refineStatus = this.t('refine_none_sel');
+                    return;
+                }
                 if (this.d2.algo === 'hill') {
                     await this.runHillClimbing();
                 } else if (this.d2.algo === 'anneal') {
@@ -744,188 +1242,327 @@
                 } else if (this.d2.algo === 'gradient') {
                     await this.runGradientDescent();
                 }
-
                 this.isRefining = false;
+                this.updateRefinement();
+                // 收敛曲线每 2 步重绘一次，结束时补画一次，确保最后一点不丢
+                this.drawConvChart();
+                // 保留完成摘要（跑了多少步、最终 Rwp 多少），让「确实做了拟合」可被核对
+                this.refineStatus = this.t('refine_done') + ' · ' + this.d2.convIt + ' ' + this.t('conv_x')
+                    + ' · Rwp = ' + this.d2.rwp + '%';
+            },
+            // 让出主线程，保证参数变化能实时刷新到界面；
+            // 并保证最小 16ms 间隔（约 60fps），使优化迭代过程肉眼可见
+            tick() {
+                return new Promise(function(r) {
+                    const t0 = Date.now();
+                    setTimeout(function() {
+                        const rest = 16 - (Date.now() - t0);
+                        if (rest > 0) setTimeout(r, rest); else r();
+                    }, 0);
+                });
             },
 
-            // 算法 1: 变步长爬山法 (聪明、快速)
+            // 算法 1: 变步长爬山法（对三个参数逐个试探，取最优方向）
             async runHillClimbing() {
-                let step = 0.05;
-                const minStep = 0.0001;
-                const maxIter = 100;
-
-                this.updateRefinement();
-                let bestRwp = parseFloat(this.d2.rwp);
-
-                for (let i = 0; i < maxIter; i++) {
-                    const centerA = this.d2.param_a;
-                    
-                    // 试探左右
-                    this.d2.param_a = centerA + step; this.updateRefinement();
-                    const rightRwp = parseFloat(this.d2.rwp);
-                    
-                    this.d2.param_a = centerA - step; this.updateRefinement();
-                    const leftRwp = parseFloat(this.d2.rwp);
-
-                    // 决策
-                    if (rightRwp < bestRwp && rightRwp < leftRwp) {
-                        this.d2.param_a = centerA + step;
-                        bestRwp = rightRwp;
-                        step *= 1.2; // 加速
-                    } else if (leftRwp < bestRwp && leftRwp < rightRwp) {
-                        this.d2.param_a = centerA - step;
-                        bestRwp = leftRwp;
-                        step *= 1.2; // 加速
-                    } else {
-                        this.d2.param_a = centerA;
-                        step *= 0.6; // 减速
-                    }
-
-                    this.updateRefinement();
-                    if (step < minStep) break;
-                    await new Promise(r => setTimeout(r, 30));
-                }
+                const steps = [0.02, 0.01, 20];        // a(Å) / zero(°) / bg(counts)
+                const res = await this.refineLocalSearch(this.getParams(), null, steps, 150, 'Hill Climbing');
+                this.setParams(res.params);
             },
 
-            // 算法 2: 模拟退火 (有趣：前期会乱跳，能跳出局部最优)
-            async runSimulatedAnnealing() {
-                let temp = 10.0; // 初始温度
-                const coolingRate = 0.90; // 降温系数
-                const maxIter = 150;
-                
-                this.updateRefinement();
-                let currentRwp = parseFloat(this.d2.rwp);
-                let bestA = this.d2.param_a;
-                let bestRwp = currentRwp;
-
-                for (let i = 0; i < maxIter; i++) {
-                    // 随机扰动：温度越高，跳得越远
-                    const range = 0.5 * (temp / 10.0); 
-                    const nextA = this.d2.param_a + (Math.random() - 0.5) * range;
-                    
-                    // 暂时应用新参数计算 Rwp
-                    const oldA = this.d2.param_a;
-                    this.d2.param_a = nextA;
-                    this.updateRefinement();
-                    const nextRwp = parseFloat(this.d2.rwp);
-
-                    // 计算能量差 (Delta E)
-                    const delta = nextRwp - currentRwp;
-
-                    // 接受准则：
-                    // 1. 如果新结果更好 (delta < 0)，直接接受
-                    // 2. 如果新结果更差 (delta > 0)，以概率 P = exp(-delta / T) 接受
-                    if (delta < 0 || Math.random() < Math.exp(-delta / temp)) {
-                        currentRwp = nextRwp;
-                        if (currentRwp < bestRwp) {
-                            bestRwp = currentRwp;
-                            bestA = nextA;
+            // 共用的确定性局部爬山：逐参数试探最优方向，有改进则放大步长，无改进则收缩步长
+            async refineLocalSearch(start, startVal, steps0, maxIter, label) {
+                const steps = steps0.slice();
+                const keys = ['a', 'zero', 'bg'];
+                let cur = { a: start.a, zero: start.zero, bg: start.bg };
+                let curVal = (startVal === null || startVal === undefined) ? this.refineObjective(cur) : startVal;
+                for (let iter = 0; iter < maxIter; iter++) {
+                    let improved = false;
+                    for (let j = 0; j < 3; j++) {
+                        // 未勾选的参数不参与试探，精修期间保持原值
+                        if (!this.d2.refineSel[keys[j]]) continue;
+                        const base = { a: cur.a, zero: cur.zero, bg: cur.bg };
+                        let best = null;
+                        for (let s = -1; s <= 1; s += 2) {
+                            const q = { a: base.a, zero: base.zero, bg: base.bg };
+                            if (j === 0) q.a += s * steps[0];
+                            else if (j === 1) q.zero += s * steps[1];
+                            else q.bg += s * steps[2];
+                            if (q.a < 2 || q.a > 8 || q.bg < 0) continue;
+                            const v = this.refineObjective(q);
+                            if (!best || v < best.v) best = { q: q, v: v };
                         }
+                        if (best && best.v < curVal - 1e-10) {
+                            cur = best.q;
+                            curVal = best.v;
+                            improved = true;
+                        }
+                    }
+                    if (improved) {
+                        steps[0] *= 1.25; steps[1] *= 1.25; steps[2] *= 1.25;
                     } else {
-                        // 拒绝，退回上一步
-                        this.d2.param_a = oldA;
-                        this.updateRefinement();
+                        steps[0] *= 0.5; steps[1] *= 0.5; steps[2] *= 0.5;
+                        // 收敛判据只看勾选的参数：它们的步长都缩到初值的 1% 以下才算收敛
+                        let done = true;
+                        for (let j = 0; j < 3; j++) {
+                            if (!this.d2.refineSel[keys[j]]) continue;
+                            if (steps[j] >= steps0[j] * 0.01) { done = false; break; }
+                        }
+                        if (done) break;
                     }
-
-                    // 降温
-                    temp *= coolingRate;
-
-                    // 如果温度极低，直接跳到历史最优解并结束
-                    if (temp < 0.01) {
-                        this.d2.param_a = bestA;
-                        this.updateRefinement();
-                        break;
-                    }
-
-                    await new Promise(r => setTimeout(r, 30));
+                    this.refineStatus = label + ' · iter ' + iter + ' · Rwp = ' + (curVal * 100).toFixed(3) + '%';
+                    this.pushConv(curVal * 100, cur);
+                    await this.tick();
                 }
+                return { params: cur, value: curVal };
             },
 
-            // 优化后的算法 3: 梯度下降 (带回溯和自适应学习率)
-            // 改进点：增加“后悔机制”，如果一步走坏了就撤销并减速，保证一定能收敛到极小值
+            // 算法 2: 模拟退火（三参数联合扰动，可跳出局部最优）
+            async runSimulatedAnnealing() {
+                const temp0 = 0.12;                     // 目标函数是 Rwp 小数，温度需匹配其变化尺度
+                let temp = temp0;
+                const cooling = 0.955;
+                const maxIter = 320;
+                const amp = [0.15, 0.08, 150];          // 扰动幅度：a(Å) / zero(°) / bg(counts)
+
+                let current = this.getParams();
+                let curVal = this.refineObjective(current);
+                let best = { a: current.a, zero: current.zero, bg: current.bg };
+                let bestVal = curVal;
+
+                for (let i = 0; i < maxIter; i++) {
+                    const scale = 0.3 + 0.7 * (temp / temp0);   // 幅度随温度缓降，但保留下限
+                    const next = {
+                        a: current.a + (Math.random() - 0.5) * amp[0] * scale,
+                        zero: current.zero + (Math.random() - 0.5) * amp[1] * scale,
+                        bg: current.bg + (Math.random() - 0.5) * amp[2] * scale
+                    };
+                    // 未勾选的参数不参与扰动，直接沿用当前值
+                    if (!this.d2.refineSel.a) next.a = current.a;
+                    if (!this.d2.refineSel.zero) next.zero = current.zero;
+                    if (!this.d2.refineSel.bg) next.bg = current.bg;
+                    if (next.a < 2 || next.a > 8 || next.bg < 0) { temp *= cooling; continue; }
+                    const nextVal = this.refineObjective(next);
+                    const delta = nextVal - curVal;
+                    if (delta < 0 || Math.random() < Math.exp(-delta / temp)) {
+                        current = { a: next.a, zero: next.zero, bg: next.bg };
+                        curVal = nextVal;
+                        if (curVal < bestVal) {
+                            bestVal = curVal;
+                            best = { a: next.a, zero: next.zero, bg: next.bg };
+                        }
+                    }
+                    temp *= cooling;
+                    if (temp < 0.0001) break;
+                    this.refineStatus = 'Simulated Annealing · iter ' + i + ' · Rwp = ' + (bestVal * 100).toFixed(3) + '%';
+                    this.pushConv(bestVal * 100, best);
+                    await this.tick();
+                }
+                // 退火结束后接一段确定性爬山，锁定最优解
+                const res = await this.refineLocalSearch(best, bestVal, [0.01, 0.005, 10], 90, 'Annealing → polish');
+                this.setParams(res.params);
+            },
+
+            // 算法 3: 梯度下降（中心差分 + 归一化梯度 + 回溯 + 自适应步长）
             async runGradientDescent() {
-                let learningRate = 0.01; // 初始学习率
-                const delta = 0.005;     // 用于计算导数的微小偏移
-                const maxIter = 200;     // 最大迭代次数
-                const minGrad = 0.01;    // 梯度阈值
+                const maxStep = [0.06, 0.03, 50];        // 单步最大幅度：a(Å) / zero(°) / bg(counts)
+                const relH = [0.002, 0.004, 0.02];      // 中心差分的相对扰动
+                let lr = 0.25;
+                const maxIter = 200;
+                let failStreak = 0;
 
-                // 获取初始误差
-                this.updateRefinement();
-                let currentRwp = parseFloat(this.d2.rwp);
+                let cur = this.getParams();
+                let curVal = this.refineObjective(cur);
 
-                for(let i=0; i<maxIter; i++) {
-                    const currentA = this.d2.param_a;
-                    
-                    // 1. 【改进】使用中心差分法计算梯度 (Central Difference)
-                    // 精度比前向差分更高： f'(x) ≈ (f(x+h) - f(x-h)) / 2h
-                    
-                    // 计算 x + h
-                    this.d2.param_a = currentA + delta;
-                    this.updateRefinement();
-                    const yPlus = parseFloat(this.d2.rwp);
+                for (let i = 0; i < maxIter; i++) {
+                    const p = { a: cur.a, zero: cur.zero, bg: cur.bg };
+                    // 中心差分：逐参数估计 ∂Rwp/∂p
+                    const grad = [0, 0, 0];
+                    const keys = ['a', 'zero', 'bg'];
+                    for (let j = 0; j < 3; j++) {
+                        // 未勾选的参数梯度置零，步长更新时自然被跳过
+                        if (!this.d2.refineSel[keys[j]]) continue;
+                        const h = Math.max(1e-6, Math.abs(p[keys[j]]) * relH[j]);
+                        const qp = { a: p.a, zero: p.zero, bg: p.bg };
+                        const qm = { a: p.a, zero: p.zero, bg: p.bg };
+                        qp[keys[j]] += h;
+                        qm[keys[j]] -= h;
+                        if (qm[keys[j]] < 0) qm[keys[j]] = 0;
+                        grad[j] = (this.refineObjective(qp) - this.refineObjective(qm)) / (2 * h);
+                    }
+                    // 归一化梯度方向 + 受限步长
+                    const trial = { a: p.a, zero: p.zero, bg: p.bg };
+                    for (let j = 0; j < 3; j++) {
+                        const g = grad[j];
+                        if (!isFinite(g) || Math.abs(g) < 1e-12) continue;
+                        trial[keys[j]] -= lr * (g / Math.abs(g)) * maxStep[j];
+                    }
+                    if (trial.a < 2) trial.a = 2;
+                    if (trial.a > 8) trial.a = 8;
+                    if (trial.bg < 0) trial.bg = 0;
 
-                    // 计算 x - h
-                    this.d2.param_a = currentA - delta;
-                    this.updateRefinement();
-                    const yMinus = parseFloat(this.d2.rwp);
-
-                    // 恢复当前位置
-                    this.d2.param_a = currentA;
-
-                    // 计算梯度
-                    const gradient = (yPlus - yMinus) / (2 * delta);
-
-                    // 2. 计算这一步想走的距离
-                    let step = learningRate * gradient;
-
-                    // 【改进】梯度裁剪 (Gradient Clipping)
-                    // 限制一步最大只能走 0.1A，防止梯度爆炸导致参数飞出屏幕
-                    if (step > 0.1) step = 0.1;
-                    if (step < -0.1) step = -0.1;
-
-                    // 3. 试探性移动
-                    const proposedA = currentA - step;
-
-                    // 4. 【关键改进】验证机制 (Backtracking)
-                    // 先看看这一步走过去，误差是不是真的变小了？
-                    this.d2.param_a = proposedA;
-                    this.updateRefinement(); // 这一步会更新 d2.rwp
-                    const newRwp = parseFloat(this.d2.rwp);
-
-                    if (newRwp >= currentRwp) {
-                        // 糟糕！误差反而变大（或者没变），说明步子迈大了，或者方向不对
-                        // 策略：撤销移动，大幅降低学习率 (减速)
-                        this.d2.param_a = currentA; // 回退
-                        learningRate *= 0.5; 
-                        this.updateRefinement(); // 恢复 UI 显示
-                        
-                        // 如果学习率已经非常小，说明走不动了，结束
-                        if(learningRate < 0.00001) break;
+                    const trialVal = this.refineObjective(trial);
+                    if (trialVal < curVal - 1e-12) {
+                        cur = trial;
+                        curVal = trialVal;
+                        lr *= 1.15;
+                        failStreak = 0;
                     } else {
-                        // 很好！误差变小了
-                        // 策略：确认移动，并尝试微量加速 (Bold Driver)
-                        currentRwp = newRwp;
-                        // 稍微增加一点学习率，鼓励在平坦区域走快点
-                        learningRate *= 1.05; 
+                        lr *= 0.5;
+                        failStreak++;
+                        if (lr < 1e-4 || failStreak >= 6) break;
                     }
+                    this.setParams(cur);
+                    this.refineStatus = 'Gradient Descent · iter ' + i + ' · Rwp = ' + (curVal * 100).toFixed(3) + '%';
+                    this.pushConv(curVal * 100, cur);
+                    await this.tick();
+                }
+                // 收尾抛光：梯度步长较粗，用小步长爬山精修终值
+                const res = await this.refineLocalSearch(this.getParams(), null, [0.005, 0.002, 5], 60, 'Gradient → polish');
+                this.setParams(res.params);
+            },
 
-                    // 停止条件：梯度极平
-                    if (Math.abs(gradient) < minGrad) {
-                        console.log("Gradient converged");
-                        break;
-                    }
+            // ================= Three.js =================
+            initThree() {
+                const container = document.getElementById('canvas-container');
+                if (!container) return;
+                this.three.scene = new THREE.Scene();
+                this.three.scene.background = new THREE.Color(0x1a1a1a);
+                this.three.camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+                this.three.camera.position.set(2.4, 2.2, 3.0);
+                this.three.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                container.appendChild(this.three.renderer.domElement);
+                const controls = new THREE.OrbitControls(this.three.camera, this.three.renderer.domElement);
+                controls.enableDamping = true;
+                this.three.scene.add(new THREE.AmbientLight(0x404040, 1.5));
+                const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+                dirLight.position.set(5, 5, 5);
+                this.three.scene.add(dirLight);
+                window.addEventListener('resize', () => {
+                    this.resizeThree();
+                    if (this.mode === 'demo1') Plotly.Plots.resize('chart-container');
+                    else Plotly.Plots.resize('refine-chart-container');
+                });
+                this.resizeThree();
+                this.animate();
+                this.updateStructure();
+            },
+            // 统一的 3D 尺寸同步：相机宽高比 + 渲染尺寸
+            resizeThree() {
+                const container = document.getElementById('canvas-container');
+                if (!container || !this.three.renderer || !this.three.camera) return;
+                const w = container.offsetWidth, h = container.offsetHeight;
+                if (!w || !h) return;
+                this.three.camera.aspect = w / h;
+                this.three.camera.updateProjectionMatrix();
+                this.three.renderer.setSize(w, h);
+            },
+            animate() {
+                this.three.animationId = requestAnimationFrame(this.animate);
+                if (this.three.renderer && this.three.scene && this.three.camera) {
+                    this.three.renderer.render(this.three.scene, this.three.camera);
+                }
+            },
+            updateStructure() {
+                const scene = this.three.scene;
+                if (!scene) return;
+                this.three.atoms.forEach(a => scene.remove(a));
+                this.three.atoms = [];
+                if (this.three.lines) scene.remove(this.three.lines);
+                const type = this.d1.structure;
+                // 晶胞与原子球按比例缩小，保证在正方形视口内完整显示（不被视口裁切）
+                const visualSize = this.three.visualSize;
+                const atomGeo = new THREE.SphereGeometry(visualSize * 0.125, 32, 32);
+                const atomMat = new THREE.MeshPhongMaterial({ color: 0x3498db, shininess: 80 });
+                const addAtom = (x, y, z) => {
+                    const mesh = new THREE.Mesh(atomGeo, atomMat);
+                    mesh.position.set((x - 0.5) * visualSize, (y - 0.5) * visualSize, (z - 0.5) * visualSize);
+                    scene.add(mesh);
+                    this.three.atoms.push(mesh);
+                };
+                for (let x = 0; x <= 1; x++) for (let y = 0; y <= 1; y++) for (let z = 0; z <= 1; z++) addAtom(x, y, z);
+                if (type === 'bcc') addAtom(0.5, 0.5, 0.5);
+                else if (type === 'fcc') [[0.5, 0.5, 0], [0.5, 0.5, 1], [0.5, 0, 0.5], [0.5, 1, 0.5], [0, 0.5, 0.5], [1, 0.5, 0.5]].forEach(p => addAtom(...p));
+                const boxGeo = new THREE.BoxGeometry(visualSize, visualSize, visualSize);
+                const edges = new THREE.EdgesGeometry(boxGeo);
+                this.three.lines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xbdc3c7 }));
+                scene.add(this.three.lines);
+                this.updateXRD();
+                this.updatePlaneVisual();
+            },
 
-                    await new Promise(r => setTimeout(r, 30));
+            // --- 简化版 3D 晶面：只画晶面平面与法线，不画入射光束 / θ 角标注 ---
+            updatePlaneVisual() {
+                if (!this.three.scene) return;
+                // 清理旧的晶面组
+                if (this.three.planeGroup) {
+                    this.three.planeGroup.traverse(function(o) {
+                        if (o.geometry) o.geometry.dispose();
+                        if (o.material) {
+                            if (Array.isArray(o.material)) o.material.forEach(m => m.dispose());
+                            else o.material.dispose();
+                        }
+                    });
+                    this.three.scene.remove(this.three.planeGroup);
+                    this.three.planeGroup = null;
+                }
+                const self = this;
+                let fam = this.selReflKey
+                    ? this.reflList.filter(function(r) { return r.key === self.selReflKey; })[0]
+                    : null;
+                if (!fam) fam = this.reflList.filter(function(r) { return r.allowed; })[0];
+                const tag = document.getElementById('plane-tag');
+                if (!fam) { if (tag) tag.style.display = 'none'; return; }
+
+                const g = new THREE.Group();
+                // 晶面法线沿 [hkl] 方向
+                const n = new THREE.Vector3(fam.h, fam.k, fam.l).normalize();
+                // 平面基向量（与法线正交）
+                const helper = Math.abs(n.z) < 0.9 ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(1, 0, 0);
+                const u = new THREE.Vector3().crossVectors(n, helper).normalize();
+                const v = new THREE.Vector3().crossVectors(n, u).normalize();
+                const L = this.three.visualSize * 0.66;
+                const p0 = u.clone().multiplyScalar(L);
+                const p1 = v.clone().multiplyScalar(L);
+                const p2 = u.clone().multiplyScalar(-L).add(v.clone().multiplyScalar(L));
+                const p3 = u.clone().multiplyScalar(-L).add(v.clone().multiplyScalar(-L));
+                const geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute([
+                    p0.x, p0.y, p0.z, p1.x, p1.y, p1.z, p2.x, p2.y, p2.z, p3.x, p3.y, p3.z
+                ], 3));
+                geo.setIndex([0, 1, 2, 0, 2, 3]);
+                geo.computeVertexNormals();
+                g.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({
+                    color: 0x3498db, transparent: true, opacity: 0.26, side: THREE.DoubleSide, depthWrite: false
+                })));
+                g.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color: 0x5dade2 })));
+                // 法线（橙色箭头）
+                const arrowLen = this.three.visualSize * 0.62;
+                const end = n.clone().multiplyScalar(arrowLen);
+                g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), end]),
+                    new THREE.LineBasicMaterial({ color: 0xf39c12 })));
+                const cone = new THREE.Mesh(new THREE.ConeGeometry(0.055, 0.15, 16), new THREE.MeshBasicMaterial({ color: 0xf39c12 }));
+                cone.position.copy(end);
+                cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), n);
+                g.add(cone);
+                this.three.planeGroup = g;
+                this.three.scene.add(g);
+
+                // 左上角标签
+                if (tag) {
+                    tag.style.display = 'block';
+                    tag.innerHTML = '<b>' + this.t('plane_title') + '</b> ' + fam.hkl +
+                        '<br>' + this.t('plane_normal') + ' [' + fam.h + ' ' + fam.k + ' ' + fam.l + ']' +
+                        '<br>' + this.t('plane_d') + ' d = ' + fam.d.toFixed(4) + ' Å' +
+                        '<br>mult = ' + fam.mult + ' &nbsp; |F|² = ' + fam.F2;
                 }
             }
         },
-                    mounted() {
-                        this.initThree();
-                        this.updateXRD();
-                        // 首帧后容器尺寸才最终稳定，再校正一次画布比例
-                        this.$nextTick(() => { if(this.scheduleResize) this.scheduleResize(); });
-                        setTimeout(() => { if(this.scheduleResize) this.scheduleResize(); }, 400);
-                    }    });
+        mounted() {
+            this.initThree();
+            this.updateXRD();
+            this.$nextTick(() => { this.resizeThree(); });
+        }
+    });
 </script>
 </body>
 </html>

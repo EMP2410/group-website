@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Realistic Calibration Demo</title>
-    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.24.1.min.js"></script>
     <script>
     // 禁用右键菜单
     document.addEventListener('contextmenu', function(e) {
@@ -34,12 +34,12 @@
             e.preventDefault();
             return false;
         }
-        // Ctrl+U (查看源代码)
+        // Ctrl+U (View Source)
         if (e.ctrlKey && e.key === 'u') {
             e.preventDefault();
             return false;
         }
-        // Ctrl+S (保存)
+        // Ctrl+S (Save)
         if (e.ctrlKey && e.key === 's') {
             e.preventDefault();
             return false;
@@ -47,10 +47,6 @@
     });
     </script>
     <style>
-        /* The demo is embedded in the site page as well as opened on its own, so the
-           sizing rules must be predictable: with the default content-box model every
-           `width: 100%` panel grows by its own padding and pokes out of the frame. */
-        *, *::before, *::after { box-sizing: border-box; }
         :root {
             --bg-color: #0b0c10;
             --panel-bg: #1f2833;
@@ -81,14 +77,14 @@
             background-color: var(--panel-bg);
             padding: 0 20px;
             border-bottom: 2px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center; gap: 10px;
-            height: 60px; flex-shrink: 0; min-width: 0; overflow: hidden;
+            display: flex; justify-content: space-between; align-items: center;
+            height: 60px; flex-shrink: 0;
         }
-        
-        .tab-container { display: flex; height: 100%; gap: 5px; align-items: flex-end; min-width: 0; }
-        
+
+        .tab-container { display: flex; height: 100%; gap: 5px; align-items: flex-end; }
+
         .tab-btn {
-            background: transparent; border: none; color: #888; 
+            background: transparent; border: none; color: #888;
             padding: 15px 20px; font-size: 1rem; font-weight: 600; cursor: pointer;
             border-bottom: 3px solid transparent; transition: all 0.2s;
         }
@@ -96,22 +92,23 @@
         .tab-btn.active { color: #fff; border-bottom-color: var(--accent); background: rgba(102, 252, 241, 0.05); }
 
         button.lang-btn {
-            background: transparent; border: 1px solid var(--accent-dim); color: var(--accent-dim); 
+            background: transparent; border: 1px solid var(--accent-dim); color: var(--accent-dim);
             padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.75rem;
         }
         button.lang-btn:hover { background: var(--accent-dim); color: var(--bg-color); }
 
         /* --- Layout --- */
-        .main-container { display: none; flex: 1; overflow: hidden; } /* Hidden by default */
+        .main-container { display: none; flex: 1; min-height: 0; overflow: hidden; } /* Hidden by default */
         .main-container.active-view { display: flex; }
 
         .sidebar {
-            width: 340px; background-color: #15191d; border-right: 1px solid #333;
-            padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0; min-width: 0;
+            width: clamp(280px, 25vw, 340px); background-color: #15191d; border-right: 1px solid #333;
+            padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; flex-shrink: 0;
         }
 
         .workspace {
-            flex: 1 1 0%; display: flex; flex-direction: column; background: #000; position: relative; min-width: 0;
+            flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column;
+            background: #000; position: relative; justify-content: center; gap: 4px;
         }
 
         /* --- UI Components --- */
@@ -129,47 +126,57 @@
             padding: 8px; border-radius: 4px; margin-bottom: 10px; font-size: 0.9rem; outline: none;
         }
         input[type="range"] { width: 100%; cursor: pointer; margin: 10px 0; accent-color: var(--accent); }
-        
+
         button.action-btn {
             width: 100%; background-color: var(--accent-dim); color: var(--bg-color); border: none;
             padding: 10px; cursor: pointer; border-radius: 4px; font-size: 0.9rem; font-weight: 700;
             transition: all 0.2s; margin-top: 5px;
         }
-        button.action-btn:hover { background-color: var(--accent); box-shadow: 0 0 10px var(--accent); }
+        button.action-btn:hover { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+        button.action-btn.secondary { background: transparent; border: 1px solid var(--accent-dim); color: var(--accent-dim); }
+        button.action-btn.secondary:hover { background: rgba(69,162,158,0.15); box-shadow: none; }
 
         .value-display { font-family: 'Courier New', monospace; color: var(--accent); font-weight: bold; }
 
+        .tooltip { font-size: 0.75rem; color: #888; margin-top: 8px; line-height: 1.5; }
+
         /* --- Canvas --- */
         .canvas-area {
-            flex: 1 1 0%; min-height: 0; min-width: 0; display: flex; justify-content: center; align-items: center;
+            flex: 0 1 auto; min-height: 0; display: flex; justify-content: center; align-items: center;
             background: #000; position: relative; overflow: hidden; cursor: crosshair;
+            height: 46vh; max-height: 470px;
+            user-select: none; -webkit-user-select: none;   /* 右键拖动十字时别把页面文字选中 */
         }
-        canvas { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: 0 0 50px rgba(0,255,255,0.05); }
-
-        /* --- Markers --- */
-        #beamCenterMarker {
-            position: absolute; width: 30px; height: 30px; transform: translate(-50%, -50%);
-            pointer-events: none; z-index: 10;
-        }
+        /* 定位包裹层：JS 会把它设为与 canvas 显示区完全一致的像素尺寸，
+           光束中心十字按它的百分比定位才不会随容器/画布尺寸比例漂移 */
+        .canvas-wrap { position: relative; display: block; flex: none; }
+        canvas { width: 100%; height: 100%; display: block; box-shadow: 0 0 50px rgba(0,255,255,0.05); }
+        #beamCenterMarker { position: absolute; width: 30px; height: 30px; transform: translate(-50%,-50%); pointer-events: none; z-index: 10; }
         #beamCenterMarker::before, #beamCenterMarker::after {
             content: ''; position: absolute; background: var(--danger); box-shadow: 0 0 4px #000;
         }
         #beamCenterMarker::before { top: 14px; left: 0; width: 30px; height: 2px; }
         #beamCenterMarker::after { left: 14px; top: 0; width: 2px; height: 30px; }
+        #calibBeamMarker { position: absolute; width: 26px; height: 26px; transform: translate(-50%,-50%); pointer-events: none; z-index: 10; }
+        #calibBeamMarker::before, #calibBeamMarker::after {
+            content: ''; position: absolute; background: var(--success); box-shadow: 0 0 4px #000;
+        }
+        #calibBeamMarker::before { top: 12px; left: 0; width: 26px; height: 2px; }
+        #calibBeamMarker::after { left: 12px; top: 0; width: 2px; height: 26px; }
 
         /* --- Plot --- */
         .plot-area {
-            height: 35vh; flex-shrink: 0; min-width: 0; overflow: hidden;
-            background: var(--panel-bg); border-top: 1px solid #333; padding: 0; z-index: 20;
+            flex: 0 0 auto; height: 30vh; min-height: 170px; max-height: 300px;
+            background: var(--panel-bg); border-top: 1px solid #333; padding: 5px; z-index: 20;
         }
 
         /* --- Calibration Specific --- */
         .math-box {
-            background: #000; padding: 10px; border: 1px solid #333; 
+            background: #000; padding: 10px; border: 1px solid #333;
             font-family: 'Courier New', monospace; color: #fff; font-size: 0.85rem; margin-top: 10px;
         }
         .math-var { color: var(--accent); }
-        
+
         .error-panel {
             margin-top: 10px; padding: 10px; border-radius: 4px; background: rgba(0,0,0,0.3); border: 1px solid #444;
         }
@@ -180,35 +187,30 @@
         .status-bad { color: var(--danger); }
 
         #legend {
-            position: absolute; bottom: 10px; left: 10px; 
+            position: absolute; bottom: 10px; left: 10px;
             background: rgba(0,0,0,0.8); padding: 8px; border-radius: 4px; font-size: 0.8rem; pointer-events: none;
         }
         .legend-item { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
         .dot { width: 10px; height: 10px; border-radius: 50%; }
-        
-        /* ---------- 响应式：适应嵌入页面的窄容器 ---------- */
-        @media (max-width: 1100px) {
-            .sidebar { width: 280px; padding: 12px; gap: 12px; }
-            header { padding: 0 12px; }
-            .tab-btn { padding: 12px 12px; font-size: 0.9rem; }
+
+        #modeBadge {
+            position: absolute; top: 10px; right: 10px; z-index: 30;
+            font-family: 'Courier New', monospace; font-size: 0.75rem; pointer-events: none;
         }
-        
-        /* 窄屏：控制面板置顶，探测器图像与图谱在其下方纵向排列 */
-        @media (max-width: 820px) {
-            .main-container.active-view { flex-direction: column; overflow-y: auto; }
-            .sidebar { width: 100%; flex: 0 0 auto; max-height: 38vh; border-right: none; border-bottom: 1px solid #333; }
-            /* 明确高度，画布才能按可用空间缩放而不是按 1024px 原始尺寸撑开 */
-            .workspace { flex: 0 0 auto; height: 70vh; min-height: 300px; }
-            .plot-area { height: 180px; }
-            .tab-btn { padding: 10px 8px; font-size: 0.82rem; }
-            header { height: 52px; }
+        #hoverInfo {
+            position: absolute; left: 10px; top: 10px; z-index: 30; pointer-events: none;
+            background: rgba(0,0,0,0.75); border: 1px solid #333; border-radius: 4px;
+            padding: 6px 10px; font-family: 'Courier New', monospace; font-size: 0.75rem; color: var(--accent);
+            display: none; white-space: pre; line-height: 1.5;
         }
-        
-        @media (max-width: 520px) {
-            .plot-area { height: 150px; }
-            .workspace { height: 72vh; min-height: 260px; }
-            button.lang-btn { padding: 4px 10px; font-size: 0.68rem; }
+        #selRingInfo {
+            position: absolute; left: 10px; bottom: 10px; z-index: 30; pointer-events: none;
+            background: rgba(0,0,0,0.78); border: 1px solid #553; border-radius: 4px;
+            padding: 6px 10px; font-family: 'Courier New', monospace; font-size: 0.72rem;
+            color: #ff8a80; display: none; white-space: pre; line-height: 1.55; max-width: 72%;
         }
+
+        footer { text-align: center; padding: 10px; background-color: #1f2833; color: #888; font-size: 0.85rem; border-top: 1px solid #333; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -224,18 +226,19 @@
 <div class="main-container active-view" id="viewSim">
     <div class="sidebar">
         <div class="control-section">
-            <div class="section-title" id="secSource">Beam & Sample</div>
+            <div class="section-title" id="secSource">Beam &amp; Sample</div>
             <label><span id="lblWavelength">Wavelength</span></label>
             <select id="wavelengthSelect" onchange="updateSim()">
-                <option value="1.5418">Cu Kα (1.54 Å / 8 keV)</option>
-                <option value="0.7107">Mo Kα (0.71 Å / 17 keV)</option>
-                <option value="0.1240" selected>High Energy (0.124 Å / 100 keV)</option>
+                <option value="1.5418" data-i18n="optCu">Cu Kα (1.54 Å / 8 keV)</option>
+                <option value="0.7107" data-i18n="optMo">Mo Kα (0.71 Å / 17 keV)</option>
+                <option value="0.1240" selected data-i18n="optHiE">High Energy (0.124 Å / 100 keV)</option>
             </select>
             <label><span id="lblSample">Sample</span></label>
             <select id="sampleSelect" onchange="updateSim()">
-                <option value="lab6">LaB6 (Standard)</option>
-                <option value="au">Gold (Au) Nano</option>
-                <option value="glass">Silica Glass</option>
+                <option value="ceo2" data-i18n="optCeO2">CeO2 (Ceria)</option>
+                <option value="lab6" selected data-i18n="optLaB6">LaB6 (Standard)</option>
+                <option value="au" data-i18n="optAu">Gold (Au) Nano</option>
+                <option value="glass" data-i18n="optGlass">Silica Glass (Amorphous)</option>
             </select>
         </div>
 
@@ -243,20 +246,41 @@
             <div class="section-title" id="secDetector">Detector</div>
             <label><span id="lblResolution">Resolution</span></label>
             <select id="resSelect" onchange="handleResChange()">
-                <option value="256">256 x 256 (Fast)</option>
-                <option value="512">512 x 512 (Standard)</option>
-                <option value="1024" selected>1024 x 1024 (High Res)</option>
+                <option value="256" data-i18n="optRes256">256 x 256 (Fast)</option>
+                <option value="512" data-i18n="optRes512">512 x 512 (Standard)</option>
+                <option value="1024" selected data-i18n="optRes1024">1024 x 1024 (High Res)</option>
             </select>
             <label><span id="lblPixelSize">Pixel Size</span></label>
             <select id="pixelSizeSelect" onchange="updateSim()">
-                <option value="0.200" selected>200 μm (Flat Panel)</option>
-                <option value="0.075">75 μm (Eiger)</option>
+                <option value="0.200" selected data-i18n="optPix200">200 μm (Flat Panel)</option>
+                <option value="0.075" data-i18n="optPix75">75 μm (Eiger)</option>
             </select>
             <label>
                 <span id="lblSDD">SDD (Distance)</span>
                 <span class="value-display" id="sddVal">1000 mm</span>
             </label>
             <input type="range" id="sddRange" min="200" max="2500" value="1000" step="10" oninput="updateSim()">
+        </div>
+
+        <div class="control-section">
+            <div class="section-title" id="secInstrument">Instrument</div>
+            <label>
+                <span id="lblInstrRes">Instrument Resolution (FWHM 2θ)</span>
+                <span class="value-display" id="instrResVal">0.000°</span>
+            </label>
+            <input type="range" id="instrResRange" min="0" max="0.3" value="0" step="0.005" oninput="updateSim()">
+            <label>
+                <span id="lblBackground">Background</span>
+                <span class="value-display" id="bgVal">4</span>
+            </label>
+            <input type="range" id="bgRange" min="0" max="60" value="4" step="1" oninput="updateSim()">
+            <label><span id="lblAxis">Horizontal Axis</span></label>
+            <select id="axisModeSelect" onchange="renderSpectrum()">
+                <option value="tt" data-i18n="optAxisTT">2-Theta (deg)</option>
+                <option value="q" data-i18n="optAxisQ">Scattering Vector q (Å⁻¹)</option>
+                <option value="d" data-i18n="optAxisD">d-spacing (Å)</option>
+            </select>
+            <div class="tooltip" id="tipResolution"></div>
         </div>
 
         <div class="control-section">
@@ -268,9 +292,13 @@
 
     <div class="workspace">
         <div class="canvas-area" id="simCanvasContainer">
-            <canvas id="simCanvas"></canvas>
-            <div id="beamCenterMarker"></div>
-            <div style="position:absolute; top:10px; right:10px; color:#66fcf1; font-family:monospace; pointer-events:none;">Mode: Simulation</div>
+            <div class="canvas-wrap" id="simCanvasWrap">
+                <canvas id="simCanvas"></canvas>
+                <div id="beamCenterMarker"></div>
+            </div>
+            <div id="modeBadge" style="color:#66fcf1;">Mode: Simulation</div>
+            <div id="hoverInfo"></div>
+            <div id="selRingInfo"></div>
         </div>
         <div class="plot-area" id="plotDiv"></div>
     </div>
@@ -286,33 +314,48 @@
             <button class="action-btn" onclick="startNewCalibration()" id="btnNewProblem">
                 🎲 Generate New Problem
             </button>
+            <div id="calibDataSource" style="font-size:0.72rem; color:#8fd3c7; margin-top:10px; line-height:1.5;
+                 background:rgba(102,252,241,0.06); border:1px solid #2a4a48; border-radius:4px; padding:8px;"></div>
         </div>
 
         <div class="control-section">
             <div class="section-title" id="calibStepTitle">Refinement</div>
             <label>
-                <span id="lblSlider">Adjust Fit (Scale)</span>
+                <span id="lblSlider">Sample-Detector Distance</span>
+                <span class="value-display" id="calibSDDVal">1000 mm</span>
             </label>
-            
-            <input type="range" id="calibRadiusSlider" min="10" max="500" value="100" step="0.1" oninput="drawCalibScene()">
-            
+            <input type="range" id="calibSDDRange" min="200" max="2500" value="1000" step="1" oninput="drawCalibScene()">
+
+            <label>
+                <span id="lblOffset">Beam Center Offset</span>
+                <span class="value-display" id="calibOffVal">(0, 0) px</span>
+            </label>
+            <input type="range" id="calibOffXRange" min="-60" max="60" value="0" step="1" oninput="drawCalibScene()">
+            <input type="range" id="calibOffYRange" min="-60" max="60" value="0" step="1" oninput="drawCalibScene()">
+
             <div class="error-panel">
                 <div style="display:flex; justify-content:space-between; align-items:end;">
-                    <div class="error-label">RMSE (Error)</div>
+                    <div class="error-label" id="lblRmse">RMSE (Error)</div>
                     <div class="error-value status-bad" id="rmseVal">--</div>
                 </div>
-                <div style="font-size:0.7rem; color:#666; margin-top:4px;" id="rmseDesc">Target: < 1.0 px</div>
+                <div style="font-size:0.7rem; color:#666; margin-top:4px;" id="rmseDesc">Target: &lt; 1.0 px</div>
             </div>
 
             <div class="math-box">
-                <div>Fit Rings (hkl): 100, 110, 111, 200, 210</div>
+                <div id="calibRingInfo">Fit Rings (hkl): 100, 110, 111, 200, 210</div>
                 <hr style="border-color:#333">
-                Current Calc SDD: <br>
+                <span id="calibSddLabel">Current Calc SDD:</span> <br>
                 <span class="math-var" id="mathRes" style="font-size:1.1rem; font-weight:bold;">---</span> mm
             </div>
         </div>
 
         <div class="control-section">
+            <button class="action-btn secondary" onclick="autoSolveCalibration()" id="btnAutoSolve">
+                ⚙ Auto Least-Squares Solve
+            </button>
+            <div class="tooltip" id="tipAutoSolve"></div>
+            <div id="calibSolveStatus" style="font-size:0.72rem; color:#ffdb58; margin-top:8px;
+                 font-family:'Courier New', monospace; line-height:1.5;"></div>
             <button class="action-btn" style="background:var(--success); color:#000;" onclick="checkCalibration()" id="btnCheck">
                 ✔ Verify Distance
             </button>
@@ -322,50 +365,100 @@
 
     <div class="workspace">
         <div class="canvas-area" id="calibCanvasContainer">
-            <canvas id="calibCanvas"></canvas>
-            <div id="legend">
-                <div class="legend-item"><div class="dot" style="background:#ff5252;"></div> Data (11 Rings)</div>
-                <div class="legend-item"><div class="dot" style="background:#66ff66;"></div> Fit (5 Rings)</div>
+            <div class="canvas-wrap" id="calibCanvasWrap">
+                <canvas id="calibCanvas"></canvas>
+                <div id="calibBeamMarker"></div>
             </div>
-            <div style="position:absolute; top:10px; right:10px; color:var(--success); font-family:monospace; pointer-events:none;">Mode: Calibration</div>
+            <div id="legend">
+                <div class="legend-item"><div class="dot" style="background:#ff5252;"></div> <span id="legendData">Data (11 Rings)</span></div>
+                <div class="legend-item"><div class="dot" style="background:#66ff66;"></div> <span id="legendFit">Fit (Model Rings)</span></div>
+                <div class="legend-item"><div class="dot" style="background:#ffffff;"></div> <span id="legendCenter">Fitted beam center</span></div>
+            </div>
+            <div id="modeBadge" style="color:var(--success);">Mode: Calibration</div>
         </div>
+        <div class="plot-area" id="plotDivCalib"></div>
     </div>
 </div>
 
 <script>
     // --- CONSTANTS ---
-    // Full LaB6 Peaks (11 rings)
+    // Full LaB6 Peaks (11 rings) — 标准 Si 标定物衍射卡片数据
     const LaB6_D = [
-        4.156, 2.939, 2.399, 2.078, 1.859, 
-        1.697, 1.469, 1.385, 1.314, 1.253, 
+        4.156, 2.939, 2.399, 2.078, 1.859,
+        1.697, 1.469, 1.385, 1.314, 1.253,
         1.200
-    ]; 
+    ];
 
     const Au_D = [2.355, 2.039, 1.442, 1.230];
-    const SiO2_D = [4.0, 1.2];
+
+    // 二氧化铈 CeO2 —— 萤石结构 (fluorite, Fm-3m)，晶格常数 a = 5.411 Å
+    // d = a / sqrt(h²+k²+l²)，这里取强度最高的 11 条反射
+    // 前 7 条落在探测器内，(420) 之后刚好出界 —— 正好演示"出界环自动剔除"
+    const CeO2_D = [
+        3.1241, 2.7055, 1.9131, 1.6314, 1.5620,
+        1.3528, 1.2413, 1.2098, 1.1044, 1.0412,
+        0.9566
+    ];
+
+    // 非晶样品没有 d 间距，只有宽化的 S(q) 弥散。这里只给出主弥散峰对应的
+    // "等效 d"（石英玻璃 S(q) 主峰约在 d ≈ 3.4 Å），其余全部用弥散尾表示。
+    const GLASS_MAIN_D = 3.43;
+    const GLASS_MAIN_W = 0.42;   // 弥散峰相对宽度（相对半径），非晶的峰钝到看不出环
+    const GLASS_TAIL_Q0 = 1.10;  // 幂律尾的参考 q (Å⁻¹)
+
+    // 各样品衍射环对应的 (hkl)，用于 1D 谱上的峰位标注
+    const HKL_LABELS = {
+        lab6: ['(100)', '(110)', '(111)', '(200)', '(210)', '(211)', '(220)', '(221)', '(310)', '(311)', '(222)'],
+        au: ['(111)', '(200)', '(220)', '(311)'],
+        ceo2: ['(111)', '(200)', '(220)', '(311)', '(222)', '(400)', '(331)', '(420)', '(422)', '(511)', '(440)']
+    };
 
     let LANG = 'en';
 
     // Simulation State
     const SIM = {
         lambda: 0.1240, pixelSize: 0.200, sdd: 1000, res: 1024,
-        sample: 'lab6', bcX: 512, bcY: 512
+        sample: 'lab6', bcX: 512, bcY: 512,
+        instrRes: 0,      // 仪器分辨率 FWHM (deg in 2θ)
+        background: 4,    // 背景计数
+        axisMode: 'tt',
+        ringRadii: [],    // 每环理论半径（像素），供 2D↔1D 联动与视场覆盖率计算
+        ringInfo: [],     // 每环的 {d, twoTheta, coverage, hkl}
+        selectedRing: -1  // 持久化的“选中峰”（按环索引），改仪器条件后按索引重新定位 → 自动跟随
     };
 
     // Calibration State
     const CALIB = {
         realSDD: 0,
+        realOffX: 0, realOffY: 0,   // 真实束心相对假定原点的偏移（px）
+        fitSDD: 1000,
+        fitOffX: 0, fitOffY: 0,
+        // 拟合的连续解（滑杆只能取整数，验证面板用连续值算误差才靠谱）
+        fitSDDExact: 1000, fitOffXExact: 0, fitOffYExact: 0,
         lambda: 0.1240,
         pixelSize: 0.200,
-        res: 800
+        res: 800,
+        instrRes: 0,       // 仪器分辨率 FWHM(2θ, 度)：决定衍射环在探测器上的厚度
+        fitRingCount: 0,
+        dList: null,       // 被标定样品的 d 序列（LaB6 / Au / CeO2）
+        obs: [],           // 实测观测量 [{ring, s, r}]（r 为相对假定原点的半径，s 为扇区号）
+        usedRings: [],     // 参与拟合的环在 dList 中的下标
+        ringRadii: [],     // 全圆方位角平均测得的环半径
+        srcSig: '',        // 模拟页参数指纹：变了说明数据过期，需要重新测量
+        conv: [],          // 收敛曲线 [{it, rmse}]
+        solving: false,
+        dataProblem: '',
+        autoCentered: false,  // 假定原点偏得太远，已用图样对称性自动找回环心
+        plotPromise: null     // 最近一次 Plotly.react 的 promise（增量更新要排在它后面）
     };
 
     // --- DOM ---
     const simCanvas = document.getElementById('simCanvas');
-    const simCtx = simCanvas.getContext('2d', { alpha: false });
+    const simCtx = simCanvas.getContext('2d', { alpha: false, willReadFrequently: true });
     const calibCanvas = document.getElementById('calibCanvas');
     const calibCtx = calibCanvas.getContext('2d', { alpha: false });
     const marker = document.getElementById('beamCenterMarker');
+    const calibMarker = document.getElementById('calibBeamMarker');
 
     // --- LOCALIZATION ---
     const TXT = {
@@ -373,23 +466,117 @@
             tabSim: "Experiment Simulation", tabCalib: "Multi-Ring Calibration",
             secSource: "Beam & Sample", lblWavelength: "Wavelength", lblSample: "Sample",
             secDetector: "Detector", lblResolution: "Resolution", lblPixelSize: "Pixel Size", lblSDD: "SDD (Distance)",
-            btnReset: "Auto-Calibrate Center", tipDrag: "⚠️ Drag Crosshair to simulate misalignment.",
-            calibGoalTitle: "Mission Goal", calibDesc: "The detector distance is unknown. Adjust the fit to align the 5 visible green rings to the data.",
-            btnNewProblem: "🎲 Generate New Problem", calibStepTitle: "Refinement",
-            lblSlider: "Adjust Fit (Scale)", btnCheck: "✔ Verify Distance",
-            rmseDesc: "Target: < 1.0 px (Root Mean Square Error)",
-            legendData: "Data (11 Rings)", legendFit: "Fit (First 5 Rings)"
+            secInstrument: "Instrument", lblInstrRes: "Instrument Resolution (FWHM 2θ)",
+            lblBackground: "Background", lblAxis: "Horizontal Axis",
+            tipResolution: "Instrument resolution broadens every Debye ring, so the 1D peaks widen and lose intensity — this is the experimental trade-off behind choosing a high-E setup.",
+            btnReset: "Auto-Calibrate Center", tipDrag: "⚠️ Right-drag the crosshair to mark a mis-assigned beam center. The rings stay where they really are, so a wrong origin smears the 1D pattern. Left-click a ring to select it instead.",
+            secProcessing: "Processing",
+            calibGoalTitle: "Mission Goal",
+            calibDesc: "The data are taken from the diffraction simulation page: the 2D detector pattern is azimuthally binned into 32 sectors, so every ring yields 32 measured peak positions — up to 11 rings × 32 = 352 observations for LaB6. The detector distance and the beam-center offset are both unknown: 3 unknowns against hundreds of observations is a genuine over-determined least-squares problem. Rings that stick out past the detector edge are dropped automatically, because only a truncated arc is left in those sectors and no offset model can explain it.",
+            btnNewProblem: "🎲 Re-measure (new random error)", calibStepTitle: "Refinement",
+            lblSlider: "Sample-Detector Distance", lblOffset: "Beam Center Offset",
+            lblRmse: "RMSE (Error)", btnCheck: "✔ Verify Distance",
+            rmseDesc: "Target: < 1.0 px (RMS of the measured peak residuals)",
+            calibRingInfo: "Fit Rings (hkl): 100, 110, 111, 200, 210",
+            calibSddLabel: "Current Calc SDD:",
+            btnAutoSolve: "⚙ Auto Least-Squares Solve",
+            tipAutoSolve: "Nelder–Mead over 3 parameters (SDD, offset x, offset y) against the measured peak positions, iterated step by step so the convergence is visible.",
+            legendData: "Measured rings (32 sectors)", legendFit: "Fitted rings",
+            legendCenter: "Fitted beam center",
+            modeSim: "Mode: Simulation", modeCalib: "Mode: Calibration",
+            yTitle: "Intensity (counts)",
+            xTitle: "2-Theta (deg)", xTitleQ: "q (Å⁻¹)", xTitleD: "d (Å)",
+            optCu: "Cu Kα (1.54 Å / 8 keV)", optMo: "Mo Kα (0.71 Å / 17 keV)", optHiE: "High Energy (0.124 Å / 100 keV)",
+            optLaB6: "LaB6 (Standard)", optAu: "Gold (Au) Nano", optGlass: "Silica Glass (Amorphous)",
+    optCeO2: "CeO2 (Ceria)",
+            optRes256: "256 x 256 (Fast)", optRes512: "512 x 512 (Standard)", optRes1024: "1024 x 1024 (High Res)",
+            optPix200: "200 μm (Flat Panel)", optPix75: "75 μm (Eiger)",
+            optAxisTT: "2-Theta (deg)", optAxisQ: "Scattering Vector q (Å⁻¹)", optAxisD: "d-spacing (Å)",
+            residTitle: "Per-Ring Residuals", residX: "Ring (hkl)", residY: "Δr (px)",
+            excellent: "Excellent! Error", good: "Good. Error", keepTrying: "Keep trying. Error",
+            actualLabel: "Actual", calcLabel: "Calculated",
+            actualOffset: "Actual beam offset", calcOffset: "Your offset",
+            partialRing: "partly off detector",
+            noPartial: "all rings fully inside the detector",
+            glassNote: "Amorphous: no Bragg rings, only broad diffuse scattering.",
+            calibPlotEmpty: "Fit the rings to see per-ring residuals",
+            selRingNone: "No reflection selected\nLeft-click a ▲ marker on the 1D trace or a ring on the 2D detector.",
+            selRingLabel: "Selected",
+            selRingFollow: "2θ follows the wavelength · ring radius follows the SDD",
+            calibDataTitle: "DATA SOURCE",
+            calibDataFrom: "Diffraction simulation page (2D pattern)",
+            calibDataRings: "rings × 32 sectors",
+            calibDataObs: "observations",
+            calibNoRings: "The current sample is amorphous: no Bragg rings, nothing to calibrate.\nSwitch the simulation page to LaB6 or Au.",
+            calibNoRingsOnDetector: "Cannot extract calibratable rings from the current 2D pattern — either the Bragg rings fall outside the detector (SDD too large / wavelength too long), or the marked beam centre is so far off that the rings smear into one another in the radial profile. Lower the SDD / switch to a high-energy beamline, or re-mark the beam centre (or press Auto-Calibrate Centre) on the simulation page, then re-measure.",
+            calibBeamCenterTooFar: "The rings were found, but they are measured from a beam centre mark that is too far away from the true ring centre: no (SDD, offset) pair can explain the radii you get from that mark (the offset also runs past the ±60 px range of the fit sliders). Mark the beam centre closer to the ring centre — or press Auto-Calibrate Centre on the simulation page — and measure again.",
+            calibAutoCentered: "Beam centre is too far off: the rings smear together in the radial profile, so the ring centre was recovered from the pattern symmetry first. All radii are still measured relative to your mark.",
+            calibSolving: "solving",
+            calibSolveIters: "iterations",
+            calibSolveDone: "Solved in",
+            convTitle: "Convergence", convX: "iteration", convY: "RMSE (px)",
+            calibErrorPct: "SDD deviation",
+            calibOffError: "beam-center error",
+            calibSampleAmorphous: "amorphous",
+            calibModelOut: "Model rings are out of view - try a smaller SDD"
         },
         cn: {
-            tabSim: "衍射实验模拟", tabCalib: "多环标定 (5环拟合)",
+            tabSim: "衍射实验模拟", tabCalib: "多环标定（最小二乘）",
             secSource: "光源与样品", lblWavelength: "波长/能量", lblSample: "样品材料",
             secDetector: "探测器设置", lblResolution: "分辨率", lblPixelSize: "像素尺寸", lblSDD: "样品距离 (SDD)",
-            btnReset: "自动校准光束中心", tipDrag: "⚠️ 拖动十字模拟光束中心偏移",
-            calibGoalTitle: "标定任务", calibDesc: "探测器距离未知。请调整参数，使5个绿色拟合环与红色数据环的内圈重合。",
-            btnNewProblem: "🎲 生成新的未知距离", calibStepTitle: "精修参数",
-            lblSlider: "调整拟合 (缩放)", btnCheck: "✔ 验证计算结果",
-            rmseDesc: "目标: < 1.0 px (均方根误差 RMSE)",
-            legendData: "真实数据 (11环)", legendFit: "拟合模型 (前5环)"
+            secInstrument: "仪器条件", lblInstrRes: "仪器分辨率 (2θ 方向 FWHM)",
+            lblBackground: "背景水平", lblAxis: "横坐标",
+            tipResolution: "仪器分辨率会把每一个德拜环展宽，1D 峰随之变宽变矮 —— 这正是选择高能光束线的实验权衡。",
+            btnReset: "自动校准光束中心", tipDrag: "⚠️ 右键拖动十字相当于把光束中心标错位置。衍射环仍停留在真实位置，积分原点错了，1D 谱就会糊掉。左键点环则是选中那个衍射峰。",
+            secProcessing: "数据处理",
+            calibGoalTitle: "标定任务",
+            calibDesc: "数据直接取自衍射实验模拟页：把 2D 探测器图样按方位角分成 32 个扇区分别做方位角平均，每个环给出 32 个实测峰位 —— LaB6 最多 11 环 × 32 = 352 个观测量。探测器距离与光束中心偏移都未知：3 个未知量对上几百个观测值，是真正的过定最小二乘问题。伸出探测器边界的环会被自动剔除：那些扇区里只剩半截弧，任何偏移模型都解释不了。",
+            btnNewProblem: "🎲 重新测量（换一组随机误差）", calibStepTitle: "精修参数",
+            lblSlider: "样品-探测器距离", lblOffset: "光束中心偏移",
+            lblRmse: "均方根误差 (RMSE)", btnCheck: "✔ 验证计算结果",
+            rmseDesc: "目标: < 1.0 px（实测峰位残差的均方根）",
+            calibRingInfo: "参与拟合的环 (hkl): 100, 110, 111, 200, 210",
+            calibSddLabel: "当前反推的 SDD:",
+            btnAutoSolve: "⚙ 自动最小二乘求解",
+            tipAutoSolve: "用 Nelder–Mead 对 3 个参数（SDD、x 偏移、y 偏移）做最小二乘，逐次迭代把收敛过程演示出来。",
+            legendData: "实测环（32 扇区）", legendFit: "拟合模型环",
+            legendCenter: "拟合出的束心",
+            modeSim: "模式：衍射模拟", modeCalib: "模式：多环标定",
+            yTitle: "强度 (计数)",
+            xTitle: "2-Theta (度)", xTitleQ: "q (Å⁻¹)", xTitleD: "d (Å)",
+            optCu: "Cu Kα (1.54 Å / 8 keV)", optMo: "Mo Kα (0.71 Å / 17 keV)", optHiE: "高能 (0.124 Å / 100 keV)",
+            optLaB6: "LaB6 (标准样)", optAu: "金纳米颗粒 (Au)", optGlass: "石英玻璃 (非晶)",
+    optCeO2: "二氧化铈 (CeO2)",
+            optRes256: "256 x 256 (快速)", optRes512: "512 x 512 (标准)", optRes1024: "1024 x 1024 (高分辨)",
+            optPix200: "200 μm (平板探测器)", optPix75: "75 μm (Eiger)",
+            optAxisTT: "2-Theta (度)", optAxisQ: "散射矢量 q (Å⁻¹)", optAxisD: "晶面间距 d (Å)",
+            residTitle: "各环残差", residX: "衍射环 (hkl)", residY: "Δr (px)",
+            excellent: "非常好！误差", good: "不错。误差", keepTrying: "继续努力。误差",
+            actualLabel: "真实距离", calcLabel: "你的结果",
+            actualOffset: "真实束心偏移", calcOffset: "你的偏移",
+            partialRing: "部分超出探测器",
+            noPartial: "所有环都完整落在探测器视场内",
+            glassNote: "非晶：没有布拉格环，只有宽化的漫散射。",
+            calibPlotEmpty: "拟合之后这里会显示每个环的残差",
+            selRingNone: "尚未选中衍射峰\n左键点击 1D 谱上的 ▲ 标记或 2D 探测器上的环即可选中",
+            selRingLabel: "已选中",
+            selRingFollow: "2θ 随波长走 · 环半径随 SDD 走",
+            calibDataTitle: "数据来源",
+            calibDataFrom: "衍射实验模拟页（2D 图样）",
+            calibDataRings: "环 × 32 扇区",
+            calibDataObs: "个观测量",
+            calibNoRings: "当前样品是非晶：没有布拉格环，无法标定。\n请在模拟页切换到 LaB6 或 Au。",
+            calibNoRingsOnDetector: "当前 2D 图样里提取不到可标定的环——要么衍射环落在探测器之外（SDD 太大或波长太长），要么光束中心标得太偏，环在径向剖面上已经糊成一片、彼此分不开。请在模拟页调小 SDD / 改用高能光束线，或重新标定光束中心（也可以直接点“自动校准光束中心”），然后重新测量。",
+            calibBeamCenterTooFar: "环是找到了，但你标的光束中心离真实环心太远：以这个原点量出来的环半径，和任何（SDD, 偏移）组合都对不上（偏移也已经超出 ±60 px 的拟合范围）。请把光束中心标回靠近环心的位置——或者直接在模拟页点“自动校准光束中心”——再重新测量。",
+            calibAutoCentered: "光束中心标得太偏，环在径向剖面上已经糊成一片：程序先用图样自身的对称性自动找回环心，再回到你标的原点逐扇区量半径。",
+            calibSolving: "求解中",
+            calibSolveIters: "次迭代",
+            calibSolveDone: "求解完成，共",
+            convTitle: "收敛过程", convX: "迭代次数", convY: "RMSE (px)",
+            calibErrorPct: "SDD 偏差",
+            calibOffError: "束心误差",
+            calibSampleAmorphous: "非晶",
+            calibModelOut: "模型环已完全跑出视场 —— 试试调小 SDD"
         }
     };
 
@@ -401,96 +588,419 @@
         return r_mm / pixSize;
     }
 
+    // 2θ (deg) → q (Å⁻¹)
+    function twoThetaToQ(twoThetaDeg, lambda) {
+        const th = twoThetaDeg * Math.PI / 360;
+        return 4 * Math.PI * Math.sin(th) / lambda;
+    }
+    // 2θ (deg) → d (Å)
+    function twoThetaToD(twoThetaDeg, lambda) {
+        const th = twoThetaDeg * Math.PI / 360;
+        const s = Math.sin(th);
+        return s > 1e-9 ? lambda / (2 * s) : NaN;
+    }
+
+    function getSampleDList() {
+        if (SIM.sample === 'lab6') return LaB6_D;
+        if (SIM.sample === 'au') return Au_D;
+        if (SIM.sample === 'ceo2') return CeO2_D;
+        return null; // 非晶没有 d 列表
+    }
+
+    // ================== CANVAS FITTING ==================
+    // 让包裹层与可用区域的最大正方形严格重合：canvas 显示区 = 包裹层 = 十字定位基准
+    function fitCanvas(containerId, wrapId) {
+        const area = document.getElementById(containerId);
+        const wrap = document.getElementById(wrapId);
+        if (!area || !wrap) return;
+        const MAX = 460;   // 最大边长上限：屏幕再大也不让图涨得离谱
+        const s = Math.max(80, Math.min(area.clientWidth, area.clientHeight, MAX));
+        wrap.style.width = s + 'px';
+        wrap.style.height = s + 'px';
+    }
+
     // ================== SIMULATION LOGIC ==================
-    function drawSimPattern() {
-        let res = SIM.res;
-        if (isDragging && SIM.res > 512) res = 512;
-        if (simCanvas.width !== res) { simCanvas.width = res; simCanvas.height = res; }
-        const scale = res / SIM.res;
+    // 半径方向剖面：先在半径上建表，逐像素查表，避免 O(像素 × 环数) 的重复高斯计算
+    let simProfile = null;
 
-        simCtx.fillStyle = '#050505'; simCtx.fillRect(0, 0, res, res);
-        const imgData = simCtx.getImageData(0, 0, res, res);
-        const data = imgData.data;
+    function buildSimProfile(res) {
+        const cx = res / 2, cy = res / 2;
+        const maxR = Math.ceil((res / 2) * Math.SQRT2);
+        const step = 0.25;
+        const n = Math.ceil(maxR / step) + 1;
+        const prof = new Float32Array(n);
 
-        let d_list = SIM.sample === 'lab6' ? LaB6_D : (SIM.sample === 'au' ? Au_D : SiO2_D);
-        let type = SIM.sample === 'glass' ? 'amorphous' : 'cryst';
+        // 仪器分辨率 -> 像素展宽：Δ(2θ)[rad] * SDD / pixelSize
+        const resPix = SIM.instrRes * Math.PI / 180 * SIM.sdd / SIM.pixelSize;
 
+        const isGlass = (SIM.sample === 'glass');
+        const dList = getSampleDList();
+
+        // ---- 晶体样品：离散德拜环 ----
         const rings = [];
-        d_list.forEach((d, i) => {
-            const r = calculateRingRadius(d, SIM.lambda, SIM.sdd, SIM.pixelSize);
-            if (r) {
-                const r_render = r * scale;
-                let w = (type === 'amorphous' ? 40 : 2.5) * scale;
-                if (r_render < res * 1.5) rings.push({r: r_render, int: 250/(1+i*0.3), w: w});
-            }
-        });
+        if (!isGlass) {
+            dList.forEach((d, i) => {
+                const r = calculateRingRadius(d, SIM.lambda, SIM.sdd, SIM.pixelSize);
+                if (!r) return;
+                // 晶体本征宽度（mosaic 展宽）
+                const wCrystal = 2.5;
+                const w = Math.max(1.2, Math.sqrt(wCrystal * wCrystal + resPix * resPix));
+                // 仪器展宽只把峰摊宽，不凭空产生额外强度：径向剖面面积（≈ 峰高 × 峰宽）保持不变，
+                // 故峰高按 w_crystal / w 归一化 —— 1D 峰变宽的同时变矮，总衍射强度守恒。
+                rings.push({ r: r, int: (250 / (1 + i * 0.3)) * (wCrystal / w), w: w, d: d, hkl: (HKL_LABELS[SIM.sample] || [])[i] || '' });
+            });
+        }
 
-        const cx = res/2, cy = res/2;
-        for (let y=0; y<res; y++) {
-            const dy = y - cy; const dy2 = dy*dy;
-            for (let x=0; x<res; x++) {
-                const dist = Math.sqrt((x-cx)**2 + dy2);
-                let val = 2 + Math.random()*2;
-                for (let r of rings) {
-                    const diff = Math.abs(dist - r.r);
-                    if (diff < r.w*4) val += r.int * Math.exp(-(diff*diff)/(2*r.w*r.w));
+        // ---- 非晶样品：宽化的 S(q) 弥散，没有环 ----
+        const glassMain = isGlass ? calculateRingRadius(GLASS_MAIN_D, SIM.lambda, SIM.sdd, SIM.pixelSize) : 0;
+
+        for (let i = 0; i < n; i++) {
+            const r = i * step;
+            let val = SIM.background + Math.random() * 2;
+            if (!isGlass) {
+                for (const ring of rings) {
+                    const diff = r - ring.r;
+                    if (Math.abs(diff) < ring.w * 4) {
+                        val += ring.int * Math.exp(-(diff * diff) / (2 * ring.w * ring.w));
+                    }
                 }
-                const idx = (y*res + x)*4;
-                val = Math.min(255, val);
-                data[idx] = val*0.8; data[idx+1] = val; data[idx+2] = val; data[idx+3] = 255;
+            } else {
+                if (glassMain) {
+                    const wBase = Math.max(4, glassMain * GLASS_MAIN_W);
+                    const w = Math.max(4, wBase * (1 + 2 * SIM.instrRes));
+                    const diff = r - glassMain;
+                    // 同晶体环：展宽后弥散峰变宽变矮，总散射强度守恒
+                    val += 14 * (wBase / w) * Math.exp(-(diff * diff) / (2 * w * w));
+                    // 直射束斑
+                    val += 90 * Math.exp(-(r * r) / (2 * 6 * 6));
+                    // 幂律尾 S(q) ~ q^-n
+                    // q = 4πsinθ/λ, sinθ ≈ r_px·pixelSize/(2·SDD)  =>  q = 2π·r_px·pixelSize/(SDD·λ)
+                    const q = 2 * Math.PI * r * SIM.pixelSize / (SIM.sdd * SIM.lambda);
+                    val += Math.min(120, 10 * Math.pow(GLASS_TAIL_Q0 / Math.max(q, 0.05), 1.35));
+                }
+            }
+            prof[i] = val;
+        }
+        return { prof: prof, step: step, n: n, cx: cx, cy: cy, rings: rings };
+    }
+
+    // 未叠加任何标记的原始图样快照。
+    // 画布上还会叠加"选中环"红色高亮、悬停预览虚线环和文字标注，
+    // 这些都是 UI 装饰，不能污染 1D 积分和标定测量 → 积分/测量一律用这份原始像素。
+    let simRawImage = null;
+
+    function drawSimPattern() {
+        const res = SIM.res;
+        if (simCanvas.width !== res) { simCanvas.width = res; simCanvas.height = res; }
+
+        simProfile = buildSimProfile(res);
+        const { prof, step, n, cx, cy } = simProfile;
+
+        const img = simCtx.createImageData(res, res);
+        const data = img.data;
+
+        for (let y = 0; y < res; y++) {
+            const dy = y - cy;
+            const dy2 = dy * dy;
+            for (let x = 0; x < res; x++) {
+                const dx = x - cx;
+                const dist = Math.sqrt(dx * dx + dy2);
+                let idx = Math.round(dist / step);
+                // 索引上限取剖面表实际长度（原来误用 n/2，导致 r>362px 的衍射环整段消失）
+                if (idx > n - 1) idx = n - 1;
+                const val = Math.min(255, prof[idx]);
+                const p = (y * res + x) * 4;
+                data[p] = val * 0.8; data[p + 1] = val; data[p + 2] = val; data[p + 3] = 255;
             }
         }
-        simCtx.putImageData(imgData, 0, 0);
-        
-        simCtx.beginPath(); simCtx.arc(cx, cy, 8*scale, 0, Math.PI*2);
+        simCtx.putImageData(img, 0, 0);
+        simRawImage = img;      // ← 原始像素快照（putImageData 不会改动 img.data）
+
+        // 记录每个环的理论信息，供 1D 标注、视场覆盖率与联动使用
+        // （d / hkl 直接存在环上，避免“被跳过的环”造成下标错位）
+        SIM.ringRadii = simProfile.rings.map(r => r.r);
+        SIM.ringInfo = simProfile.rings.map((ring) => {
+            const d = ring.d;
+            const twoTheta = 2 * Math.asin(SIM.lambda / (2 * d)) * 180 / Math.PI;
+            return { d: d, twoTheta: twoTheta, coverage: ringCoverage(ring.r), hkl: ring.hkl };
+        });
+
+        // 选中的环可能因为换波长而消失，这时要清掉选择，避免指向错误的环
+        if (SIM.selectedRing >= SIM.ringInfo.length) SIM.selectedRing = -1;
+
+        // 探测器中心标记（物理光束斑真实位置）
+        simCtx.beginPath(); simCtx.arc(cx, cy, 8, 0, Math.PI * 2);
         simCtx.fillStyle = '#000'; simCtx.fill(); simCtx.strokeStyle = '#222'; simCtx.stroke();
+
+        // 联动预览：鼠标悬停在 1D 谱的峰位标记上时，用黄色虚线描出对应的环
+        if (highlightedRing >= 0 && highlightedRing < SIM.ringRadii.length && highlightedRing !== SIM.selectedRing) {
+            const r = SIM.ringRadii[highlightedRing];
+            simCtx.save();
+            simCtx.beginPath(); simCtx.arc(cx, cy, r, 0, Math.PI * 2);
+            simCtx.strokeStyle = '#ffe66d'; simCtx.lineWidth = Math.max(1.5, res / 400);
+            simCtx.setLineDash([6, 6]);
+            simCtx.stroke();
+            simCtx.restore();
+        }
+
+        // 持久化选中的环：每次重绘都按新的仪器条件重新定位 → 半径随 SDD 变、2θ 随波长变
+        if (SIM.selectedRing >= 0 && SIM.selectedRing < SIM.ringRadii.length) {
+            const r = SIM.ringRadii[SIM.selectedRing];
+            const info = SIM.ringInfo[SIM.selectedRing];
+            simCtx.save();
+            simCtx.beginPath(); simCtx.arc(cx, cy, r, 0, Math.PI * 2);
+            simCtx.strokeStyle = '#ff5252'; simCtx.lineWidth = Math.max(2, res / 300);
+            simCtx.shadowBlur = 14; simCtx.shadowColor = '#ff5252';
+            simCtx.stroke();
+            simCtx.shadowBlur = 0;
+            // 环上标注：让“它跟着新条件走了”这件事直接看得见
+            const txt = (info.hkl || '#' + (SIM.selectedRing + 1)) + '  2θ=' + info.twoTheta.toFixed(3) + '°  r=' + r.toFixed(1) + 'px';
+            simCtx.font = (res * 0.026).toFixed(1) + "px 'Courier New', monospace";
+            simCtx.textAlign = 'center'; simCtx.textBaseline = 'bottom';
+            simCtx.fillStyle = 'rgba(0,0,0,0.65)';
+            const tw = simCtx.measureText(txt).width;
+            simCtx.fillRect(cx - tw / 2 - 6, cy - r - res * 0.052, tw + 12, res * 0.036);
+            simCtx.fillStyle = '#ff8a80';
+            simCtx.fillText(txt, cx, cy - r - res * 0.014);
+            simCtx.restore();
+        }
     }
+
+    // 环落在方形探测器内的角向覆盖率（1 = 完整可见）
+    function ringCoverage(r) {
+        const res = SIM.res, cx = res / 2, cy = res / 2;
+        if (r <= 0) return 1;
+        let inside = 0;
+        const N = 360;
+        for (let i = 0; i < N; i++) {
+            const a = i / N * 2 * Math.PI;
+            const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+            if (x >= 0 && x < res && y >= 0 && y < res) inside++;
+        }
+        return inside / N;
+    }
+
+    // ================== 1D INTEGRATION ==================
+    let spectrum = { tt: [], y: [] };   // 积分结果（缓存），供横坐标切换复用
 
     function integrateSim() {
         const res = simCanvas.width;
         const scale = SIM.res / res;
-        const maxR = Math.sqrt(res**2 + res**2); 
-        const max2Theta = Math.atan((maxR * scale * SIM.pixelSize) / SIM.sdd) * 180/Math.PI;
-        
-        // High Res Integration
-        const nBins = 3000; 
-        
-        const yData = new Float32Array(nBins).fill(0);
-        const count = new Uint32Array(nBins).fill(0);
-        const step = max2Theta / nBins;
 
-        const img = simCtx.getImageData(0,0,res,res).data;
+        // 方形探测器的角落半径 = (res/2)*√2  （原来写成 sqrt(res²+res²)，整整大了 2 倍）
+        const maxR = (res / 2) * Math.SQRT2;
+        const max2Theta = Math.atan((maxR * scale * SIM.pixelSize) / SIM.sdd) * 180 / Math.PI;
+
+        // 固定步长 0.004°/bin（原来步长随 SDD 漂移 8.4 倍，且一半 bin 恒空）
+        const step = 0.004;
+        const nBins = Math.max(64, Math.min(20000, Math.ceil(max2Theta / step)));
+
+        const yData = new Float32Array(nBins);
+        const count = new Uint32Array(nBins);
+
+        const img = (simRawImage && simRawImage.width === res)
+            ? simRawImage.data
+            : simCtx.getImageData(0, 0, res, res).data;
         const usrCx = SIM.bcX / scale;
         const usrCy = SIM.bcY / scale;
 
         const pixStep = (res > 800 && !isDragging) ? 2 : 1;
 
-        for(let y=0; y<res; y+=pixStep) {
+        for (let y = 0; y < res; y += pixStep) {
             const dy = y - usrCy;
-            for(let x=0; x<res; x+=pixStep) {
-                const r_pix = Math.sqrt((x-usrCx)**2 + dy*dy);
-                if(r_pix < 5) continue;
-                const twoTh = Math.atan((r_pix * scale * SIM.pixelSize)/SIM.sdd) * 180/Math.PI;
+            for (let x = 0; x < res; x += pixStep) {
+                const r_pix = Math.sqrt((x - usrCx) ** 2 + dy * dy);
+                if (r_pix < 3) continue;
+                const twoTh = Math.atan((r_pix * scale * SIM.pixelSize) / SIM.sdd) * 180 / Math.PI;
                 const bin = Math.floor(twoTh / step);
-                if(bin < nBins) {
-                    yData[bin] += img[(y*res+x)*4+1];
+                if (bin < nBins) {
+                    yData[bin] += img[(y * res + x) * 4 + 1];
                     count[bin]++;
                 }
             }
         }
 
-        const xs = [], ys = [];
-        for(let i=0; i<nBins; i++) {
-            if(count[i]>0) { xs.push(i*step); ys.push(yData[i]/count[i]); }
+        const tt = [], ys = [];
+        for (let i = 0; i < nBins; i++) {
+            if (count[i] > 0) { tt.push(i * step); ys.push(yData[i] / count[i]); }
         }
-        
-        Plotly.react('plotDiv', [{ x: xs, y: ys, mode: 'lines', line: {color: '#66fcf1', width: 1.0}, fill:'tozeroy', fillcolor:'rgba(102,252,241,0.1)' }], {
-            paper_bgcolor:'rgba(0,0,0,0)', plot_bgcolor:'rgba(0,0,0,0)',
-            margin:{t:20,b:30,l:50,r:10}, font:{color:'#888'},
-            xaxis:{title: '2-Theta (deg)', color: '#ccc', gridcolor:'#333'},
-            yaxis:{title: 'Intensity', color: '#ccc', gridcolor:'#333'}
-        }, {displayModeBar: false});
+        spectrum = { tt: tt, y: ys };
+        renderSpectrum();
     }
+
+    function axisTransform(ttValues) {
+        const mode = document.getElementById('axisModeSelect').value;
+        if (mode === 'q') return ttValues.map(v => twoThetaToQ(v, SIM.lambda));
+        if (mode === 'd') return ttValues.map(v => twoThetaToD(v, SIM.lambda));
+        return ttValues.slice();
+    }
+
+    function currentXAxisTitle() {
+        const t = TXT[LANG];
+        const mode = document.getElementById('axisModeSelect').value;
+        if (mode === 'q') return t.xTitleQ;
+        if (mode === 'd') return t.xTitleD;
+        return t.xTitle;
+    }
+
+    function renderSpectrum() {
+        const t = TXT[LANG];
+        const xs = axisTransform(spectrum.tt);
+        const traces = [];
+
+        // 主谱
+        traces.push({
+            x: xs, y: spectrum.y, mode: 'lines', name: t.yTitle,
+            line: { color: '#66fcf1', width: 1.0 },
+            fill: 'tozeroy', fillcolor: 'rgba(102,252,241,0.1)',
+            hovertemplate: '%{y:.0f} counts<extra></extra>'
+        });
+
+        // 理论峰位标记（非晶没有峰位标记，只给弥散说明）
+        const isGlass = (SIM.sample === 'glass');
+        if (!isGlass) {
+            const mx = [], my = [], meta = [], labels = [];
+            const mColor = [], mSize = [], mSymbol = [];
+            SIM.ringInfo.forEach((info, i) => {
+                const xVal = axisTransform([info.twoTheta])[0];
+                const idx = nearestIndex(spectrum.tt, info.twoTheta);
+                const peakY = idx >= 0 ? spectrum.y[idx] : 0;
+                const sel = (i === SIM.selectedRing);
+                mx.push(xVal);
+                my.push(peakY * 1.06 + (sel ? 12 : 3));
+                meta.push(i);
+                // 选中的峰用专属样式，和普通峰区分开
+                mColor.push(sel ? '#ff5252' : '#ffb703');
+                mSize.push(sel ? 16 : 11);
+                mSymbol.push(sel ? 'star' : 'triangle-down');
+                labels.push({
+                    idx: i,
+                    text: (info.hkl || hklLabelFromIndex(i)) + '  d = ' + info.d.toFixed(3) + ' Å'
+                        + (sel ? '  [selected]' : '')
+                        + (info.coverage < 0.999 ? '  (' + Math.round(info.coverage * 100) + '% on detector)' : '')
+                });
+            });
+            traces.push({
+                x: mx, y: my, mode: 'markers', name: 'Reflections',
+                marker: {
+                    symbol: mSymbol, size: mSize, color: mColor,
+                    line: { width: 1.5, color: '#000' }
+                },
+                customdata: labels.map(l => l.text),
+                text: labels.map(l => l.text),
+                hovertemplate: '%{text}<br>2θ = %{x:.3f}<extra></extra>',
+                meta: { kind: 'refl', items: labels }
+            });
+        }
+
+        const layout = {
+            paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+            margin: { t: 20, b: 32, l: 58, r: 14 }, font: { color: '#888' },
+            xaxis: {
+                title: { text: currentXAxisTitle(), color: '#ccc' },
+                color: '#ccc', gridcolor: '#333', zeroline: false
+            },
+            yaxis: {
+                title: { text: t.yTitle, color: '#ccc' },
+                color: '#ccc', gridcolor: '#333', rangemode: 'tozero'
+            },
+            showlegend: false,
+            hovermode: 'closest'
+        };
+
+        Plotly.react('plotDiv', traces, layout, { displayModeBar: false, responsive: true })
+            .then(() => updatePlotShapes());
+
+        // 1D → 2D 联动：悬停理论峰位标记时，在 2D 图上预览对应的环
+        const pd = document.getElementById('plotDiv');
+        if (!pd.__hoverBound) {
+            pd.__hoverBound = true;
+            pd.on('plotly_hover', function (ev) {
+                const pt = ev.points && ev.points[0];
+                if (!pt || !pt.data || !pt.data.meta || pt.data.meta.kind !== 'refl') return;
+                const idx = pt.data.meta.items[pt.pointIndex].idx;
+                if (idx !== highlightedRing) {
+                    highlightedRing = idx;
+                    drawSimPattern();
+                }
+            });
+            // 点击 = 持久选中（hover 态会被 Plotly.react 清掉，选中态不能跟着丢）
+            pd.on('plotly_click', function (ev) {
+                const pt = ev.points && ev.points[0];
+                if (!pt || !pt.data || !pt.data.meta || pt.data.meta.kind !== 'refl') return;
+                selectRing(pt.data.meta.items[pt.pointIndex].idx);
+            });
+        }
+    }
+
+    // ================== 峰位选择（持久化，跟随仪器条件） ==================
+    // 旧实现只有 Plotly 的 hover 态，Plotly.react() 重绘时会被清掉，
+    // 于是“一改仪器条件，选中的峰就不动了”。这里把选择按环索引存起来，
+    // 每次重绘都按新的参数重新定位：半径随 SDD 变、2θ 随波长变。
+    function selectRing(i) {
+        if (i < 0 || i >= SIM.ringInfo.length) return;
+        SIM.selectedRing = (SIM.selectedRing === i) ? -1 : i;
+        highlightedRing = -1;
+        drawSimPattern();
+        renderSpectrum();
+        updateSelectionInfo();
+    }
+
+    function updateSelectionInfo() {
+        const el = document.getElementById('selRingInfo');
+        const t = TXT[LANG];
+        if (SIM.selectedRing < 0 || SIM.selectedRing >= SIM.ringInfo.length) {
+            el.style.display = 'block';
+            el.style.color = '#8a8f96';
+            el.textContent = t.selRingNone;
+            return;
+        }
+        const info = SIM.ringInfo[SIM.selectedRing];
+        const r = SIM.ringRadii[SIM.selectedRing];
+        el.style.display = 'block';
+        el.style.color = '#ff8a80';
+        el.textContent = t.selRingLabel + ': ' + (info.hkl || hklLabelFromIndex(SIM.selectedRing))
+            + '   d = ' + info.d.toFixed(3) + ' Å\n'
+            + '2θ = ' + info.twoTheta.toFixed(3) + '°    r = ' + r.toFixed(1) + ' px\n'
+            + t.selRingFollow;
+    }
+
+    // 1D 图上的辅助线统一管理：选中峰的竖直参考线 + 2D→1D 的跟随线
+    // （分开管理，避免联动线把选中峰的参考线覆盖掉）
+    let linkShape = null;
+    function updatePlotShapes() {
+        const shapes = [];
+        if (SIM.selectedRing >= 0 && SIM.selectedRing < SIM.ringInfo.length) {
+            const xVal = axisTransform([SIM.ringInfo[SIM.selectedRing].twoTheta])[0];
+            shapes.push({
+                type: 'line', xref: 'x', yref: 'paper',
+                x0: xVal, x1: xVal, y0: 0, y1: 1,
+                line: { color: 'rgba(255,82,82,0.8)', width: 1.5, dash: 'dash' }
+            });
+        }
+        if (linkShape) shapes.push(linkShape);
+        const gd = document.getElementById('plotDiv');
+        if (gd && gd.data) Plotly.relayout('plotDiv', { shapes: shapes });
+    }
+
+    function hklLabelFromIndex(i) {
+        const list = HKL_LABELS[SIM.sample];
+        if (!list) return '';
+        return list[i] || '';
+    }
+
+    function nearestIndex(arr, v) {
+        if (!arr.length) return -1;
+        let lo = 0, hi = arr.length - 1;
+        while (lo < hi) {
+            const mid = (lo + hi) >> 1;
+            if (arr[mid] < v) lo = mid + 1; else hi = mid;
+        }
+        if (lo > 0 && Math.abs(arr[lo - 1] - v) < Math.abs(arr[lo] - v)) return lo - 1;
+        return lo;
+    }
+
+    let highlightedRing = -1;
 
     // Sim Interaction
     function updateSim() {
@@ -498,124 +1008,1496 @@
         SIM.pixelSize = parseFloat(document.getElementById('pixelSizeSelect').value);
         SIM.sdd = parseInt(document.getElementById('sddRange').value);
         SIM.sample = document.getElementById('sampleSelect').value;
+        SIM.instrRes = parseFloat(document.getElementById('instrResRange').value);
+        SIM.background = parseFloat(document.getElementById('bgRange').value);
         document.getElementById('sddVal').innerText = SIM.sdd + ' mm';
-        drawSimPattern(); integrateSim(); updateMarker();
+        document.getElementById('instrResVal').innerText = SIM.instrRes.toFixed(3) + '°';
+        document.getElementById('bgVal').innerText = Math.round(SIM.background);
+        drawSimPattern();
+        integrateSim();
+        updateMarker();
+        updateHoverHint();
+        updateSelectionInfo();
     }
-    
+
+    function updateHoverHint() {
+        const el = document.getElementById('hoverInfo');
+        const t = TXT[LANG];
+        if (SIM.sample === 'glass') {
+            el.style.display = 'block';
+            el.textContent = t.glassNote;
+        } else {
+            const partial = SIM.ringInfo.filter(r => r.coverage < 0.999);
+            if (partial.length) {
+                el.style.display = 'block';
+                el.textContent = `${partial.length} / ${SIM.ringInfo.length} ${t.partialRing}`;
+            } else {
+                el.style.display = 'none';
+            }
+        }
+    }
+
     let isDragging = false;
-    document.getElementById('simCanvasContainer').addEventListener('mousedown', (e) => { isDragging = true; handleDrag(e); });
-    window.addEventListener('mousemove', (e) => { if(isDragging) handleDrag(e); });
-    window.addEventListener('mouseup', () => { if(isDragging) { isDragging = false; drawSimPattern(); integrateSim(); } });
+    let dragRaf = 0;
+    let dragMoved = false;
+    let dragStart = null;
+    document.getElementById('simCanvasContainer').addEventListener('mousedown', (e) => {
+        // 只有右键用来标定光束中心，左键整块留给"选中衍射环"。
+        // 早先 mousedown 不分按键：单击一个环既把红色十字挪过去、又选中它，
+        // 两件事互相打架 —— 看上像是"点一下就把中心标错了"。
+        if (e.button !== 2) return;
+        e.preventDefault();
+        isDragging = true; dragMoved = false;
+        dragStart = { x: e.clientX, y: e.clientY };
+        handleDrag(e);
+    });
+    window.addEventListener('mousemove', (e) => { if (isDragging) handleDrag(e); });
+    window.addEventListener('mouseup', (e) => {
+        if (!isDragging) return;
+        isDragging = false; dragStart = null;
+        // 右键不会触发 click，dragMoved 没人复位 —— 在这里清掉，
+        // 否则它会一直是 true，把后面左键的选环点击全部吞掉
+        dragMoved = false;
+        integrateSim();
+    });
+
     function handleDrag(e) {
         const rect = simCanvas.getBoundingClientRect();
-        SIM.bcX = ((e.clientX - rect.left)/rect.width) * SIM.res;
-        SIM.bcY = ((e.clientY - rect.top)/rect.height) * SIM.res;
-        updateMarker(); drawSimPattern(); integrateSim();
+        if (!rect.width || !rect.height) return;
+        if (dragStart) {
+            const d = Math.hypot(e.clientX - dragStart.x, e.clientY - dragStart.y);
+            if (d > 3) dragMoved = true;
+        }
+        // 夹紧到探测器范围内，避免把原点标到画布外
+        const fx = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+        const fy = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+        SIM.bcX = fx * SIM.res;
+        SIM.bcY = fy * SIM.res;
+        updateMarker();
+        // 2D 图样不随光束中心标定改变，无需重绘；只重算 1D 积分（并用 rAF 节流）
+        if (!dragRaf) {
+            dragRaf = requestAnimationFrame(() => { dragRaf = 0; integrateSim(); });
+        }
     }
-    function updateMarker() { marker.style.left = (SIM.bcX/SIM.res*100)+'%'; marker.style.top = (SIM.bcY/SIM.res*100)+'%'; }
-    function handleResChange() { SIM.res = parseInt(document.getElementById('resSelect').value); resetSimCenter(); }
-    function resetSimCenter() { SIM.bcX = SIM.res/2; SIM.bcY = SIM.res/2; updateSim(); }
 
+    function updateMarker() {
+        // 十字位于与 canvas 显示区严格同尺寸的包裹层内，百分比定位即像素级正确
+        marker.style.left = (SIM.bcX / SIM.res * 100) + '%';
+        marker.style.top = (SIM.bcY / SIM.res * 100) + '%';
+    }
+
+    function handleResChange() {
+        SIM.res = parseInt(document.getElementById('resSelect').value);
+        resetSimCenter();
+    }
+
+    function resetSimCenter() {
+        SIM.bcX = SIM.res / 2; SIM.bcY = SIM.res / 2;
+        updateSim();
+    }
+
+    // 2D → 1D 联动：鼠标在 2D 图上移动时，在 1D 谱上标出对应 2θ
+    let linkRaf = 0;
+    simCanvas.addEventListener('mousemove', (e) => {
+        if (isDragging) return;
+        const rect = simCanvas.getBoundingClientRect();
+        if (!rect.width) return;
+        const fx = (e.clientX - rect.left) / rect.width;
+        const fy = (e.clientY - rect.top) / rect.height;
+        const res = SIM.res;
+        const cx = res / 2, cy = res / 2;
+        const dx = fx * res - cx, dy = fy * res - cy;
+        const r = Math.sqrt(dx * dx + dy * dy);
+        const twoTh = Math.atan((r * SIM.pixelSize) / SIM.sdd) * 180 / Math.PI;
+
+        // 找最近的理论环
+        let best = -1, bestD = 1e9;
+        SIM.ringRadii.forEach((rr, i) => {
+            const d = Math.abs(rr - r);
+            if (d < bestD) { bestD = d; best = i; }
+        });
+        const el = document.getElementById('hoverInfo');
+        if (SIM.sample === 'glass') {
+            el.style.display = 'block';
+            el.textContent = `${twoTh.toFixed(3)}°  2θ\nr = ${r.toFixed(1)} px\n` + TXT[LANG].glassNote;
+        } else if (best >= 0 && bestD < 25) {
+            const info = SIM.ringInfo[best];
+            el.style.display = 'block';
+            el.textContent = `${twoTh.toFixed(3)}°  2θ\nr = ${r.toFixed(1)} px\n` + hklLabelFromIndex(best);
+        } else {
+            el.style.display = 'none';
+        }
+
+        // 2D → 1D 联动：把当前 2θ 标在 1D 谱上（rAF 节流，避免每像素重绘）
+        const xVal = axisTransform([twoTh])[0];
+        if (!linkRaf) {
+            linkRaf = requestAnimationFrame(() => {
+                linkRaf = 0;
+                linkShape = {
+                    type: 'line', xref: 'x', yref: 'paper',
+                    x0: xVal, x1: xVal, y0: 0, y1: 1,
+                    line: { color: 'rgba(255,231,109,0.45)', width: 1, dash: 'dot' }
+                };
+                updatePlotShapes();
+            });
+        }
+    });
+
+    simCanvas.addEventListener('mouseleave', () => {
+        document.getElementById('hoverInfo').style.display = 'none';
+        linkShape = null;
+        updatePlotShapes();
+    });
+
+    // 在 2D 探测器上左键点一下某个环 → 选中它（等价于点 1D 谱上的峰位标记）
+    // 光束中心的定位走右键，这里不碰，免得一次点击干两件事
+    simCanvas.addEventListener('click', (e) => {
+        if (e.button !== 0) return;
+        if (dragMoved) { dragMoved = false; return; }   // 刚才是拖拽光束中心，不是选环
+        const rect = simCanvas.getBoundingClientRect();
+        if (!rect.width) return;
+        const fx = (e.clientX - rect.left) / rect.width;
+        const fy = (e.clientY - rect.top) / rect.height;
+        const res = SIM.res;
+        const dx = fx * res - res / 2, dy = fy * res - res / 2;
+        const r = Math.sqrt(dx * dx + dy * dy);
+        let best = -1, bestD = 1e9;
+        SIM.ringRadii.forEach((rr, i) => {
+            const d = Math.abs(rr - r);
+            if (d < bestD) { bestD = d; best = i; }
+        });
+        if (best >= 0 && bestD < 30) selectRing(best);
+    });
 
     // ================== CALIBRATION LOGIC ==================
+    // 数据来源：衍射实验模拟页渲染出来的 2D 探测器图样。
+    //   · 以分析员标定的光束中心（“假定原点”）为极心，把方位角分成 32 个扇区，
+    //     每个扇区单独做径向平均 → 32 条径向剖面
+    //   · 每条剖面上用半高宽内的强度加权质心做亚像素峰位提取
+    //   · 像素强度叠加散粒噪声（泊松近似），测量带真实的统计涨落
+    // 观测量：5 环 × 32 扇区 = 160 个；未知量：SDD、offX、offY = 3 个 → 真正过定。
+    //
+    // 为什么用扇区而不是象限：
+    //   真实衍射环是一个**圆**，只是圆心不在假定原点上。若只按 4 个象限取平均，
+    //   每个象限只能给出一个"平均半径"，画出来就是四段半径不同的圆弧——看着像
+    //   环断了，其实是这种汇总方式本身丢了形状信息。改成 32 个扇区后，逐扇区
+    //   的半径连起来就是那个偏心圆本身，画布上恢复成一条闭合的环。
+    //
+    // 物理模型（环心相对假定原点偏移 δ，射线方位角 β 上的远交点半径）：
+    //   r(β) = s(β) + √(s(β)² + R² − δ²)，  s(β) = δ·cos(β − ψ₀)
+    // 观测量 = 扇区内的弧长加权平均半径（与像素强度加权严格等价）
+    const CALIB_SECTORS = 32;                  // 扇区数（每个 11.25°）
+    const SECTOR_ANGLE = 2 * Math.PI / CALIB_SECTORS;
+    const SECTOR_CENTER = (s) => (s + 0.5) * SECTOR_ANGLE;
 
+    // 重新测量：先在模拟页随机"标错"一次光束中心（标定页必须自己把它找回来），
+    // 再从新的 2D 图样实测一组数据
     function startNewCalibration() {
-        CALIB.realSDD = Math.floor(Math.random() * 1200) + 600; 
-        document.getElementById('calibFeedback').innerHTML = "";
-        
-        // Reset slider to something wrong
-        const firstRingPix = calculateRingRadius(LaB6_D[0], CALIB.lambda, CALIB.realSDD, CALIB.pixelSize);
-        document.getElementById('calibRadiusSlider').value = firstRingPix * 0.8; 
-        
+        const maxOff = 5;                        // 分析员把光束中心标错几像素
+        let ox = 0, oy = 0;
+        for (let k = 0; k < 20; k++) {
+            ox = Math.round((Math.random() * 2 - 1) * maxOff);
+            oy = Math.round((Math.random() * 2 - 1) * maxOff);
+            if (Math.hypot(ox, oy) >= 3) break;   // 偏移太小时扇区间的差异不明显
+        }
+        SIM.bcX = Math.min(SIM.res - 5, Math.max(5, SIM.res / 2 + ox));
+        SIM.bcY = Math.min(SIM.res - 5, Math.max(5, SIM.res / 2 + oy));
+        updateSim();
+        document.getElementById('calibFeedback').innerHTML = '';
+        document.getElementById('calibSolveStatus').innerHTML = '';
+        takeCalibrationData(true);
+    }
+
+    // 从模拟页取数（force=true 表示无视指纹，强制重测）
+    function takeCalibrationData(force) {
+        const sig = [SIM.sample, SIM.lambda, SIM.pixelSize, SIM.sdd, SIM.res,
+                     SIM.instrRes, Math.round(SIM.bcX), Math.round(SIM.bcY)].join('|');
+        if (!force && sig === CALIB.srcSig && CALIB.obs.length) { updateCalibSourceInfo(); return; }
+        CALIB.srcSig = sig;
+        CALIB.lambda = SIM.lambda;
+        CALIB.pixelSize = SIM.pixelSize;
+        CALIB.res = SIM.res;
+        CALIB.instrRes = SIM.instrRes;
+        CALIB.dList = getSampleDList();
+        CALIB.conv = [];
+
+        if (!CALIB.dList) {            // 非晶样品：没有布拉格环，无从标定
+            CALIB.obs = []; CALIB.ringRadii = [];
+            CALIB.autoCentered = false;
+            CALIB.scanFit = null;       // 没有数据就没有粗扫解可参考
+            CALIB.realSDD = SIM.sdd; CALIB.realOffX = 0; CALIB.realOffY = 0;
+            updateCalibSourceInfo();
+            drawCalibScene();
+            return;
+        }
+
+        // 合理性检查：用模型去解释实测数据（不碰真值）。
+        // 解释不了 → 说明当前 SDD / 波长下根本没有可标定的环（环跑出探测器了），别拿垃圾数据做题。
+        const cands = measureSimRings();
+        let pick = null, gotObs = false;
+        // 两套测量方案各自打分：
+        //   ① 正常路径：直接以分析员标定的原点为极心找环、量半径
+        //   ② 自动定心回退：原点偏得离谱时，环在径向剖面上糊成一片，
+        //      先借图样自身的对称性找回环心，再回到那个原点逐扇区量半径
+        // 观测量的原点始终是分析员标的那个 —— 两套方案解出来的是同一个偏移量。
+        const scored = [];
+        for (const c of cands) {
+            if (!c.obs.length || c.radii.length < 3) continue;
+            gotObs = true;
+            let ex = calibExplainFit(c.obs);
+            let obs = c.obs, ringsUsed = c.ringsUsed || [];
+            // 残差偏大 → 多半是某圈环被探测器边界削坏了（最外圈环伸出探测器，
+            // 扇区里只剩半截弧，和偏心圆模型对不上）。先把坏环剔掉重拟一次，
+            // 往往比整组作废划算得多：内圈那 10 环照样能把 SDD 定得很准。
+            if (ex.rms >= 1.2) {
+                const cl = calibCleanRings(c, ex);
+                if (cl.fit.rms < ex.rms) { obs = cl.obs; ringsUsed = cl.ringsUsed; ex = cl.fit; }
+            }
+            scored.push({ c: c, obs: obs, ringsUsed: ringsUsed, rms: ex.rms, ex: ex });
+        }
+        // 模型都解释不了的（环糊了 / 认错环了）不算数；
+        // 只认出 2 圈环也不够（环间距定不住 SDD）
+        const usable = scored.filter(s => s.rms < 1.5 && s.ringsUsed.length >= 3);
+        if (usable.length) {
+            // 默认用分析员的方案；自动定心只有在"明显更能解释数据"（残差差 2 倍以上）
+            // 时才顶上。两者残差接近说明分析员标得挺准，就别去打扰他 ——
+            // 这一栏演示的是"你自己的标定够用就别多此一举"，不是"程序永远比你准"。
+            // 用倍数而不是绝对阈值，是因为残差的绝对水平随仪器分辨率、环宽而变，
+            // 只有两套方案之间的相对比较才与这些无关。
+            const normal = usable.find(s => !s.c.autoCentered);
+            const auto = usable.find(s => s.c.autoCentered);
+            let best = normal || auto;
+            if (auto && (!normal || auto.rms * 2 < normal.rms)) best = auto;
+                            pick = { c: best.c, obs: best.obs, ringsUsed: best.ringsUsed, autoCentered: !!best.c.autoCentered, ex: best.ex };
+                        }        const sane = !!pick;
+
+        CALIB.ringRadii = pick ? pick.c.radii : [];
+        CALIB.obs = pick ? pick.obs : [];
+        CALIB.usedRings = pick ? pick.ringsUsed : [];
+        CALIB.fitRingCount = CALIB.usedRings.length;
+        // 两种"取不到数据"要分开说：环根本没进探测器 / 环在但你标的原点离环心太远
+        CALIB.dataProblem = sane ? '' : (gotObs ? 'beamCenterTooFar' : 'noRingsOnDetector');
+        CALIB.autoCentered = pick ? !!pick.autoCentered : false;
+        // 粗扫（网格 + 局部细化）得到的全局解，留作单纯形法的"及格线"：
+        // 单纯形有时会陷进局部极小，那时从这里重启精修 —— 全局粗扫 + 局部精修，
+        // 是多参数拟合的常规做法
+        CALIB.scanFit = pick ? { sdd: pick.ex.sdd, ox: pick.ex.ox, oy: pick.ex.oy, rms: pick.ex.rms } : null;
+
+        // 真值只用于最后的"✔ 验证"，代价函数里绝不出现
+        CALIB.realSDD = SIM.sdd;
+        CALIB.realOffX = SIM.res / 2 - SIM.bcX;
+        CALIB.realOffY = SIM.res / 2 - SIM.bcY;
+
+        // 初值：分析员只能大致估计，故意偏离真值（至少差 6%，免得看起来像作弊）
+        const bias = 1 + (Math.random() < 0.5 ? -1 : 1) * (0.06 + Math.random() * 0.22);
+        CALIB.fitSDD = Math.max(200, Math.min(2500, Math.round(CALIB.realSDD * bias)));
+        CALIB.fitOffX = Math.round((Math.random() * 2 - 1) * 28);
+        CALIB.fitOffY = Math.round((Math.random() * 2 - 1) * 28);
+        // 初值没有小数，误差面板此时显示的偏差就是"离真值有多远"
+        CALIB.fitSDDExact = CALIB.fitSDD;
+        CALIB.fitOffXExact = CALIB.fitOffX;
+        CALIB.fitOffYExact = CALIB.fitOffY;
+
+        syncCalibControls();
+        updateCalibSourceInfo();
         drawCalibScene();
     }
 
-    function drawCalibScene() {
-        if(calibCanvas.width !== CALIB.res) { calibCanvas.width = CALIB.res; calibCanvas.height = CALIB.res; }
-        const ctx = calibCtx;
-        const cx = CALIB.res/2, cy = CALIB.res/2;
+    function syncCalibControls() {
+        document.getElementById('calibSDDRange').value = CALIB.fitSDD;
+        document.getElementById('calibOffXRange').value = CALIB.fitOffX;
+        document.getElementById('calibOffYRange').value = CALIB.fitOffY;
+    }
 
-        // 1. Clear
-        ctx.fillStyle = '#050505'; ctx.fillRect(0,0,CALIB.res,CALIB.res);
-
-        // 2. Draw "Data" (Red Rings) - ALL 11 RINGS
-        const realRings = []; // Store for RMSE calculation
-        ctx.strokeStyle = '#ff5252'; ctx.lineWidth = 2; ctx.shadowBlur = 4; ctx.shadowColor = '#cc0000';
-        
-        LaB6_D.forEach((d, i) => {
-            const r = calculateRingRadius(d, CALIB.lambda, CALIB.realSDD, CALIB.pixelSize);
-            realRings.push(r);
-            if(r < CALIB.res) { 
-                ctx.beginPath(); 
-                ctx.arc(cx, cy, r, 0, Math.PI*2); 
-                // Slight transparency for outer rings
-                ctx.globalAlpha = i < 5 ? 1.0 : 0.6;
-                ctx.stroke(); 
-                ctx.globalAlpha = 1.0;
-            }
-        });
-        ctx.shadowBlur = 0; ctx.lineWidth = 1;
-
-        // 3. Calculate "Fit" (Green Rings) - LIMIT TO FIRST 5
-        const inputR1 = parseFloat(document.getElementById('calibRadiusSlider').value);
-        
-        // Reverse engineer SDD from Ring 1
-        const theta1 = Math.asin(CALIB.lambda / (2 * LaB6_D[0]));
-        const currentCalcSDD = (inputR1 * CALIB.pixelSize) / Math.tan(2 * theta1);
-        
-        // Calculate fit rings (ONLY 5)
-        const fitRings = [];
-        ctx.strokeStyle = '#66ff66'; ctx.setLineDash([4, 4]); ctx.lineWidth = 2;
-        for(let i=0; i<5; i++) {
-            const d = LaB6_D[i];
-            const r = calculateRingRadius(d, CALIB.lambda, currentCalcSDD, CALIB.pixelSize);
-            fitRings.push(r);
-            if(r < CALIB.res) { ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI*2); ctx.stroke(); }
+    function updateCalibSourceInfo() {
+        const t = TXT[LANG];
+        const el = document.getElementById('calibDataSource');
+        if (!CALIB.dList) {
+            el.innerHTML = `<b>${t.calibDataTitle}</b><br>${t.calibNoRings}`;
+            return;
         }
+        if (CALIB.dataProblem === 'noRingsOnDetector') {
+            el.innerHTML = `<b>${t.calibDataTitle}</b><br>${t.calibDataFrom}<br>`
+                + `<span style="color:#ff8a80;">${t.calibNoRingsOnDetector}</span>`;
+            return;
+        }
+        if (CALIB.dataProblem === 'beamCenterTooFar') {
+            el.innerHTML = `<b>${t.calibDataTitle}</b><br>${t.calibDataFrom}<br>`
+                + `<span style="color:#ff8a80;">${t.calibBeamCenterTooFar}</span>`;
+            return;
+        }
+        el.innerHTML = `<b>${t.calibDataTitle}</b><br>`
+            + `${t.calibDataFrom}<br>`
+            + `${SIM.sample.toUpperCase()} · λ=${SIM.lambda.toFixed(4)} Å · ${SIM.res}² · ${SIM.pixelSize} mm/px<br>`
+            + `${CALIB.usedRings.length} ${t.calibDataRings} → <b>${CALIB.obs.length} ${t.calibDataObs}</b>`
+            + (CALIB.autoCentered ? `<br><span style="color:#ffd166;">⚠ ${t.calibAutoCentered}</span>` : '');
+    }
+
+    // 在扇区 s 的径向剖面里找峰：
+    //   · 搜索范围 [rLo, rHi]，prefer 为期望半径
+    //   · 取范围内"离 prefer 最近的局部极大"（不是最强的）：环心偏心很大时，
+    //     某一扇区的峰会被挤到搜索窗边缘甚至落到窗外，取最近者才不会跳到隔壁环上
+    //   · 再以峰位为中心做半高宽级别的强度加权质心 → 亚像素半径
+    function sectorPeakNear(sum, cnt, bg, s, rLo, rHi, prefer, half, step, nb) {
+        const b0 = Math.max(0, Math.floor(rLo / step));
+        const b1 = Math.min(nb - 1, Math.ceil(rHi / step));
+        let bi = -1, bd = Infinity;
+        for (let b = b0; b <= b1; b++) {
+            if (!cnt[s][b]) continue;
+            const v = sum[s][b] / cnt[s][b] - bg[s];
+            if (v <= 0) continue;
+            const l = (b > 0 && cnt[s][b - 1]) ? sum[s][b - 1] / cnt[s][b - 1] - bg[s] : -Infinity;
+            const r = (b < nb - 1 && cnt[s][b + 1]) ? sum[s][b + 1] / cnt[s][b + 1] - bg[s] : -Infinity;
+            if (!(v > l && v >= r)) continue;                 // 必须是局部极大
+            const d = Math.abs((b + 0.5) * step - prefer);
+            if (d < bd) { bd = d; bi = b; }
+        }
+        if (bi < 0) return null;
+        const c0 = Math.max(0, Math.floor((bi * step - half) / step));
+        const c1 = Math.min(nb - 1, Math.ceil((bi * step + half) / step));
+        let sw = 0, sr = 0;
+        for (let b = c0; b <= c1; b++) {
+            if (!cnt[s][b]) continue;
+            const w = sum[s][b] - bg[s] * cnt[s][b];
+            if (w <= 0) continue;
+            sw += w; sr += w * (b + 0.5) * step;
+        }
+        if (!(sw > 0)) return null;
+        // 顺带量出峰的半高全宽：环在探测器上本来就是一圈有厚度的带，
+        // 这个宽度就是它的径向厚度（mosaic 本征展宽 ⊕ 仪器分辨率展宽）。
+        // 标定页画红色实测环时用它定线宽 —— 环就不该是一条 1.5 px 的细线。
+        const peakV = sum[s][bi] / cnt[s][bi] - bg[s];
+        const halfLevel = bg[s] + 0.5 * peakV;
+        let lf = bi, rg = bi;
+        while (lf > b0 && cnt[s][lf - 1] && (sum[s][lf - 1] / cnt[s][lf - 1]) > halfLevel) lf--;
+        while (rg < b1 && cnt[s][rg + 1] && (sum[s][rg + 1] / cnt[s][rg + 1]) > halfLevel) rg++;
+        const fwhm = Math.max(step, (rg - lf + 1) * step);
+        return { r: sr / sw, w: fwhm };
+    }
+
+    // 偏心圆拟合：环心 C 相对假定原点的偏移未知，环半径 R 也未知。
+    //   |r·u − C|² = R²  →  2r·Cx·cosβ + 2r·Cy·sinβ − K = r²，  K = Cx² + Cy² − R²
+    // 对 (Cx, Cy, K) 是线性的，直接最小二乘即可（解 3×3 正规方程）
+    function fitEccentricCircle(samples) {
+        if (!samples || samples.length < 8) return null;
+        let m00 = 0, m01 = 0, m02 = 0, m11 = 0, m12 = 0, m22 = 0, b0 = 0, b1 = 0, b2 = 0;
+        for (const s of samples) {
+            const a0 = 2 * s.r * Math.cos(s.ang), a1 = 2 * s.r * Math.sin(s.ang), a2 = -1;
+            const rhs = s.r * s.r;
+            m00 += a0 * a0; m01 += a0 * a1; m02 += a0 * a2;
+            m11 += a1 * a1; m12 += a1 * a2; m22 += a2 * a2;
+            b0 += a0 * rhs; b1 += a1 * rhs; b2 += a2 * rhs;
+        }
+        const det3 = (a, b, c, d, e, f, g, h, i) =>
+            a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g);
+        const det = det3(m00, m01, m02, m01, m11, m12, m02, m12, m22);
+        if (!isFinite(det) || Math.abs(det) < 1e-9) return null;
+        const cx = det3(b0, m01, m02, b1, m11, m12, b2, m12, m22) / det;
+        const cy = det3(m00, b0, m02, m01, b1, m12, m02, b2, m22) / det;
+        const K = det3(m00, m01, b0, m01, m11, b1, m02, m12, b2) / det;
+        const R2 = cx * cx + cy * cy - K;
+        if (!isFinite(R2) || R2 <= 0) return null;
+        return { cx: cx, cy: cy, R: Math.sqrt(R2) };
+    }
+
+    // 偏心圆在方位角 ang 上的远交点半径（与 sectorArcMeanRadius 同一几何）
+    function eccentricRadiusAt(cx, cy, R, ang) {
+        const s = cx * Math.cos(ang) + cy * Math.sin(ang);
+        const disc = R * R - cx * cx - cy * cy;
+        if (disc <= 0) return null;
+        return s + Math.sqrt(s * s + disc);
+    }
+
+    // 以 (cx, cy) 为极心，把 2D 图样按方位角分成 CALIB_SECTORS 个扇区做径向直方图。
+    // 极心不同 → 同一个环在剖面上的位置也不同，所以"环心"和"极心"要分开：
+    // 观测量永远相对假定原点量，而找环可以用别的极心（见自动定心回退）。
+    function buildSectorHist(img, res, cx, cy, step, nb, maxR) {
+        const sum = [], cnt = [];
+        for (let s = 0; s < CALIB_SECTORS; s++) { sum.push(new Float64Array(nb)); cnt.push(new Uint32Array(nb)); }
+        const pixStep = 2;                          // 抽样，加快统计
+        for (let y = 0; y < res; y += pixStep) {
+            for (let x = 0; x < res; x += pixStep) {
+                const p = (y * res + x) * 4;
+                const rr = img[p], g = img[p + 1], b = img[p + 2];
+                // 排除高亮/彩色像素（选中环是红色的，r 通道远高于 g）
+                if (Math.abs(g - b) > 8 || rr > g + 10) continue;
+                const dx = x - cx, dy = y - cy;
+                const r = Math.sqrt(dx * dx + dy * dy);
+                if (r < 6 || r >= maxR) continue;
+                // 探测器散粒噪声：泊松涨落的高斯近似
+                const sig = Math.sqrt(Math.max(g, 0));
+                const v = g + (Math.random() + Math.random() + Math.random() + Math.random() - 2) * sig * 0.75;
+                const bin = Math.min(nb - 1, Math.floor(r / step));
+                let ang = Math.atan2(dy, dx);
+                if (ang < 0) ang += 2 * Math.PI;
+                const sec = Math.min(CALIB_SECTORS - 1, (ang / SECTOR_ANGLE) | 0);
+                sum[sec][bin] += v; cnt[sec][bin]++;
+            }
+        }
+        return { sum: sum, cnt: cnt };
+    }
+
+    // 各扇区径向剖面的背景水平（该扇区剖面所有径向 bin 的中位数）
+    function sectorBackgrounds(sum, cnt, nb) {
+        const bg = [];
+        for (let q = 0; q < CALIB_SECTORS; q++) {
+            const vals = [];
+            for (let i = 0; i < nb; i++) if (cnt[q][i]) vals.push(sum[q][i] / cnt[q][i]);
+            vals.sort((a, b) => a - b);
+            bg.push(vals.length ? vals[Math.floor(vals.length / 2)] : 0);
+        }
+        return bg;
+    }
+
+    // 在扇区剖面上找环：
+    //   ① 全圆平均剖面（偏心的一阶效应被抵消）→ 局部极大 → 环半径
+    //   ② 用"半径比"把实测环和晶面间距表对上号：R_j/R_0 = tanθ_j/tanθ_0 只由 λ 和 d 决定，
+    //      与 SDD 无关。这样即使中间漏检了一个环，后面各环的编号也不会错位。
+    // 找不到 3 个以上的环就返回 null（说明这个极心根本看不到可标定的环）。
+    function detectRingsFromSectors(sum, cnt, bg, nb, step, dList, lambda) {
+        const allP = new Float64Array(nb), allV = new Uint8Array(nb);
+        for (let i = 0; i < nb; i++) {
+            let s = 0, c = 0;
+            for (let q = 0; q < CALIB_SECTORS; q++) { if (cnt[q][i]) { s += sum[q][i]; c += cnt[q][i]; } }
+            if (c) { allP[i] = s / c; allV[i] = 1; }
+        }
+        const ringPeaks = findProfilePeaks(allP, allV, step);
+        if (ringPeaks.length < 3) return null;
+        const aligned = alignRingsToDList(ringPeaks, dList, lambda);
+        if (aligned.length < 3) return null;
+        return { peaks: ringPeaks, aligned: aligned, radii: aligned.map(a => a.r) };
+    }
+
+    // 图样对称中心估计（"自动定心"的简化版）：
+    // 扣掉背景后，环的强度分布关于真实环心中心对称，
+    // 所以"超过背景阈值那部分像素的强度质心"就是环心。
+    // 只在假定原点周围根本找不到环时才会用到它 —— 把环先找回来，
+    // 之后仍然回到假定原点逐扇区量半径，最小二乘解出来的还是同一个偏移量。
+    function estimatePatternCenter(img, res) {
+        const step = 2;
+        const vals = [];
+        for (let y = 0; y < res; y += step) {
+            for (let x = 0; x < res; x += step) {
+                const p = (y * res + x) * 4;
+                vals.push(img[p + 1]);
+            }
+        }
+        if (vals.length < 100) return null;
+        vals.sort((a, b) => a - b);
+        const med = vals[Math.floor(vals.length / 2)];
+        // 稳健标准差：四分位距 / 1.349
+        const q25 = vals[Math.floor(vals.length * 0.25)];
+        const q75 = vals[Math.floor(vals.length * 0.75)];
+        const sigma = Math.max(1e-3, (q75 - q25) / 1.349);
+        const thr = med + 4 * sigma;
+        let sw = 0, sx = 0, sy = 0, n = 0;
+        for (let y = 0; y < res; y += step) {
+            for (let x = 0; x < res; x += step) {
+                const p = (y * res + x) * 4;
+                const rr = img[p], g = img[p + 1], b = img[p + 2];
+                if (Math.abs(g - b) > 8 || rr > g + 10) continue;
+                const w = g - thr;
+                if (w <= 0) continue;
+                sw += w; sx += w * x; sy += w * y; n++;
+            }
+        }
+        if (sw <= 0 || n < 200) return null;
+        return { cx: sx / sw, cy: sy / sw };
+    }
+
+    // ---------- 实测：逐扇区径向平均 + 亚像素峰位 ----------
+
+    // 逐扇区量半径 → 观测量 {ring, s, r}
+    //   center 为 null：环心未知 → ① 粗测 ② 偏心圆拟合 ③ 按拟合出的圆心精测
+    //   center 已知：   直接按它预测每个扇区的半径再精测
+    // H/bg 始终是"相对假定原点"的扇区直方图 —— 观测量必须相对分析员标的那个原点，
+    // 否则最小二乘解出来的偏移量就不是同一个量了。
+    function measureSectors(H, bg, step, nb, aligned, radii, center) {
+        // 最终观测量：每个（环, 扇区）一个"弧长加权平均半径"
+        // 环心偏心时，同一个环在不同扇区的半径可以差很多（全圆平均半径只是它们的中枢），
+        // 所以不能一律以全圆平均半径为中心去定峰——偏心大的扇区会落到窗口边缘，
+        // 产生系统偏差甚至把隔壁的环认成这一个。
+        // 做法分两遍：
+        //   ① 粗测：每个扇区在全圆平均半径附近 ±reach 内取"离它最近的局部极大"
+        //   ② 用粗测结果拟合偏心圆（圆心偏移 + 环半径），得到环心在每个方位角上的预测位置
+        //   ③ 精测：按预测位置重新定峰，并把粗测阶段漏掉的扇区补回来
+        // 拟合只用测到的数据，不碰真值。
+        //
+        // 用几个环？全部 —— 只要探测器里能分辨的环都该用上，环越多越定得住 SDD。
+        // 真正用不上环的判据放在最后：扇区覆盖数不够（环大半跑到探测器外）才丢。
+        const used = aligned.length;
+        const obs = [];
+        const ringsUsed = [];
+
+        // —— ① 粗测（环心已知时不需要）——
+        const coarse = [];
+        for (let i = 0; i < used; i++) {
+            const gap = ringWindow(radii, i);
+            // 质心积分的半宽：由环自身的厚度决定（σ ≈ 2.5 px，取 ±2~3σ 已够），
+            // 不能再由"到邻环的距离"决定 —— LaB6 外圈几个环只隔 22~26 px，
+            // 按旧判据（half = gap − 13）整批会被判为"分不开"而丢掉，
+            // 结果 11 个环只测出 5 个。
+            const half = Math.max(6, Math.min(gap * 0.3, 12));
+            // 粗测的搜索半宽：要够覆盖偏心引起的扇区半径漂移，又不能撞到邻环上。
+            // 下限 16 px 是给"环伸出探测器"留的余量：那种情况下全圆平均半径会偏小，
+            // 真实峰落在窗口更外侧，窗口太窄就压根找不到它。
+            const reach = Math.max(16, Math.min(gap * 0.45, 45));
+            const rr = new Array(CALIB_SECTORS).fill(null);
+            const ww = new Array(CALIB_SECTORS).fill(null);   // 各扇区量到的环厚（半高全宽）
+            if (!center) {
+                for (let s = 0; s < CALIB_SECTORS; s++) {
+                    const v = sectorPeakNear(H.sum, H.cnt, bg, s,
+                        radii[i] - reach, radii[i] + reach, radii[i], half, step, nb);
+                    if (v != null) { rr[s] = v.r; ww[s] = v.w; }
+                }
+            }
+            coarse.push({ gap: gap, half: half, rr: rr, ww: ww });
+        }
+
+        // —— ② 拟合偏心圆，各环取共识圆心 ——
+        const ringFit = [];
+        let offCx = 0, offCy = 0, hasCenter = false;
+        if (center) {
+            offCx = center.cx; offCy = center.cy; hasCenter = true;
+        } else {
+            let cxSum = 0, cySum = 0, wSum = 0;
+            for (let i = 0; i < used; i++) {
+                const c = coarse[i];
+                if (!c) { ringFit.push(null); continue; }
+                const samples = [];
+                for (let s = 0; s < CALIB_SECTORS; s++) {
+                    if (c.rr[s] == null) continue;
+                    samples.push({ ang: SECTOR_CENTER(s), r: c.rr[s] });
+                }
+                const fit = fitEccentricCircle(samples);
+                ringFit.push(fit);
+                // 拟合出的环半径要和全圆平均半径对得上，否则说明粗测被别的环污染了
+                if (fit && Math.abs(fit.R - radii[i]) < c.gap * 0.5) {
+                    cxSum += fit.cx * samples.length;
+                    cySum += fit.cy * samples.length;
+                    wSum += samples.length;
+                }
+            }
+            if (wSum > 0) { offCx = cxSum / wSum; offCy = cySum / wSum; hasCenter = true; }
+        }
+
+        // —— ③ 精测 ——
+        for (let i = 0; i < used; i++) {
+            const c = coarse[i];
+            if (!c) continue;
+            let rr = c.rr;
+            let ww = c.ww;
+            if (hasCenter) {
+                const fit = ringFit[i];
+                const R = (fit && Math.abs(fit.R - radii[i]) < c.gap * 0.5) ? fit.R : radii[i];
+                const win = Math.max(12, Math.min(c.gap * 0.45, 30));
+                const fine = new Array(CALIB_SECTORS).fill(null);
+                const fineW = new Array(CALIB_SECTORS).fill(null);
+                const devs = [];
+                for (let s = 0; s < CALIB_SECTORS; s++) {
+                    const pred = eccentricRadiusAt(offCx, offCy, R, SECTOR_CENTER(s));
+                    if (pred == null) { fine[s] = c.rr[s]; fineW[s] = c.ww[s]; continue; }
+                    const v = sectorPeakNear(H.sum, H.cnt, bg, s, pred - win, pred + win, pred, c.half, step, nb);
+                    if (v == null) { fine[s] = c.rr[s]; fineW[s] = c.ww[s]; continue; }
+                    fine[s] = v.r;
+                    fineW[s] = v.w;
+                    devs.push(Math.abs(v.r - pred));
+                }
+                // 精测结果和预测差太多 → 圆心拟合不可靠，这一环退回粗测
+                if (center || !devs.length || median(devs) <= 4) { rr = fine; ww = fineW; }
+            }
+            let nSector = 0;
+            for (let s = 0; s < CALIB_SECTORS; s++) {
+                if (rr[s] == null) continue;
+                const jit = (Math.random() + Math.random() + Math.random() + Math.random() - 2) * 0.35;
+                obs.push({ ring: aligned[i].dIdx, s: s, r: rr[s] + jit, w: ww[s] || 0 });
+                nSector++;
+            }
+            // 扇区覆盖太少（多半是这圈环大部分跑到探测器外了）→ 这个环不可用
+            if (nSector >= 8) ringsUsed.push(aligned[i].dIdx);
+        }
+        return { obs: obs, radii: radii, ringsUsed: ringsUsed };
+    }
+
+    // 给出若干套"候选测量方案"，由上层挑一套模型能解释的：
+    //   ① 正常路径：以分析员标定的原点为极心，找环 + 逐扇区量半径
+    //   ② 自动定心回退：原点标得太偏 → 环在径向剖面上被抹平、挤成一团分不开，
+    //      这时先借图样自身的对称性（阈值化后的强度质心 = 环心）把环找回来，
+    //      再回到假定原点逐扇区量半径 —— 解出来的仍是同一个偏移量。
+    function measureSimRings() {
+        const res = SIM.res;
+        const step = 0.5;                          // 径向 bin (px)
+        const maxR = Math.ceil((res / 2) * Math.SQRT2);
+        const nb = Math.ceil(maxR / step) + 2;
+        // 用原始图样（不含选中环高亮等 UI 叠加），否则被选中的那个环会被红色描边污染
+        const img = (simRawImage && simRawImage.width === res)
+            ? simRawImage.data
+            : simCtx.getImageData(0, 0, res, res).data;
+        const ax = SIM.bcX, ay = SIM.bcY;           // 假定原点（分析员标定的光束中心）
+
+        const dList = getSampleDList();
+        if (!dList) return [];
+
+        // 扇区直方图：观测量的极心 = 假定原点
+        const H = buildSectorHist(img, res, ax, ay, step, nb, maxR);
+        const bg = sectorBackgrounds(H.sum, H.cnt, nb);
+        const cands = [];
+
+        // —— 候选①：正常路径 ——
+        const rings0 = detectRingsFromSectors(H.sum, H.cnt, bg, nb, step, dList, SIM.lambda);
+        if (rings0) {
+            const m = measureSectors(H, bg, step, nb, rings0.aligned, rings0.radii, null);
+            m.autoCentered = false;
+            cands.push(m);
+        }
+
+        // —— 候选②：自动定心回退 ——
+        const c = estimatePatternCenter(img, res);
+        if (c) {
+            const H2 = buildSectorHist(img, res, c.cx, c.cy, step, nb, maxR);
+            const bg2 = sectorBackgrounds(H2.sum, H2.cnt, nb);
+            const rings2 = detectRingsFromSectors(H2.sum, H2.cnt, bg2, nb, step, dList, SIM.lambda);
+            if (rings2) {
+                const m = measureSectors(H, bg, step, nb, rings2.aligned, rings2.radii,
+                    { cx: c.cx - ax, cy: c.cy - ay });
+                m.autoCentered = true;
+                cands.push(m);
+            }
+        }
+        return cands;
+    }
+
+    // 把实测环半径与晶面间距表对上号。
+    // 半径比 R_j/R_0 只由 λ 和 d 决定（与 SDD 无关）→ 用比值做匹配，
+    // 中间漏检一个环也不会让后面的编号整体错位。
+    function alignRingsToDList(ringRadii, dList, lambda) {
+        if (!ringRadii || ringRadii.length < 3 || !dList || !dList.length) return [];
+        const tanT = dList.map(d => {
+            const s = lambda / (2 * d);
+            return (s >= 1 || !isFinite(s)) ? NaN : Math.tan(Math.asin(s));
+        });
+        let best = null;
+        for (let j0 = 0; j0 < dList.length; j0++) {
+            if (!isFinite(tanT[j0]) || tanT[j0] <= 0) continue;
+            const t0 = tanT[j0];
+            const assign = [];
+            let prev = j0 - 1, err = 0;
+            for (let k = 0; k < ringRadii.length; k++) {
+                const meas = ringRadii[k] / ringRadii[0];
+                let bj = -1, bd = Infinity;
+                for (let j = Math.max(j0, prev + 1); j < dList.length; j++) {
+                    if (!isFinite(tanT[j])) continue;
+                    const pred = tanT[j] / t0;
+                    const d = Math.abs(pred - meas) / meas;
+                    if (d < bd) { bd = d; bj = j; }
+                }
+                if (bj < 0 || bd > 0.05) continue;      // 这个环对不上，跳过
+                prev = bj; err += bd;
+                assign.push({ dIdx: bj, r: ringRadii[k] });
+            }
+            if (assign.length < 3) continue;
+            const score = assign.length - 20 * (err / assign.length);
+            if (!best || score > best.score) best = { score: score, assign: assign };
+        }
+        return best ? best.assign : [];
+    }
+
+    // 数据合理性闸门（不涉及真值）：模型能不能解释这组实测数据？
+    // 在 (SDD, offX, offY) 空间做全局粗搜 + 逐级局部细化，
+    // 若最优残差仍然很大，说明根本没有可标定的环（环跑到探测器外 / 图样太脏）
+    function calibExplainFit(obs) {
+        let best = { rms: Infinity, sdd: 1000, ox: 0, oy: 0 };
+        const evalWith = (list, sdd, ox, oy) => {
+            let s = 0, n = 0;
+            for (let i = 0; i < list.length; i++) {
+                const m = calibModelRadius(list[i].ring, list[i].s, sdd, ox, oy);
+                if (m == null) return 1e9;
+                const dr = list[i].r - m; s += dr * dr; n++;
+            }
+            return Math.sqrt(s / n);
+        };
+        // 粗搜要跑 24×17×17 ≈ 7000 个网格点，每个点都得把模型半径算一遍
+        // （每点 13 次 Simpson 积分）。观测量涨到 300 多之后全量跑会明显卡住，
+        // 所以粗搜阶段按扇区抽稀（每 4 个取 1 个）：残差均值几乎不变，快 4 倍；
+        // 局部细化再换回全量，精度不受影响。
+        const coarse = obs.filter(o => o.s % 4 === 0);
+        const list0 = coarse.length >= 12 ? coarse : obs;
+        // 全局粗搜：保留前几个候选，避免只盯着一个局部极小
+        const cands = [];
+        for (let sdd = 200; sdd <= 2500; sdd += 100) {
+            for (let ox = -64; ox <= 64; ox += 8) {
+                for (let oy = -64; oy <= 64; oy += 8) {
+                    const r = evalWith(list0, sdd, ox, oy);
+                    if (r < 1e8) cands.push({ rms: r, sdd: sdd, ox: ox, oy: oy });
+                }
+            }
+        }
+        cands.sort((a, b) => a.rms - b.rms);
+        for (let ci = 0; ci < Math.min(6, cands.length); ci++) {
+            let cur = { rms: evalWith(obs, cands[ci].sdd, cands[ci].ox, cands[ci].oy),
+                        sdd: cands[ci].sdd, ox: cands[ci].ox, oy: cands[ci].oy };
+            let sStep = 50, oStep = 5;
+            for (let pass = 0; pass < 5; pass++) {
+                const bs = cur.sdd, bx = cur.ox, by = cur.oy;
+                for (let ds = -2; ds <= 2; ds++) {
+                    for (let dx = -2; dx <= 2; dx++) {
+                        for (let dy = -2; dy <= 2; dy++) {
+                            const s2 = bs + ds * sStep, x2 = bx + dx * oStep, y2 = by + dy * oStep;
+                            if (s2 < 100 || s2 > 5000) continue;
+                            const r = evalWith(obs, s2, x2, y2);
+                            if (r < cur.rms) cur = { rms: r, sdd: s2, ox: x2, oy: y2 };
+                        }
+                    }
+                }
+                sStep /= 3; oStep /= 3;
+            }
+            if (cur.rms < best.rms) best = cur;
+        }
+        return best;
+    }
+
+    // 按环体检：把观测量按环分组，逐环统计模型残差的偏置与均方根。
+    // 用途是判断"某一圈环的数据本身是否自洽"。
+    // 好环的残差彼此同量级（亚像素级）；某一圈环明显大一截，
+    // 说明问题出在这圈环的测量上，而不是模型上。
+    function calibRingResiduals(obs, sdd, ox, oy) {
+        const byRing = new Map();
+        for (const o of obs) {
+            const m = calibModelRadius(o.ring, o.s, sdd, ox, oy);
+            if (m == null) continue;
+            const d = o.r - m;
+            let g = byRing.get(o.ring);
+            if (!g) { g = []; byRing.set(o.ring, g); }
+            g.push(d);
+        }
+        const out = [];
+        byRing.forEach((ds, ring) => {
+            let s2 = 0, s1 = 0;
+            for (const d of ds) { s2 += d * d; s1 += d; }
+            out.push({ ring: ring, n: ds.length, bias: s1 / ds.length, rms: Math.sqrt(s2 / ds.length) });
+        });
+        return out;
+    }
+
+    // 剔环：把模型解释不了的那圈环整圈去掉，再重新拟合。
+    //
+    // 为什么要剔：LaB6 最外圈 d = 1.2 Å 的环半径 519 px，比探测器半宽 512 px 还大，
+    // 有 4 段弧伸到探测器外面去了。被切掉的那几段，扇区里只剩半截弧，
+    // 而偏心圆模型仍按"整段弧"做弧长加权 —— 两边对不上，残差能到十几像素。
+    // 这种残差不是随机噪声：最小二乘会被它拽偏，SDD 偏 0.4%、束心偏移偏 1 px。
+    //
+    // 判据只做环与环之间的横向对比（好环的残差基准线），不掺任何真值，
+    // 而且只剔"少数派"：坏环过半说明整组数据不可信，该整体作废而不是乱剔。
+    function calibCleanRings(c, ex) {
+        let obs = c.obs, ringsUsed = (c.ringsUsed || []).slice(), fit = ex;
+        for (let pass = 0; pass < 2; pass++) {
+            const rs = calibRingResiduals(obs, fit.sdd, fit.ox, fit.oy);
+            if (rs.length < 4) break;
+            const medRms = median(rs.map(r => r.rms));
+            const bad = rs.filter(r => r.rms > Math.max(2.5, 5 * medRms));
+            if (!bad.length) break;
+            if (bad.length * 2 >= rs.length) break;            // 坏环过半 → 整组数据可疑，收手
+            if (rs.length - bad.length < 3) break;              // 至少留 3 圈环
+            const badSet = new Set(bad.map(r => r.ring));
+            const kept = obs.filter(o => !badSet.has(o.ring));
+            const ex2 = calibExplainFit(kept);
+            if (!(ex2.rms < fit.rms)) break;                    // 剔了反而更差 → 判错了，别动
+            obs = kept;
+            ringsUsed = ringsUsed.filter(r => !badSet.has(r));
+            fit = ex2;
+        }
+        return { obs: obs, ringsUsed: ringsUsed, fit: fit };
+    }
+
+    // 剖面峰检测：局部极大 + 半高宽内强度加权质心（亚像素）
+    function findProfilePeaks(prof, valid, step) {
+        const cands = [];
+        const n = prof.length;
+        const vals = [];
+        for (let i = 0; i < n; i++) if (valid[i]) vals.push(prof[i]);
+        if (!vals.length) return [];
+        vals.sort((a, b) => a - b);
+        const med = vals[Math.floor(vals.length / 2)];
+        const maxV = vals[vals.length - 1];
+        const thr = med + 0.18 * (maxV - med);
+        for (let i = 3; i < n - 3; i++) {
+            if (!valid[i] || !valid[i - 1] || !valid[i + 1]) continue;
+            const v = prof[i];
+            if (v < thr) continue;
+            if (!(v > prof[i - 1] && v >= prof[i + 1])) continue;
+            const half = med + 0.5 * (v - med);
+            let lo = i, hi = i;
+            while (lo > 1 && valid[lo - 1] && prof[lo - 1] > half) lo--;
+            while (hi < n - 2 && valid[hi + 1] && prof[hi + 1] > half) hi++;
+            let wsum = 0, rsum = 0;
+            for (let k = lo; k <= hi; k++) {
+                if (!valid[k]) continue;
+                const w = prof[k] - med;
+                if (w <= 0) continue;
+                wsum += w; rsum += w * (k + 0.5) * step;
+            }
+            if (wsum > 0) cands.push({ r: rsum / wsum, v: v });
+        }
+        // 合并挨得太近的峰：偏心时环的径向剖面会被拉宽，一个环会冒出好几个次级极大
+        cands.sort((a, b) => a.r - b.r);
+        const merged = [];
+        for (const c of cands) {
+            const last = merged[merged.length - 1];
+            if (last && (c.r - last.r) < 6) {
+                if (c.v > last.v) merged[merged.length - 1] = c;
+            } else merged.push(c);
+        }
+        return merged.map(c => c.r);
+    }
+
+    // 峰匹配的搜索窗：相邻环间距（不封顶，真正的间距才决定窗口能开多大）
+    function ringWindow(radii, i) {
+        let gap = 1e9;
+        if (i > 0) gap = Math.min(gap, radii[i] - radii[i - 1]);
+        if (i < radii.length - 1) gap = Math.min(gap, radii[i + 1] - radii[i]);
+        return Math.max(8, gap);
+    }
+
+    function nearestPeak(peaks, target, win) {
+        let best = null, bd = win;
+        for (const p of peaks) {
+            const d = Math.abs(p - target);
+            if (d < bd) { bd = d; best = p; }
+        }
+        return best;
+    }
+
+    function median(arr) {
+        if (!arr.length) return 0;
+        const a = arr.slice().sort((x, y) => x - y);
+        const m = a.length >> 1;
+        return (a.length % 2) ? a[m] : 0.5 * (a[m - 1] + a[m]);
+    }
+
+    // 模型：某环在某扇区内的方位角平均半径
+    //
+    // 关键：扇区是按"假定原点的极角 β"划分的（测量端分扇区就是这么分的），
+    // 所以每个扇区在 β 上占固定角度。偏心时环在某个扇区里是一段斜着的弧，
+    // 弧上各点到假定原点的距离并不相同，必须按弧长加权——测量端按像素强度加权，
+    // 模型端就用同一个定义，两边才能严丝合缝地对上。
+    //
+    // 射线方向 β 上的远交点半径：r(β) = s + √(s² + R² − δ²)，s = 圆心在射线上的投影
+    // 弧长元：ds = √(r² + r′²) dβ，r′ = dr/dβ
+    // 预先把每个扇区的 cos/sin 和 Simpson 权重打表，模型算起来很快。
+    const SECTOR_BETA_TABLE = (() => {
+        const N = 12, tab = [];
+        for (let q = 0; q < CALIB_SECTORS; q++) {
+            const b0 = q * SECTOR_ANGLE, b1 = b0 + SECTOR_ANGLE, t = [];
+            for (let i = 0; i <= N; i++) {
+                const beta = b0 + (b1 - b0) * i / N;
+                t.push({ c: Math.cos(beta), s: Math.sin(beta), w: (i === 0 || i === N) ? 1 : (i % 2 ? 4 : 2) });
+            }
+            tab.push(t);
+        }
+        return tab;
+    })();
+
+    function sectorArcMeanRadius(R, offX, offY, sec) {
+        const o2 = offX * offX + offY * offY;
+        const disc0 = R * R - o2;
+        if (disc0 <= 0) return null;                    // 假定原点跑到圆内部，模型不适用
+        let sw = 0, sr = 0;
+        const tab = SECTOR_BETA_TABLE[sec];
+        for (let i = 0; i < tab.length; i++) {
+            const e = tab[i];
+            const s = offX * e.c + offY * e.s;
+            const D = Math.sqrt(s * s + disc0);
+            const r = s + D;
+            const ds = -offX * e.s + offY * e.c;        // ds/dβ
+            const dr = ds * (1 + s / D);                // dr/dβ
+            const w = Math.sqrt(r * r + dr * dr) * e.w;
+            sw += w; sr += w * r;
+        }
+        return sw > 0 ? sr / sw : null;
+    }
+
+    function calibModelRadius(ringIdx, sec, sdd, offX, offY) {
+        const d = CALIB.dList[ringIdx]; if (!d) return null;
+        const R = calculateRingRadius(d, CALIB.lambda, sdd, CALIB.pixelSize);
+        if (R == null || R <= 0) return null;
+        const off = Math.hypot(offX, offY);
+        if (off < 1e-6) return R;                       // 无偏心：就是 R
+        if (off > 0.85 * R) return null;                // 假定原点落到圆内部，模型不适用
+        return sectorArcMeanRadius(R, offX, offY, sec);
+    }
+
+    // 3 参数代价函数：只比较“实测峰位”和“模型峰位”，不掺任何真值
+    function calibCost(sdd, offX, offY) {
+        if (!CALIB.obs.length) return 1e9;
+        if (sdd < 100 || sdd > 5000) return 1e9;
+        let s = 0, n = 0;
+        for (const o of CALIB.obs) {
+            const m = calibModelRadius(o.ring, o.s, sdd, offX, offY);
+            if (m == null) return 1e9;
+            const dr = o.r - m;
+            s += dr * dr; n++;
+        }
+        return s / n;
+    }
+
+    // Nelder–Mead 三参数最小二乘
+    // Nelder–Mead 单纯形法：拆成“初始化 / 单步迭代”两段，
+    // 这样可以把每一步迭代画出来，演示真正的收敛过程
+    function nelderMeadInit(f, x0, step) {
+        const n = x0.length;
+        const simplex = [];
+        for (let i = 0; i <= n; i++) {
+            const p = x0.slice();
+            if (i > 0) p[i - 1] += step[i - 1];
+            simplex.push(p);
+        }
+        const st = { simplex: simplex, fv: simplex.map(f), n: n, best: simplex[0], bestF: Infinity };
+        nelderMeadUpdateBest(st);
+        return st;
+    }
+
+    function nelderMeadUpdateBest(st) {
+        let bi = 0;
+        for (let i = 1; i <= st.fv.length; i++) if (st.fv[i] < st.fv[bi]) bi = i;
+        st.best = st.simplex[bi];
+        st.bestF = st.fv[bi];
+        return st;
+    }
+
+    // 单步：反射 → 必要时扩张 / 收缩 / 收缩收缩
+    function nelderMeadIter(st, f) {
+        const n = st.n;
+        const order = st.fv.map((v, i) => i).sort((a, b) => st.fv[a] - st.fv[b]);
+        st.simplex = order.map(i => st.simplex[i]);
+        st.fv = order.map(i => st.fv[i]);
+
+        const centroid = new Array(n).fill(0);
+        for (let i = 0; i < n; i++) {
+            for (let j = 0; j < n; j++) centroid[j] += st.simplex[i][j] / n;
+        }
+        const worst = st.simplex[n], fWorst = st.fv[n];
+
+        // reflection
+        const refl = centroid.map((c, j) => c + 1.0 * (c - worst[j]));
+        const fRefl = f(refl);
+        if (fRefl < st.fv[0]) {
+            // expansion
+            const exp = centroid.map((c, j) => c + 2.0 * (c - worst[j]));
+            const fExp = f(exp);
+            if (fExp < fRefl) { st.simplex[n] = exp; st.fv[n] = fExp; }
+            else { st.simplex[n] = refl; st.fv[n] = fRefl; }
+        } else if (fRefl < st.fv[n - 1]) {
+            st.simplex[n] = refl; st.fv[n] = fRefl;
+        } else {
+            // contraction
+            const con = centroid.map((c, j) => c + 0.5 * (worst[j] - c));
+            const fCon = f(con);
+            if (fCon < fWorst) { st.simplex[n] = con; st.fv[n] = fCon; }
+            else {
+                for (let i = 1; i <= n; i++) {
+                    st.simplex[i] = st.simplex[i].map((v, j) => st.simplex[0][j] + 0.5 * (v - st.simplex[0][j]));
+                    st.fv[i] = f(st.simplex[i]);
+                }
+            }
+        }
+        nelderMeadUpdateBest(st);
+        return st;
+    }
+
+    // 单纯形张开的尺度：用于判断“已经收敛、没必要再迭代”（按各参数尺度归一）
+    function simplexSpread(st) {
+        let s = 0;
+        for (const p of st.simplex) {
+            const a = (p[0] - st.best[0]) / 1000, b = (p[1] - st.best[1]) / 10, c = (p[2] - st.best[2]) / 10;
+            s = Math.max(s, Math.hypot(a, b, c));
+        }
+        return s;
+    }
+
+    // 自动最小二乘：逐迭代动画演示收敛过程（而不是一步给出答案）
+    function autoSolveCalibration() {
+        if (CALIB.solving) return;
+        const t = TXT[LANG];
+        const statusEl = document.getElementById('calibSolveStatus');
+        const btn = document.getElementById('btnAutoSolve');
+        if (!CALIB.obs.length) {
+            const msg = CALIB.dataProblem === 'noRingsOnDetector' ? t.calibNoRingsOnDetector
+                : (CALIB.dataProblem === 'beamCenterTooFar' ? t.calibBeamCenterTooFar : t.calibNoRings);
+            statusEl.innerHTML = `<span style="color:#ff5252;">${msg}</span>`;
+            return;
+        }
+
+        CALIB.solving = true;
+        CALIB.conv = [];
+        btn.disabled = true;
+        btn.innerText = t.calibSolving;
+        document.getElementById('calibFeedback').innerHTML = '';
+
+        const f = (p) => calibCost(p[0], p[1], p[2]);
+        // 粗扫的全局解当"及格线"：单纯形法偶尔会陷进局部极小（RMSE 卡在半路不动），
+        // 那时从粗扫找到的盆地重启精修，比硬撑着更靠谱
+        const scan = CALIB.scanFit || null;
+        let st = nelderMeadInit(f, [CALIB.fitSDD, CALIB.fitOffX, CALIB.fitOffY], [60, 12, 12]);
+        const maxIter = 120;
+        let iter = 0;          // 当前阶段的迭代数
+        let total = 0;         // 总迭代数（收敛曲线的横轴，重启后依然单调）
+        let restarts = 0;      // 已经从粗扫重启过几次
+        let stall = 0;
+        let prevRmse = Infinity;
+        let convTraceReady = false;
+
+        const applyBest = () => {
+            // 连续解：最小二乘给出的是浮点数，取整会让"误差 0.00%"这种
+            // 过于完美的结果糊弄过去，验证面板一律用连续值算误差
+            CALIB.fitSDDExact = st.best[0];
+            CALIB.fitOffXExact = st.best[1];
+            CALIB.fitOffYExact = st.best[2];
+            CALIB.fitSDD = Math.min(2500, Math.max(200, Math.round(st.best[0])));
+            CALIB.fitOffX = Math.max(-60, Math.min(60, Math.round(st.best[1])));
+            CALIB.fitOffY = Math.max(-60, Math.min(60, Math.round(st.best[2])));
+            syncCalibControls();
+        };
+
+        const tick = () => {
+            if (iter < maxIter) {
+                nelderMeadIter(st, f);
+                iter++; total++;
+                CALIB.conv.push({ it: total, rmse: Math.sqrt(Math.max(st.bestF, 0)) });
+                applyBest();
+                const rmse = Math.sqrt(Math.max(st.bestF, 0));
+                statusEl.innerHTML = `${t.calibSolving} ${iter}/${maxIter}<br>`
+                    + `RMSE ${rmse.toFixed(2)} px · SDD ${CALIB.fitSDDExact.toFixed(2)} mm · `
+                    + `Δ(${CALIB.fitOffXExact.toFixed(2)}, ${CALIB.fitOffYExact.toFixed(2)}) px`;
+                drawCalibScene({ skipPlots: true });
+                // 增量更新：每步都 Plotly.react 重画整张图会卡到 0.5 s/步，
+                // 这里只在第一步整画，之后只追加收敛曲线的一个点 + 刷新残差柱
+                        if (!convTraceReady) {
+                            renderCalibPlots(CALIB.conv, calibResidualSummary());
+                            convTraceReady = true;
+                        } else {
+                            // 增量更新必须排在上一轮 Plotly.react 之后：react 内部是"先 purge 再异步重建"，
+                            // 这期间 gd.data 是空的，直接 extendTraces 会抛 "indices must be valid indices"。
+                            CALIB.plotPromise = (CALIB.plotPromise || Promise.resolve()).then(() => {
+                                const gd = document.getElementById('plotDivCalib');
+                                if (!gd || !gd.data || gd.data.length < 2) {   // trace 还没建好 → 退回整图重绘
+                                    renderCalibPlots(CALIB.conv, calibResidualSummary());
+                                    return;
+                                }
+                                Plotly.extendTraces('plotDivCalib',
+                                    { x: [[total]], y: [[Math.max(rmse, 1e-3)]] }, [0]);
+                                const resid = calibResidualSummary();
+                                if (resid.length) {
+                                    Plotly.restyle('plotDivCalib', {
+                                        y: [resid.map(r => r.rms)],
+                                        'marker.color': [resid.map(r => r.rms < 1 ? '#66ff66' : '#ffdb58')]
+                                    }, [1]);
+                                }
+                            });
+                        }                // 收敛判据（都与参数尺度无关）：
+                //  1) RMSE 的相对改善连续几步停滞 → 说明已经压到噪声底
+                //  2) 单纯形顶点的函数值彼此接近 → 单纯形已经塌缩
+                if (iter > 15 && prevRmse > 0 && Math.abs(prevRmse - rmse) < 0.002 * prevRmse) stall++;
+                else stall = 0;
+                prevRmse = rmse;
+                const fv = st.fv;
+                const fSpread = Math.max.apply(null, fv) - Math.min.apply(null, fv);
+                const spreadSmall = fSpread < 1e-5 * Math.abs(st.bestF) + 1e-12;
+                if (iter < maxIter && stall < 16 && !spreadSmall) {
+                    setTimeout(tick, 16);
+                    return;
+                }
+            }
+            // 单纯形塌缩或卡住了，但残差离粗扫的解还差得远 → 陷进局部极小了。
+            // 从粗扫找到的盆地重启一次精修（全局粗扫 + 局部精修，多参数拟合的标准做法）。
+            const rmseNow = Math.sqrt(Math.max(st.bestF, 0));
+            if (restarts < 1 && scan && rmseNow > scan.rms * 1.05 + 0.02) {
+                restarts++;
+                st = nelderMeadInit(f, [scan.sdd, scan.ox, scan.oy], [12, 4, 4]);
+                iter = 0; stall = 0; prevRmse = Infinity;
+                setTimeout(tick, 16);
+                return;
+            }
+            // 收尾
+            CALIB.solving = false;
+            btn.disabled = false;
+            btn.innerText = t.btnAutoSolve;
+            applyBest();
+            const rmse = Math.sqrt(Math.max(st.bestF, 0));
+            const errPct = Math.abs(CALIB.fitSDDExact - CALIB.realSDD) / CALIB.realSDD * 100;
+            const offErr = Math.hypot(CALIB.fitOffXExact - CALIB.realOffX, CALIB.fitOffYExact - CALIB.realOffY);
+            statusEl.innerHTML = `${t.calibSolveDone} ${total} ${t.calibSolveIters}<br>`
+                + `RMSE ${rmse.toFixed(2)} px · ${t.calibErrorPct} ${errPct.toFixed(3)}% · `
+                + `${t.calibOffError} ${offErr.toFixed(2)} px`;
+            drawCalibScene();
+            renderCalibPlots(CALIB.conv, calibResidualSummary());
+        };
+
+        setTimeout(tick, 60);
+    }
+
+    // 每个环在各扇区上的残差均方根
+    function calibResidualSummary() {
+        const out = [];
+        const byRing = {};
+        for (const o of CALIB.obs) {
+            const m = calibModelRadius(o.ring, o.s, CALIB.fitSDDExact, CALIB.fitOffXExact, CALIB.fitOffYExact);
+            if (m == null) continue;
+            if (!byRing[o.ring]) byRing[o.ring] = [];
+            byRing[o.ring].push(o.r - m);
+        }
+        Object.keys(byRing).forEach(k => {
+            const arr = byRing[k];
+            const rms = Math.sqrt(arr.reduce((s, v) => s + v * v, 0) / arr.length);
+            out.push({ ring: +k, hkl: hklString(+k), rms: rms, n: arr.length });
+        });
+        out.sort((a, b) => a.ring - b.ring);
+        return out;
+    }
+
+    // Catmull-Rom 样条（用三次贝塞尔实现）：把一串控制点连成光滑曲线。
+    // closed=true 时首尾相接（整圈环）；否则端点处用相邻点作虚拟邻居（开放曲线）。
+    // 为什么需要它：每个扇区只量到一个半径，直接用直线连接 32 个点，
+    // 外圈环的矢高可达 ~1.7 px —— 比环本身 6 px 的厚度还显眼，看上去就是个 32 边形。
+    // 衍射环在探测器上本来就是连续的圆，32 段只是采样密度，用样条重建更贴近真实。
+    function catmullRomPath(ctx, pts, closed) {
+        const n = pts.length;
+        if (!n) return;
+        if (n === 1) { ctx.moveTo(pts[0].x, pts[0].y); return; }
+        if (n === 2) { ctx.moveTo(pts[0].x, pts[0].y); ctx.lineTo(pts[1].x, pts[1].y); return; }
+        const at = i => closed
+            ? pts[((i % n) + n) % n]
+            : pts[Math.min(Math.max(i, 0), n - 1)];
+        ctx.moveTo(pts[0].x, pts[0].y);
+        const segs = closed ? n : n - 1;
+        for (let i = 0; i < segs; i++) {
+            const p0 = at(i - 1), p1 = at(i), p2 = at(i + 1), p3 = at(i + 2);
+            ctx.bezierCurveTo(
+                p1.x + (p2.x - p0.x) / 6, p1.y + (p2.y - p0.y) / 6,
+                p2.x - (p3.x - p1.x) / 6, p2.y - (p3.y - p1.y) / 6,
+                p2.x, p2.y
+            );
+        }
+    }
+
+    // 逐扇区半径的轻度平滑：相邻扇区的峰值定位误差有 ~0.5 px 的随机抖动，
+    // 直接连成曲线看着"毛茸茸"。用 5 点对称窗加权平均：
+    // 这个核对偏心形状的一次/二次谐波响应都是 1.0（真实偏心一点不损失），
+    // 却能把随机抖动压掉近一半。平滑只用于绘图，拟合始终用原始观测。
+    function smoothRingRadii(list) {
+        const bySec = {};
+        for (const o of list) bySec[o.s] = o.r;
+        const W = [0.1, 0.2, 0.4, 0.2, 0.1];
+        const out = {};
+        for (const o of list) {
+            let sum = 0, wsum = 0;
+            for (let k = -2; k <= 2; k++) {
+                const s = (o.s + k + CALIB_SECTORS * 2) % CALIB_SECTORS;
+                const r = bySec[s];
+                if (r == null) continue;
+                sum += W[k + 2] * r; wsum += W[k + 2];
+            }
+            out[o.s] = wsum > 0 ? sum / wsum : o.r;
+        }
+        return out;
+    }
+
+    function drawCalibScene(opts) {
+        opts = opts || {};
+        const skipPlots = !!opts.skipPlots;
+        if (calibCanvas.width !== CALIB.res) { calibCanvas.width = CALIB.res; calibCanvas.height = CALIB.res; }
+        const ctx = calibCtx;
+        const res = CALIB.res;
+
+        const sddNow = parseInt(document.getElementById('calibSDDRange').value);
+        const oxNow = parseInt(document.getElementById('calibOffXRange').value);
+        const oyNow = parseInt(document.getElementById('calibOffYRange').value);
+        if (sddNow !== CALIB.fitSDD || oxNow !== CALIB.fitOffX || oyNow !== CALIB.fitOffY) {
+            // 滑杆被手动拖动过 → 用户给的是整数解，连续值跟着走
+            CALIB.fitSDD = sddNow; CALIB.fitOffX = oxNow; CALIB.fitOffY = oyNow;
+            CALIB.fitSDDExact = sddNow; CALIB.fitOffXExact = oxNow; CALIB.fitOffYExact = oyNow;
+        }
+
+        document.getElementById('calibSDDVal').innerText = CALIB.fitSDD + ' mm';
+        document.getElementById('calibOffVal').innerText = `(${CALIB.fitOffX}, ${CALIB.fitOffY}) px`;
+
+        ctx.fillStyle = '#050505'; ctx.fillRect(0, 0, res, res);
+
+        // 假定原点（分析员标定的光束中心）：实测半径就是相对它量的
+        const ax = res / 2, ay = res / 2;
+        const lw = Math.max(1.5, res / 400);
+
+        // --- 视图比例尺 S：只由实测数据决定 ---
+        // 实测环是标定的"尺子"，它在画布上的大小和位置必须与拟合参数无关：
+        // 拖 SDD / 拖偏移 / 自动求解迭代时，红环要纹丝不动，动的只有绿色模型环。
+        // （早先这里把模型环半径也掺进 maxR，于是模型环一大 → maxR 变大 → S 变小，
+        //   实测环被整体缩小，看着像"拟合环把实测环挤没了"。）
+        let maxR = 0;
+        for (const o of CALIB.obs) if (o.r > maxR) maxR = o.r;
+        if (maxR <= 0) {
+            // 一条可用实测环都没有（数据本身有问题）：只能按模型环取景，否则比例尺退化
+            if (CALIB.dList) {
+                for (const j of (CALIB.usedRings || [])) {
+                    const r = calculateRingRadius(CALIB.dList[j], CALIB.lambda, CALIB.fitSDD, CALIB.pixelSize);
+                    if (r != null && r > maxR) maxR = r;
+                }
+            }
+        }
+        if (maxR <= 0) maxR = res * 0.5;
+        const S = (res * 0.47) / maxR;
+
+        // 模型环是否全部跑到画布外（这时连一条弧都看不见，用户会以为程序没画环）
+        // 判据：模型环圆心 = 假定原点 + 拟合偏移；圆心到画布最远角的距离就是它的可见极限。
+        // 只要还有一圈落在极限以内（哪怕只剩一小段弧），就不算"全跑出去了"。
+        let modelOut = false;
+        if (CALIB.dList) {
+            const mcx = ax + CALIB.fitOffX * S, mcy = ay + CALIB.fitOffY * S;
+            const far = Math.max(
+                Math.hypot(mcx, mcy), Math.hypot(res - mcx, mcy),
+                Math.hypot(mcx, res - mcy), Math.hypot(res - mcx, res - mcy));
+            let anyVisible = false, hasRing = false;
+            for (const j of (CALIB.usedRings || [])) {
+                const r = calculateRingRadius(CALIB.dList[j], CALIB.lambda, CALIB.fitSDD, CALIB.pixelSize);
+                if (r == null) continue;
+                hasRing = true;
+                if (r * S <= far) { anyVisible = true; break; }
+            }
+            modelOut = hasRing && !anyVisible;
+        }
+
+        // --- 1. 实测数据（红）：逐扇区实测半径连成的闭合环 ---
+        // 用"粗淡 + 细亮"两遍描边做辉光：比 shadowBlur 便宜得多，
+        // 求解循环里每一步都要重画这张画布，阴影模糊会直接把迭代拖成幻灯片
+        let drawnArcs = 0;
+        const obsByRing = {};
+        for (const o of CALIB.obs) {
+            if (!obsByRing[o.ring]) obsByRing[o.ring] = [];
+            obsByRing[o.ring].push(o);
+        }
+        // 每圈环的实测厚度：各扇区量到的半高全宽取中位数（px，原图坐标）。
+        // 衍射环在探测器上本来就是一圈有厚度的带（mosaic 本征展宽 ⊕ 仪器分辨率展宽），
+        // 画成一条 1.5 px 细线会把"这圈环其实有宽度"这个信息抹掉，
+        // 也让人对"这个半径到底有多不确定"没有直觉。
+        const ringFwhm = {};
+        for (const o of CALIB.obs) {
+            if (!o.w) continue;
+            (ringFwhm[o.ring] = ringFwhm[o.ring] || []).push(o.w);
+        }
+        for (const pass of [0, 1]) {
+            ctx.strokeStyle = pass === 0 ? 'rgba(255,82,82,0.28)' : '#ff5252';
+            for (const ringKey in obsByRing) {
+                // 底层：一圈半透明的宽带 = 环的实测厚度；顶层：一条亮芯线 = 环的中心线
+                const fw = median(ringFwhm[ringKey] || []) || 0;
+                ctx.lineWidth = pass === 0
+                    ? Math.max(lw, fw * S)
+                    : Math.max(lw * 0.9, fw * S * 0.25);
+                // 逐扇区的实测半径重建成闭合曲线：真实衍射环是一个圆（圆心不在假定
+                // 原点上），把扇区半径连起来才是它本身；若按象限各画一段"平均半径
+                // 圆弧"，偏心一大就画成四段互不相接的弧，看着像环断了。
+                // 但"连起来"不能用直线段：32 个控制点用直线连接，外圈环的矢高
+                // ~1.7 px，比环自身 6 px 的厚度还显眼，看着就是个多边形。
+                // 衍射环本来就是连续的圆，32 段只是采样密度 —— 用样条重建，
+                // 曲线仍穿过每一个实测点，偏心形状一点不丢。
+                const list = obsByRing[ringKey].slice().sort((p, q2) => p.s - q2.s);
+                // 扇区缺失处断开：那一段本来就不在探测器里（如最外圈环伸出边界）
+                const segs = [];
+                let cur = [];
+                for (const o of list) {
+                    if (cur.length && o.s !== cur[cur.length - 1].s + 1) { segs.push(cur); cur = []; }
+                    cur.push(o);
+                }
+                if (cur.length) segs.push(cur);
+                ctx.beginPath();
+                const rDraw = smoothRingRadii(list);   // 只影响绘制，拟合仍用原始观测
+                for (const seg of segs) {
+                    const pts = seg.map(o => {
+                        const ang = SECTOR_CENTER(o.s);
+                        const rr = rDraw[o.s];
+                        return { x: ax + Math.cos(ang) * rr * S, y: ay + Math.sin(ang) * rr * S };
+                    });
+                    // 32 个扇区齐全 → 闭合样条（首尾自然接上，不留 11° 的缺口）；
+                    // 缺扇区 → 开放样条，缺口照旧断开
+                    const closed = segs.length === 1 && pts.length >= CALIB_SECTORS;
+                    catmullRomPath(ctx, pts, closed);
+                }
+                ctx.globalAlpha = CALIB.usedRings.indexOf(+ringKey) >= 0 ? 1.0 : 0.5;
+                ctx.stroke();
+                ctx.globalAlpha = 1.0;
+                if (pass === 1) drawnArcs++;
+            }
+        }
+        ctx.lineWidth = lw;
+
+        // --- 2. 拟合模型环（绿虚线）：圆心 = 假定原点 + 拟合偏移 ---
+        // 模型环画在实测环**上面**。压在下面时，红环的亮芯会把绿环整条吃掉 ——
+        // 而且拟合得越好吃得越干净：两者重合时绿环只剩几个像素露头（实测 3 px），
+        // 正好该看清"模型压在实测上"的时候反而看不见模型。
+        // 挪到上层，绿虚线横跨在红环中心线上：绿线骑在红线上 = 拟合到位，
+        // 绿线偏到红线内外 = 半径差了多少，一眼可辨。
+        if (CALIB.dList) {
+            ctx.strokeStyle = 'rgba(102,255,102,0.95)';
+            ctx.setLineDash([6, 6]);
+            ctx.lineWidth = lw;
+            for (const j of CALIB.usedRings) {
+                const r = calculateRingRadius(CALIB.dList[j], CALIB.lambda, CALIB.fitSDD, CALIB.pixelSize);
+                if (r == null) continue;
+                ctx.beginPath();
+                ctx.arc(ax + CALIB.fitOffX * S, ay + CALIB.fitOffY * S, r * S, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+            ctx.setLineDash([]);
+        }
+
+        // --- 3. 拟合出的束心（白十字）与假定原点（白色虚线小十字）---
+        const m = Math.max(12, res / 35);
+        const fx = ax + CALIB.fitOffX * S, fy = ay + CALIB.fitOffY * S;
+        ctx.strokeStyle = '#ffffff'; ctx.lineWidth = lw;
+        ctx.beginPath();
+        ctx.moveTo(fx - m, fy);
+        ctx.lineTo(fx + m, fy);
+        ctx.moveTo(fx, fy - m);
+        ctx.lineTo(fx, fy + m);
+        ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.setLineDash([3, 4]);
+        ctx.beginPath();
+        ctx.moveTo(ax - m * 0.55, ay); ctx.lineTo(ax + m * 0.55, ay);
+        ctx.moveTo(ax, ay - m * 0.55); ctx.lineTo(ax, ay + m * 0.55);
+        ctx.stroke();
         ctx.setLineDash([]);
 
-        // 4. Update UI Values
-        document.getElementById('mathRes').innerText = Math.round(currentCalcSDD);
+        // --- 3.5 模型环整个跑出视场时的提示 ---
+        // 比例尺锁死在实测环上之后，SDD 调得过大时模型环会真的跑到画布外，
+        // 这时得告诉用户"环还在，只是画出去了"，否则会以为程序没画环
+        if (modelOut) {
+            const tip = TXT[LANG].calibModelOut;
+            ctx.font = (res * 0.030).toFixed(1) + "px 'Courier New', monospace";
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            const tw = ctx.measureText(tip).width;
+            ctx.fillStyle = 'rgba(0,0,0,0.7)';
+            ctx.fillRect(res / 2 - tw / 2 - 10, res * 0.045 - res * 0.022, tw + 20, res * 0.044);
+            ctx.fillStyle = '#ffdb58';
+            ctx.fillText(tip, res / 2, res * 0.045);
+        }
 
-        // 5. Calculate RMSE based on VISIBLE 5 RINGS ONLY
-        let sumSq = 0;
-        let count = 0;
-        for(let i=0; i<5; i++) {
-            // Compare fit ring [i] vs real ring [i]
-            // Ensure real ring corresponds to same index
-            if(realRings[i] < CALIB.res * 1.5) { 
-                const diff = fitRings[i] - realRings[i];
-                sumSq += diff * diff;
-                count++;
-            }
+        document.getElementById('legendData').innerText = `${TXT[LANG].legendData} (${drawnArcs})`;
+
+        // 拟合出的束心十字（定位在包裹层百分比坐标上）
+        calibMarker.style.left = (fx / res * 100) + '%';
+        calibMarker.style.top = (fy / res * 100) + '%';
+
+        // --- 4. RMSE（只看实测与模型峰位的残差，不含任何真值）---
+        let sumSq = 0, count = 0;
+        for (const o of CALIB.obs) {
+            const mm = calibModelRadius(o.ring, o.s, CALIB.fitSDDExact, CALIB.fitOffXExact, CALIB.fitOffYExact);
+            if (mm == null) continue;
+            const dr = o.r - mm;
+            sumSq += dr * dr; count++;
         }
         const rmse = count > 0 ? Math.sqrt(sumSq / count) : 0;
-        
+
         const rmseEl = document.getElementById('rmseVal');
         rmseEl.innerText = rmse.toFixed(2) + " px";
-        
-        if(rmse < 1.0) rmseEl.className = "error-value status-good";
-        else if(rmse < 5.0) rmseEl.className = "error-value status-warn";
+        if (rmse < 1.0) rmseEl.className = "error-value status-good";
+        else if (rmse < 5.0) rmseEl.className = "error-value status-warn";
         else rmseEl.className = "error-value status-bad";
+
+        document.getElementById('mathRes').innerText = CALIB.fitSDDExact.toFixed(1);
+        if (!skipPlots) renderCalibPlots(CALIB.conv, calibResidualSummary());
+    }
+
+    function hklString(i) {
+        // 与 LaB6_D 的 d 序列严格对应（a = 4.156 Å）
+        const fam = [[1,0,0],[1,1,0],[1,1,1],[2,0,0],[2,1,0],[2,1,1],
+                     [2,2,0],[2,2,1],[3,1,0],[3,1,1],[2,2,2]];
+        const f = fam[i] || [i + 1, 0, 0];
+        return `(${f[0]} ${f[1]} ${f[2]})`;
+    }
+
+    // 标定页图表：左 = 收敛曲线（RMSE 随迭代次数），右 = 各环残差
+    function renderCalibPlots(conv, resid) {
+        const t = TXT[LANG];
+        const traces = [];
+        const layout = {
+            paper_bgcolor: 'rgba(0,0,0,0)', plot_bgcolor: 'rgba(0,0,0,0)',
+            margin: { t: 26, b: 36, l: 52, r: 14 }, font: { color: '#888', size: 10 },
+            showlegend: false, hovermode: 'closest',
+            xaxis: {
+                title: { text: t.convX, color: '#ccc' }, color: '#ccc', gridcolor: '#333',
+                domain: [0.0, 0.45], anchor: 'y'
+            },
+            yaxis: {
+                title: { text: t.convY, color: '#ccc' }, color: '#ccc', gridcolor: '#333',
+                domain: [0.0, 1.0], anchor: 'x', type: 'log'
+            },
+            xaxis2: {
+                title: { text: t.residX, color: '#ccc' }, color: '#ccc', gridcolor: '#333',
+                domain: [0.56, 1.0], anchor: 'y2'
+            },
+            yaxis2: {
+                title: { text: t.residY, color: '#ccc' }, color: '#ccc', gridcolor: '#333',
+                domain: [0.0, 1.0], anchor: 'x2'
+            },
+            annotations: [
+                { x: 0.225, y: 1.10, xref: 'paper', yref: 'paper', showarrow: false, font: { color: '#ccc', size: 11 }, text: t.convTitle },
+                { x: 0.78, y: 1.10, xref: 'paper', yref: 'paper', showarrow: false, font: { color: '#ccc', size: 11 }, text: t.residTitle }
+            ]
+        };
+
+        if (conv && conv.length) {
+            traces.push({
+                x: conv.map(c => c.it),
+                y: conv.map(c => Math.max(c.rmse, 1e-3)),
+                type: 'scatter', mode: 'lines+markers', xaxis: 'x', yaxis: 'y',
+                line: { color: '#66fcf1', width: 1.6 },
+                marker: { size: 3.5, color: '#66fcf1' },
+                hovertemplate: 'iter %{x}<br>RMSE %{y:.3f} px<extra></extra>',
+                name: 'RMSE'
+            });
+        } else {
+            layout.annotations.push({
+                x: 0.225, y: 0.5, xref: 'paper', yref: 'paper', showarrow: false,
+                font: { color: '#666', size: 10 }, text: t.calibPlotEmpty
+            });
+        }
+
+        if (resid && resid.length) {
+            traces.push({
+                x: resid.map(r => r.hkl),
+                y: resid.map(r => r.rms),
+                type: 'bar', xaxis: 'x2', yaxis: 'y2',
+                marker: { color: resid.map(r => r.rms < 1 ? '#66ff66' : '#ffdb58') },
+                customdata: resid.map(r => r.n),
+                hovertemplate: '%{x}<br>Δr(RMS) = %{y:.2f} px<br>%{customdata} sectors<extra></extra>',
+                name: 'residual'
+            });
+        } else {
+            layout.annotations.push({
+                x: 0.78, y: 0.5, xref: 'paper', yref: 'paper', showarrow: false,
+                font: { color: '#666', size: 10 }, text: t.calibPlotEmpty
+            });
+        }
+
+        CALIB.plotPromise = Plotly.react('plotDivCalib', traces, layout, { displayModeBar: false, responsive: true });
     }
 
     function checkCalibration() {
-        const inputR1 = parseFloat(document.getElementById('calibRadiusSlider').value);
-        const theta1 = Math.asin(CALIB.lambda / (2 * LaB6_D[0]));
-        const currentCalcSDD = (inputR1 * CALIB.pixelSize) / Math.tan(2 * theta1);
-        
-        const errPct = Math.abs(currentCalcSDD - CALIB.realSDD)/CALIB.realSDD * 100;
+        const t = TXT[LANG];
         const fb = document.getElementById('calibFeedback');
-        
-        let msg = "";
-        if(LANG==='cn') msg = `真实距离: ${CALIB.realSDD} mm<br>你的结果: ${Math.round(currentCalcSDD)} mm`;
-        else msg = `Actual: ${CALIB.realSDD} mm<br>Calculated: ${Math.round(currentCalcSDD)} mm`;
+        if (!CALIB.obs.length) {
+            fb.innerHTML = `<span style="color:#ff5252;">${t.calibNoRings}</span>`;
+            return;
+        }
+        const errPct = Math.abs(CALIB.fitSDDExact - CALIB.realSDD) / CALIB.realSDD * 100;
+        const offErr = Math.hypot(CALIB.fitOffXExact - CALIB.realOffX, CALIB.fitOffYExact - CALIB.realOffY);
 
-        if(errPct < 0.5) fb.innerHTML = `<span style="color:#66ff66; font-weight:bold;">Excellent! Error ${errPct.toFixed(2)}%</span><br><small>${msg}</small>`;
-        else if(errPct < 2.0) fb.innerHTML = `<span style="color:#ffdb58;">Good. Error ${errPct.toFixed(2)}%</span><br><small>${msg}</small>`;
-        else fb.innerHTML = `<span style="color:#ff5252;">Keep trying. Error ${errPct.toFixed(2)}%</span><br><small>${msg}</small>`;
+        // 显示到小数点后两位：真实标定软件就是这么打印的，
+        // 也能看出拟合值和真值之间那点"亚毫米/亚像素"的差距
+        const msg = `${t.actualLabel}: ${CALIB.realSDD} mm / ${t.calcLabel}: ${CALIB.fitSDDExact.toFixed(2)} mm<br>`
+            + `${t.actualOffset}: (${CALIB.realOffX}, ${CALIB.realOffY}) px / ${t.calcOffset}: (${CALIB.fitOffXExact.toFixed(2)}, ${CALIB.fitOffYExact.toFixed(2)}) px`;
+
+        if (errPct < 1.5 && offErr < 6) fb.innerHTML = `<span style="color:#66ff66; font-weight:bold;">${t.excellent} ${errPct.toFixed(3)}%</span><br><small>${msg}</small>`;
+        else if (errPct < 4.0) fb.innerHTML = `<span style="color:#ffdb58;">${t.good} ${errPct.toFixed(3)}%</span><br><small>${msg}</small>`;
+        else fb.innerHTML = `<span style="color:#ff5252;">${t.keepTrying} ${errPct.toFixed(3)}%</span><br><small>${msg}</small>`;
     }
-
 
     // ================== UTILS ==================
     function switchTab(mode) {
@@ -624,9 +2506,20 @@
         document.getElementById('viewSim').className = mode === 'sim' ? 'main-container active-view' : 'main-container';
         document.getElementById('viewCalib').className = mode === 'calib' ? 'main-container active-view' : 'main-container';
 
-        if(mode === 'sim') updateSim();
-        else { if(CALIB.realSDD === 0) startNewCalibration(); drawCalibScene(); }
-        scheduleResize();
+        if (mode === 'sim') {
+            fitCanvas('simCanvasContainer', 'simCanvasWrap');
+            updateSim();
+        } else {
+            fitCanvas('calibCanvasContainer', 'calibCanvasWrap');
+            // 首次进入：生成一道新题目（光束中心被标错一点，标定页要自己找回来）
+            if (!CALIB.srcSig) startNewCalibration();
+            else takeCalibrationData(false);   // 模拟页条件变了才重新测量
+            drawCalibScene();
+        }
+        setTimeout(() => {
+            if (mode === 'sim') Plotly.Plots.resize('plotDiv');
+            else Plotly.Plots.resize('plotDivCalib');
+        }, 60);
     }
 
     function toggleLang() {
@@ -641,47 +2534,79 @@
         document.getElementById('lblResolution').innerText = t.lblResolution;
         document.getElementById('lblPixelSize').innerText = t.lblPixelSize;
         document.getElementById('lblSDD').innerText = t.lblSDD;
+        document.getElementById('secInstrument').innerText = t.secInstrument;
+        document.getElementById('lblInstrRes').innerText = t.lblInstrRes;
+        document.getElementById('lblBackground').innerText = t.lblBackground;
+        document.getElementById('lblAxis').innerText = t.lblAxis;
+        document.getElementById('tipResolution').innerText = t.tipResolution;
         document.getElementById('btnReset').innerText = t.btnReset;
         document.getElementById('tipDrag').innerText = t.tipDrag;
+        document.getElementById('secProcessing').innerText = t.secProcessing;
         document.getElementById('calibGoalTitle').innerText = t.calibGoalTitle;
         document.getElementById('calibDesc').innerText = t.calibDesc;
         document.getElementById('btnNewProblem').innerText = t.btnNewProblem;
         document.getElementById('calibStepTitle').innerText = t.calibStepTitle;
         document.getElementById('lblSlider').innerText = t.lblSlider;
+        document.getElementById('lblOffset').innerText = t.lblOffset;
+        document.getElementById('lblRmse').innerText = t.lblRmse;
         document.getElementById('btnCheck').innerText = t.btnCheck;
         document.getElementById('rmseDesc').innerText = t.rmseDesc;
-        const legs = document.querySelectorAll('.legend-item');
-        legs[0].innerHTML = `<div class="dot" style="background:#ff5252;"></div> ${t.legendData}`;
-        legs[1].innerHTML = `<div class="dot" style="background:#66ff66;"></div> ${t.legendFit}`;
+        document.getElementById('calibRingInfo').innerText = t.calibRingInfo;
+        document.getElementById('calibSddLabel').innerText = t.calibSddLabel;
+        document.getElementById('btnAutoSolve').innerText = t.btnAutoSolve;
+        document.getElementById('tipAutoSolve').innerText = t.tipAutoSolve;
+        document.getElementById('legendData').innerText = t.legendData;
+        document.getElementById('legendFit').innerText = t.legendFit;
+        document.getElementById('legendCenter').innerText = t.legendCenter;
+
+        // 下拉选项文本
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+            const key = el.getAttribute('data-i18n');
+            if (t[key]) el.textContent = t[key];
+        });
+
+        // 两个模式角标
+        const badges = document.querySelectorAll('#modeBadge');
+        if (badges[0]) badges[0].innerText = t.modeSim;
+        if (badges[1]) badges[1].innerText = t.modeCalib;
+
+        updateSelectionInfo();
+        updateCalibSourceInfo();
+
+        if (document.getElementById('viewSim').className.includes('active-view')) {
+            drawSimPattern(); renderSpectrum(); updateHoverHint();
+        } else {
+            drawCalibScene();
+        }
     }
 
-    // ================== RESIZE HANDLING ==================
-    // Plotly 不会在容器尺寸变化后自动重排，嵌入到页面时图谱会溢出边框，
-    // 因此监听窗口与容器尺寸变化并主动重算。
-    let resizeRaf = null;
-    function resizePlots() {
-        const el = document.getElementById('plotDiv');
-        if(!el || el.offsetWidth === 0 || !el.data) return;
-        try { Plotly.Plots.resize(el); } catch(e) { /* 图谱未就绪时忽略 */ }
-    }
-    function scheduleResize() {
-        if(resizeRaf) cancelAnimationFrame(resizeRaf);
-        resizeRaf = requestAnimationFrame(() => { resizeRaf = null; resizePlots(); });
-    }
-    window.addEventListener('resize', scheduleResize);
-    window.addEventListener('load', scheduleResize);
-    if(window.ResizeObserver) {
-        const plotArea = document.getElementById('plotDiv');
-        if(plotArea) new ResizeObserver(scheduleResize).observe(plotArea);
-    }
-    setTimeout(scheduleResize, 300);
+    // 窗口尺寸变化：canvas 包裹层 + Plotly 都要重算
+    let resizeRaf = 0;
+    window.addEventListener('resize', () => {
+        if (resizeRaf) return;
+        resizeRaf = requestAnimationFrame(() => {
+            resizeRaf = 0;
+            const simActive = document.getElementById('viewSim').className.includes('active-view');
+            if (simActive) {
+                fitCanvas('simCanvasContainer', 'simCanvasWrap');
+                Plotly.Plots.resize('plotDiv');
+            } else {
+                fitCanvas('calibCanvasContainer', 'calibCanvasWrap');
+                Plotly.Plots.resize('plotDivCalib');
+            }
+        });
+    });
 
-    switchTab('sim');
-    if (navigator.language.startsWith('zh')) toggleLang();
+    window.addEventListener('load', () => {
+        fitCanvas('simCanvasContainer', 'simCanvasWrap');
+        fitCanvas('calibCanvasContainer', 'calibCanvasWrap');
+        switchTab('sim');
+        if (navigator.language.startsWith('zh')) toggleLang();
+    });
 
 </script>
 
-<footer style="text-align: center; padding: 10px; background-color: #1f2833; color: #888; font-size: 0.85rem; border-top: 1px solid #333; margin-top: 0;">
+<footer style="text-align: center; padding: 10px; background-color: #1f2833; color: #888; font-size: 0.85rem; border-top: 1px solid #333;">
     © 2026 @hellowei.cn
 </footer>
 

@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Real Space <-> Reciprocal Space Interactive Demo</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+    <script>
+    // 禁用右键菜单
+    document.addEventListener('contextmenu', function(e) { e.preventDefault(); return false; });
+    // 禁用常见快捷键
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'F12') { e.preventDefault(); return false; }
+        if (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) { e.preventDefault(); return false; }
+        if (e.ctrlKey && (e.key === 'u' || e.key === 's')) { e.preventDefault(); return false; }
+    });
+    </script>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdeva, sans-serif; margin: 0; padding: 0; background-color: #f4f4f9; color: #333; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
+        #app { display: flex; flex-direction: column; height: 100vh; }
+
+        /* 导航栏 */
+        nav { background: #2c3e50; color: white; padding: 1rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.2); z-index: 100; position: relative; }
+        nav h1 { margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .nav-buttons button { background: transparent; border: 1px solid rgba(255,255,255,0.5); color: white; padding: 6px 12px; cursor: pointer; margin-left: 10px; border-radius: 4px; transition: all 0.3s; }
+        .nav-buttons button:hover { background: rgba(255,255,255,0.1); }
+        .nav-buttons button.active { background: #3498db; border-color: #3498db; font-weight: bold; box-shadow: 0 0 10px rgba(52, 152, 219, 0.5); }
+
+        .main-content { flex: 1; position: relative; overflow: hidden; }
+        .page-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; padding: 20px; gap: 20px; box-sizing: border-box; background: #f4f4f9; }
+
+        .panel-left { width: 320px; display: flex; flex-direction: column; gap: 15px; overflow-y: auto; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 2; }
+        .panel-center { flex: 1; display: flex; flex-direction: column; gap: 15px; min-width: 0; }
+
+        .control-group { border-bottom: 1px solid #eee; padding-bottom: 15px; }
+        .control-group:last-child { border-bottom: none; }
+        .control-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9rem; color: #2c3e50; }
+        .control-group select, .control-group input[type=range] { width: 100%; padding: 5px; border-radius: 4px; border: 1px solid #ddd; box-sizing: border-box; }
+        .value-display { font-family: 'Consolas', monospace; color: #e74c3c; float: right; font-weight: bold; }
+        .chk { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; font-size: 0.88rem; color: #34495e; cursor: pointer; font-weight: normal !important; }
+        .chk input { width: auto; margin: 0; cursor: pointer; }
+
+        /* 公式栏 */
+        .formula-box { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; font-size: 1.15rem; border-left: 5px solid #3498db; }
+        .interactive-formula span { cursor: help; border-bottom: 2px solid rgba(52, 152, 219, 0.3); padding: 0 2px; transition: background 0.2s; border-radius: 3px; position: relative; }
+        .interactive-formula span:hover { background: #eaf2f8; color: #2980b9; border-bottom-color: #2980b9; }
+        .interactive-formula span::after { content: attr(data-desc); position: absolute; top: 120%; left: 50%; transform: translateX(-50%); background: rgba(44,62,80,0.95); color: white; padding: 8px 12px; border-radius: 4px; font-size: 0.85rem; white-space: nowrap; opacity: 0; pointer-events: none; transition: all 0.2s; z-index: 2000; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .interactive-formula span::before { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: transparent transparent rgba(44,62,80,0.95) transparent; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 2000; }
+        .interactive-formula span:hover::after, .interactive-formula span:hover::before { opacity: 1; top: 110%; }
+
+        /* 数值面板 */
+        .metric-row { display: flex; flex-wrap: wrap; gap: 10px; }
+        .metric { flex: 1 1 120px; background: white; border-radius: 8px; padding: 10px 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); border-left: 4px solid #3498db; }
+        .metric small { display: block; color: #7f8c8d; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .metric strong { font-family: 'Consolas', monospace; color: #2c3e50; font-size: 1.15rem; }
+        .metric.hl { border-left-color: #e74c3c; }
+        .metric.hl strong { color: #e74c3c; }
+
+        /* 三维视图 */
+        #viewport-host { position: relative; flex: 1; min-height: 320px; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); background: #10141c; }
+        /* 画布必须锁死 CSS 尺寸：高 DPI 下 setSize 的绘图缓冲区是逻辑尺寸的 devicePixelRatio 倍，
+           若不锁定 CSS 宽高，缓冲区会按 1:1 像素铺开并溢出容器，右侧（下方）的倒空间会被整块裁掉。 */
+        #viewport-host canvas { display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .view-tag { position: absolute; top: 10px; font-size: 0.8rem; font-weight: bold; color: #fff; background: rgba(0,0,0,0.45); padding: 4px 10px; border-radius: 4px; z-index: 10; pointer-events: none; letter-spacing: 0.5px; }
+        #tag-real { left: 10px; }
+        #tag-rec { left: calc(50% + 10px); }
+        .split-line { position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: rgba(255,255,255,0.25); z-index: 9; pointer-events: none; }
+        /* 视口过窄时改为上下分屏 */
+        #viewport-host.vsplit .split-line { left: 0; right: 0; top: 50%; bottom: auto; width: auto; height: 2px; }
+        #viewport-host.vsplit #tag-rec { left: 10px; top: calc(50% + 10px); }
+        #pick-hint { position: absolute; right: 12px; bottom: 10px; font-size: 0.75rem; color: #bdc3c7; z-index: 10; pointer-events: none; text-align: right; }
+
+        .hint { font-size: 0.85rem; color: #7f8c8d; background: #f8f9fa; padding: 10px; border-radius: 4px; border-left: 3px solid #f39c12; line-height: 1.55; }
+        .hint strong { color: #2c3e50; }
+        button.action-btn { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; cursor: pointer; border-radius: 6px; font-weight: bold; margin-top: 8px; transition: background 0.2s; box-shadow: 0 2px 5px rgba(39,174,96,0.3); }
+        button.action-btn:hover { background: #219150; }
+        button.action-btn.secondary { background: #3498db; box-shadow: 0 2px 5px rgba(52,152,219,0.3); }
+        button.action-btn.secondary:hover { background: #2980b9; }
+        button.action-btn.on { background: #e67e22; box-shadow: 0 2px 5px rgba(230,126,34,0.35); }
+        @media (max-width: 1150px) { .panel-left { width: 275px; } }
+    </style>
+</head>
+<body>
+
+<div id="app">
+    <nav>
+        <h1>🔄 {{ t('title') }} <span style="font-size: 0.75rem; color: rgba(255,255,255,0.5); font-weight: normal; margin-left: 10px;">@hellowei.cn</span></h1>
+        <div class="nav-buttons">
+            <button @click="toggleLang" style="font-family: monospace;">{{ lang === 'zh' ? 'EN' : '中' }}</button>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <!-- ============ 三维联动 ============ -->
+        <div class="page-container">
+            <div class="panel-left">
+                <h3>🧭 {{ t('params') }}</h3>
+
+                <div class="control-group">
+                    <label>{{ t('structure') }}</label>
+                    <select v-model="struct" @change="onStructChange">
+                        <option value="sc">{{ t('st_sc') }}</option>
+                        <option value="fcc">{{ t('st_fcc') }}</option>
+                        <option value="bcc">{{ t('st_bcc') }}</option>
+                        <option value="hcp">{{ t('st_hcp') }}</option>
+                    </select>
+                </div>
+
+                <div class="control-group">
+                    <label>{{ t('lattice_a') }} (Å) <span class="value-display">{{ a.toFixed(2) }}</span></label>
+                    <input type="range" v-model.number="a" min="2.0" max="8.0" step="0.05" @input="markDirty">
+                </div>
+
+                <div class="control-group" v-if="struct==='hcp'">
+                    <label>{{ t('lattice_c') }} (Å) <span class="value-display">{{ c.toFixed(2) }}</span></label>
+                    <input type="range" v-model.number="c" min="3.0" max="10.0" step="0.05" @input="markDirty">
+                </div>
+
+                <div class="control-group">
+                    <label>{{ t('rec_zoom') }} <span class="value-display">{{ recZoom.toFixed(2) }}×</span></label>
+                    <input type="range" v-model.number="recZoom" min="0.3" max="3.0" step="0.05" @input="markDirty">
+                </div>
+
+                <div class="control-group">
+                    <label>{{ t('rec_shell') }} <span class="value-display">{{ recShell }}</span></label>
+                    <input type="range" v-model.number="recShell" min="1" max="3" step="1" @input="markGeo">
+                    <p style="font-size:0.78rem; color:#7f8c8d; margin:8px 0 0; line-height:1.5;">{{ t('rec_shell_hint') }}</p>
+                </div>
+
+                <div class="control-group">
+                    <label>{{ t('display') }}</label>
+                    <label class="chk"><input type="checkbox" v-model="showCell" @change="markGeo"> {{ t('show_cell') }}</label>
+                    <label class="chk"><input type="checkbox" v-model="showAtoms" @change="markGeo"> {{ t('show_atoms') }}</label>
+                    <label class="chk"><input type="checkbox" v-model="showRec" @change="markGeo"> {{ t('show_rec') }}</label>
+                    <label class="chk"><input type="checkbox" v-model="showPlane" @change="markGeo"> {{ t('show_plane') }}</label>
+                    <label class="chk"><input type="checkbox" v-model="showFamily" @change="markGeo"> {{ t('show_family') }}</label>
+                    <label class="chk"><input type="checkbox" v-model="showShell" @change="markGeo"> {{ t('show_shell') }}</label>
+                </div>
+
+                <div class="control-group">
+                    <label>{{ t('animation') }}</label>
+                    <button class="action-btn" :class="{on: autoRotate}" @click="autoRotate = !autoRotate">
+                        {{ autoRotate ? '⏸ ' + t('stop_rotate') : '▶ ' + t('start_rotate') }}
+                    </button>
+                    <button class="action-btn secondary" :class="{on: breathing}" @click="toggleBreathing">
+                        {{ breathing ? '⏸ ' + t('stop_breath') : '▶ ' + t('start_breath') }}
+                    </button>
+                    <p style="font-size:0.78rem; color:#7f8c8d; margin:8px 0 0; line-height:1.5;">{{ t('breath_hint') }}</p>
+                </div>
+
+                <div class="control-group">
+                    <label>{{ t('select_hkl') }}</label>
+                    <div style="display:flex; gap:6px; align-items:center;">
+                        <input type="number" v-model.number="h" min="-6" max="6" style="width:100%; padding:5px; border-radius:4px; border:1px solid #ddd;" @change="applyHkl">
+                        <input type="number" v-model.number="k" min="-6" max="6" style="width:100%; padding:5px; border-radius:4px; border:1px solid #ddd;" @change="applyHkl">
+                        <input type="number" v-model.number="l" min="-6" max="6" style="width:100%; padding:5px; border-radius:4px; border:1px solid #ddd;" @change="applyHkl">
+                        <button class="action-btn secondary" style="width:auto; margin:0; padding:8px 12px;" @click="applyHkl">↵</button>
+                    </div>
+                    <p style="font-size:0.78rem; color:#7f8c8d; margin:8px 0 0; line-height:1.5;">{{ t('pick_hint') }}</p>
+                </div>
+
+                <div class="hint">
+                    <strong>{{ t('hint_title') }}</strong><br>
+                    {{ t('hint_body') }}
+                </div>
+            </div>
+
+            <div class="panel-center">
+                <div class="formula-box">
+                    <div class="interactive-formula">
+                        <strong>G</strong> =
+                        <span :data-desc="t('desc_h')">h</span>
+                        <span :data-desc="t('desc_ast')">a*</span> +
+                        <span :data-desc="t('desc_k')">k</span>
+                        <span :data-desc="t('desc_bst')">b*</span> +
+                        <span :data-desc="t('desc_l')">l</span>
+                        <span :data-desc="t('desc_cst')">c*</span> , &nbsp;&nbsp;
+                        <span :data-desc="t('desc_G')">|G|</span> =
+                        <span :data-desc="t('desc_inv_d')">1/d</span> , &nbsp;&nbsp;
+                        <span :data-desc="t('desc_a')">a</span>·<span :data-desc="t('desc_bst2')">b*</span> =
+                        <span :data-desc="t('desc_zero')">0</span>
+                    </div>
+                </div>
+
+                <div class="metric-row">
+                    <div class="metric"><small>{{ t('m_a') }}</small><strong>{{ a.toFixed(3) }} Å</strong></div>
+                    <div class="metric hl"><small>{{ t('m_d') }}</small><strong>{{ dval.toFixed(4) }} Å</strong></div>
+                    <div class="metric hl"><small>{{ t('m_g') }}</small><strong>{{ gval.toFixed(4) }} Å⁻¹</strong></div>
+                    <div class="metric"><small>{{ t('m_2t') }}</small><strong>{{ twoTheta.toFixed(2) }}°</strong></div>
+                    <div class="metric"><small>{{ t('m_V') }}</small><strong>{{ cellVol.toFixed(2) }} Å³</strong></div>
+                </div>
+
+                <div id="viewport-host" ref="viewport">
+                    <div class="view-tag" id="tag-real">{{ t('tag_real') }}</div>
+                    <div class="view-tag" id="tag-rec">{{ t('tag_rec') }}</div>
+                    <div class="split-line"></div>
+                    <div id="pick-hint">{{ t('pick_hint') }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* ============================================================
+ *  晶体学工具函数
+ * ============================================================ */
+// 晶格矩阵：每一行是一个基矢 L[m] = a_m（笛卡尔）
+function latticeMatrix(cell) {
+    const a = cell[0], b = cell[1], c = cell[2];
+    const al = cell[3]*Math.PI/180, be = cell[4]*Math.PI/180, ga = cell[5]*Math.PI/180;
+    const ca = Math.cos(al), cb = Math.cos(be), cg = Math.cos(ga), sg = Math.sin(ga);
+    const vol = Math.sqrt(Math.max(1 + 2*ca*cb*cg - ca*ca - cb*cb - cg*cg, 1e-12));
+    return [
+        [a, 0, 0],
+        [b*cg, b*sg, 0],
+        [c*cb, c*(ca - cb*cg)/sg, c*vol/sg]
+    ];
+}
+function matInv3(M) {
+    const d = M[0][0]*(M[1][1]*M[2][2]-M[1][2]*M[2][1])
+            - M[0][1]*(M[1][0]*M[2][2]-M[1][2]*M[2][0])
+            + M[0][2]*(M[1][0]*M[2][1]-M[1][1]*M[2][0]);
+    const i = 1/d;
+    return [
+        [(M[1][1]*M[2][2]-M[1][2]*M[2][1])*i, (M[0][2]*M[2][1]-M[0][1]*M[2][2])*i, (M[0][1]*M[1][2]-M[0][2]*M[1][1])*i],
+        [(M[1][2]*M[2][0]-M[1][0]*M[2][2])*i, (M[0][0]*M[2][2]-M[0][2]*M[2][0])*i, (M[0][2]*M[1][0]-M[0][0]*M[1][2])*i],
+        [(M[1][0]*M[2][1]-M[1][1]*M[2][0])*i, (M[0][1]*M[2][0]-M[0][0]*M[2][1])*i, (M[0][0]*M[1][1]-M[0][1]*M[1][0])*i]
+    ];
+}
+// 分数坐标 -> 笛卡尔：r[i] = Σ_m p[m]·L[m][i]
+function fracToCart(p, L) {
+    return [ p[0]*L[0][0]+p[1]*L[1][0]+p[2]*L[2][0],
+             p[0]*L[0][1]+p[1]*L[1][1]+p[2]*L[2][1],
+             p[0]*L[0][2]+p[1]*L[1][2]+p[2]*L[2][2] ];
+}
+// 文本贴图标签：画布宽度随文字自适应，避免长文本被压扁或截断
+const LABEL_FONT = 'bold 46px "Segoe UI", sans-serif';
+const LABEL_H = 90;
+function labelWidth(ctx, text) {
+    ctx.font = LABEL_FONT;
+    return Math.max(120, Math.min(1400, Math.ceil(ctx.measureText(text).width) + 28));
+}
+function makeLabel(text, color, scale) {
+    const cv = document.createElement('canvas');
+    const ctx = cv.getContext('2d');
+    cv.width = labelWidth(ctx, text); cv.height = LABEL_H;
+    ctx.font = LABEL_FONT;            // 改变画布尺寸会重置上下文状态
+    ctx.fillStyle = color;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(text, cv.width/2, LABEL_H/2);
+    const tex = new THREE.CanvasTexture(cv);
+    const spr = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthTest: false }));
+    const asp = cv.width/LABEL_H;
+    spr.scale.set((scale || 1.2)*0.28*asp, (scale || 1.2)*0.28, 1);
+    spr.userData.baseScale = scale || 1.2;
+    spr.userData.canvas = cv;
+    spr.userData.ctx = ctx;
+    spr.userData.color = color;
+    spr.userData.text = text;
+    spr.userData.aspect = asp;
+    return spr;
+}
+// 就地刷新标签文字：复用同一张 canvas，不重建纹理
+function updateLabelText(spr, text) {
+    const cv = spr.userData.canvas, ctx = spr.userData.ctx;
+    if (!cv || !ctx || spr.userData.text === text) return;
+    const w = labelWidth(ctx, text);
+    if (w !== cv.width) { cv.width = w; spr.userData.aspect = w/LABEL_H; }
+    ctx.font = LABEL_FONT;            // 改变画布尺寸会重置上下文状态
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.fillStyle = spr.userData.color;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(text, cv.width/2, LABEL_H/2);
+    spr.material.map.needsUpdate = true;
+    spr.userData.text = text;
+}
+
+/* ============================================================
+ *  晶体结构定义
+ * ============================================================ */
+const STRUCTS = {
+    sc:  { label: {zh:'简单立方 SC', en:'Simple Cubic'},
+           centering: [[0,0,0]], basis: [[0,0,0]],
+           rule: {zh:'无系统消光，任何 (hkl) 都可能出现。', en:'No systematic absences: every (hkl) is possible.'} },
+    fcc: { label: {zh:'面心立方 FCC', en:'Face-Centered Cubic'},
+           centering: [[0,0,0],[0,0.5,0.5],[0.5,0,0.5],[0.5,0.5,0]], basis: [[0,0,0]],
+           rule: {zh:'F 心：h,k,l 全奇或全偶才出现（(100)、(110) 消失）。', en:'F-centering: h,k,l all odd or all even ((100), (110) absent).'} },
+    bcc: { label: {zh:'体心立方 BCC', en:'Body-Centered Cubic'},
+           centering: [[0,0,0]], basis: [[0,0,0],[0.5,0.5,0.5]],
+           rule: {zh:'I 心：h+k+l 为偶数才出现（(100)、(111) 消失）。', en:'I-centering: h+k+l even ((100), (111) absent).'} },
+    hcp: { label: {zh:'六方密排 HCP', en:'Hexagonal Close-Packed'},
+           centering: [[0,0,0]], basis: [[0,0,0],[2/3,1/3,0.5]],
+           rule: {zh:'P6₃ 螺旋轴：00l 中 l 为奇数消失。', en:'6₃ screw axis: 00l with odd l absent.'} }
+};
+
+const K_REAL = 0.60;   // 实空间显示常数（显示单位 / Å）
+const K_REC  = 8.0;    // 倒空间显示常数（显示单位 / Å⁻¹）
+
+new Vue({
+    el: '#app',
+    data: function() {
+        return {
+            lang: 'zh',
+            struct: 'fcc',
+            a: 4.00,
+            c: 5.20,
+            h: 1, k: 1, l: 1,
+            recZoom: 1.0,
+            recShell: 1,
+            vsplit: false,
+            arrowM: 0,
+            arrowSign: 1,
+            // 晶面截取盒相对晶胞的放大系数：分数坐标下 [-planeE, 1+planeE]³。
+            // 晶面在物理上是无限延展的平面，盒子略大于晶胞后，任何 (hkl) 的平面
+            // 都能与盒子相交成正常多边形，且相邻两面间距严格等于 d。
+            planeE: 0.2,
+            showCell: true, showAtoms: true, showRec: true, showPlane: true, showShell: true, showFamily: true,
+            autoRotate: false,
+            breathing: false,
+            breathPhase: 0,
+            dval: 0, gval: 0, twoTheta: 0, cellVol: 0,
+            dirty: true, geoDirty: true
+        };
+    },
+    computed: {
+        texts: function() {
+            if (this.lang === 'zh') return {
+                title: '实空间 ⇄ 倒空间',
+                params: '参数与控制',
+                structure: '晶体结构',
+                st_sc: '简单立方 SC', st_fcc: '面心立方 FCC', st_bcc: '体心立方 BCC', st_hcp: '六方密排 HCP',
+                lattice_a: '晶格常数 a', lattice_c: '晶格常数 c',
+                rec_zoom: '倒空间显示缩放',
+                display: '显示选项',
+                show_cell: '实空间晶胞棱边', show_atoms: '实空间原子/阵点',
+                show_rec: '倒空间点阵', show_plane: '选中的晶面', show_shell: '等间距球壳',
+                show_family: '同族其他晶面',
+                rec_shell: '倒空间壳层数', rec_shell_hint: '显示的倒易点范围：|h|,|k|,|l| ≤ N。壳层越大可点击选取的晶面越多。',
+                animation: '动画',
+                start_rotate: '自动旋转', stop_rotate: '停止旋转',
+                start_breath: '晶格呼吸（a 连续变化）', stop_breath: '停止呼吸',
+                breath_hint: '呼吸动画直观展示：a 增大 → 实空间膨胀、倒空间点阵同步收缩，d 与 1/d 互为倒数。',
+                select_hkl: '选定晶面 (hkl)',
+                hint_title: '教学要点',
+                hint_body: '① 倒易矢量 G = ha*+kb*+lc* 垂直于 (hkl) 晶面，长度正好等于 1/d。② 左图橙色与紫色两个相邻晶面间距为 d（红色虚线箭头跨越其间），灰色为同族的其他平行晶面；晶面略微伸出晶胞，因为晶面本身是无限延展的。③ 红色箭头恒从过原点的 m=0 面出发，沿法向 ±G 指向相邻的那一面：对含负指数的晶面会自动改指向已画出的那一侧，保证箭头两端都落在真实画出的晶面上。④ 同族晶面的数目随 hkl 与晶胞形状变化，可用"同族其他晶面"开关只看高亮的那一对。⑤ 右图的 G 长度是 1/d，二者互为倒数。⑥ 拖动 a 滑块：实空间膨胀，倒空间同步收缩。⑦ 灰色倒易点代表被消光的反射。',
+                m_a: '晶格常数 a', m_d: '晶面间距 d', m_g: '倒易矢量 |G|', m_2t: '2θ (Cu Kα)', m_V: '晶胞体积 V',
+                tag_real: '实空间 Real Space', tag_rec: '倒空间 Reciprocal Space',
+                pick_hint: '🖱 点击倒空间中的点即可选晶面（用上方"倒空间壳层数"滑块可显示更多可点选的倒易点；也可直接输入 hkl）',
+                desc_h: '晶面指数 h', desc_k: '晶面指数 k', desc_l: '晶面指数 l',
+                desc_ast: '倒易基矢 a*（与 a 垂直，长度 1/a）',
+                desc_bst: '倒易基矢 b*（与 b 垂直，长度 1/b）',
+                desc_cst: '倒易基矢 c*（与 c 垂直，长度 1/c）',
+                desc_G: '倒易矢量长度 = 1/d', desc_inv_d: '晶面间距的倒数',
+                desc_a: '实空间基矢 a', desc_bst2: '倒易基矢 b*',
+                desc_zero: '交叉正交条件：a·b* = b·c* = c·a* = 0（注意 a·a* = 1，不是 0）'
+            };
+            return {
+                title: 'Real <-> Reciprocal Space',
+                params: 'Parameters',
+                structure: 'Structure',
+                st_sc: 'Simple Cubic', st_fcc: 'Face-Centered Cubic', st_bcc: 'Body-Centered Cubic', st_hcp: 'Hexagonal Close-Packed',
+                lattice_a: 'Lattice constant a', lattice_c: 'Lattice constant c',
+                rec_zoom: 'Reciprocal display zoom',
+                display: 'Display',
+                show_cell: 'Real-space cell edges', show_atoms: 'Real-space atoms / lattice points',
+                show_rec: 'Reciprocal lattice points', show_plane: 'Selected lattice plane', show_shell: 'Equal-distance shell',
+                show_family: 'Other planes of the family',
+                rec_shell: 'Reciprocal shells', rec_shell_hint: 'Shows reciprocal points with |h|,|k|,|l| ≤ N. More shells give more planes you can click.',
+                animation: 'Animation',
+                start_rotate: 'Auto rotate', stop_rotate: 'Stop rotating',
+                start_breath: 'Lattice breathing (a varies)', stop_breath: 'Stop breathing',
+                breath_hint: 'The breathing animation shows it directly: as a grows the real space expands while the reciprocal lattice shrinks; d and 1/d are reciprocals.',
+                select_hkl: 'Selected plane (hkl)',
+                hint_title: 'Key ideas',
+                hint_body: '1) G = ha*+kb*+lc* is normal to the (hkl) plane and its length equals 1/d. 2) The orange and violet planes on the left are two adjacent members of the family, separated by d (the red dashed arrow spans exactly that gap); grey planes are the other members. The planes stick slightly out of the cell because lattice planes extend infinitely. 3) The red arrow always starts on the m=0 plane through the origin and runs along the normal ±G to the neighbouring member: for planes with negative indices it flips to the side that is actually drawn, so both ends of the arrow always land on drawn planes. 4) The number of planes in a family depends on hkl and on the cell shape; use the "Other planes of the family" switch to show only the highlighted pair. 5) The vector G on the right has length 1/d, the reciprocal of the spacing. 6) Drag a: the real space expands while the reciprocal space shrinks in proportion. 7) Grey reciprocal points are extinct reflections.',
+                m_a: 'Lattice constant a', m_d: 'Plane spacing d', m_g: 'Reciprocal vector |G|', m_2t: '2θ (Cu Kα)', m_V: 'Cell volume V',
+                tag_real: 'Real Space', tag_rec: 'Reciprocal Space',
+                pick_hint: '🖱 Click a point in the reciprocal space to select a plane (use the "Reciprocal shells" slider for more clickable points; you can also type hkl directly)',
+                desc_h: 'Miller index h', desc_k: 'Miller index k', desc_l: 'Miller index l',
+                desc_ast: 'Reciprocal basis a* (normal to a, length 1/a)',
+                desc_bst: 'Reciprocal basis b* (normal to b, length 1/b)',
+                desc_cst: 'Reciprocal basis c* (normal to c, length 1/c)',
+                desc_G: 'Length of reciprocal vector = 1/d', desc_inv_d: 'Reciprocal of the plane spacing',
+                desc_a: 'Direct-space basis a', desc_bst2: 'Reciprocal basis b*',
+                desc_zero: 'Cross-orthogonality: a·b* = b·c* = c·a* = 0 (note a·a* = 1, not 0)'
+            };
+        },
+        cellParams: function() {
+            if (this.struct === 'hcp') return [this.a, this.a, this.c, 90, 90, 120];
+            return [this.a, this.a, this.a, 90, 90, 90];
+        }
+    },
+    mounted: function() {
+        this.initThree();
+        this.$nextTick(function() { this.onResize(); });
+        window.addEventListener('resize', this.onResize);
+    },
+    methods: {
+        t: function(key) { return this.texts[key]; },
+        toggleLang: function() { this.lang = this.lang === 'zh' ? 'en' : 'zh'; },
+        markDirty: function() { this.dirty = true; },
+        // 显示开关与晶面切换会改变 3D 几何（晶面多边形 / 倒易点 / 球壳），必须触发重建
+        markGeo: function() { this.geoDirty = true; this.dirty = true; },
+        onStructChange: function() {
+            if (this.struct === 'fcc') { this.h = 1; this.k = 1; this.l = 1; }
+            else if (this.struct === 'bcc') { this.h = 1; this.k = 1; this.l = 0; }
+            else if (this.struct === 'hcp') { this.h = 1; this.k = 0; this.l = 0; }
+            else { this.h = 1; this.k = 0; this.l = 0; }
+            this.geoDirty = true; this.dirty = true;
+        },
+        applyHkl: function() {
+            this.h = parseInt(this.h) || 0;
+            this.k = parseInt(this.k) || 0;
+            this.l = parseInt(this.l) || 0;
+            if (this.h === 0 && this.k === 0 && this.l === 0) this.h = 1;
+            this.geoDirty = true; this.dirty = true;
+        },
+
+        /* ---------------- 单位坐标几何（a = c = 1） ---------------- */
+        unitGeo: function() {
+            const cell = (this.struct === 'hcp') ? [1, 1, 1, 90, 90, 120] : [1, 1, 1, 90, 90, 90];
+            const L = latticeMatrix(cell);
+            const v1 = new THREE.Vector3(L[0][0], L[0][1], L[0][2]);
+            const v2 = new THREE.Vector3(L[1][0], L[1][1], L[1][2]);
+            const v3 = new THREE.Vector3(L[2][0], L[2][1], L[2][2]);
+            const V = v1.dot(new THREE.Vector3().crossVectors(v2, v3));
+            const as = new THREE.Vector3().crossVectors(v2, v3).divideScalar(V);
+            const bs = new THREE.Vector3().crossVectors(v3, v1).divideScalar(V);
+            const cs = new THREE.Vector3().crossVectors(v1, v2).divideScalar(V);
+            return { L: L, v1: v1, v2: v2, v3: v3, as: as, bs: bs, cs: cs, V: V };
+        },
+        Gvec: function(g, h, k, l) {
+            return new THREE.Vector3(
+                h*g.as.x + k*g.bs.x + l*g.cs.x,
+                h*g.as.y + k*g.bs.y + l*g.cs.y,
+                h*g.as.z + k*g.bs.z + l*g.cs.z
+            );
+        },
+        updateNumbers: function() {
+            const cell = this.cellParams;
+            const L = latticeMatrix(cell);
+            const v1 = new THREE.Vector3(L[0][0], L[0][1], L[0][2]);
+            const v2 = new THREE.Vector3(L[1][0], L[1][1], L[1][2]);
+            const v3 = new THREE.Vector3(L[2][0], L[2][1], L[2][2]);
+            const V = v1.dot(new THREE.Vector3().crossVectors(v2, v3));
+            const as = new THREE.Vector3().crossVectors(v2, v3).divideScalar(V);
+            const bs = new THREE.Vector3().crossVectors(v3, v1).divideScalar(V);
+            const cs = new THREE.Vector3().crossVectors(v1, v2).divideScalar(V);
+            const G = new THREE.Vector3(
+                this.h*as.x + this.k*bs.x + this.l*cs.x,
+                this.h*as.y + this.k*bs.y + this.l*cs.y,
+                this.h*as.z + this.k*bs.z + this.l*cs.z
+            );
+            const len = G.length();
+            this.gval = len;
+            this.dval = len > 1e-9 ? 1/len : 0;
+            this.cellVol = V;
+            const lam = 1.5418;
+            const sinT = lam/(2*this.dval);
+            this.twoTheta = (sinT > 0 && sinT < 1) ? 2*Math.asin(sinT)*180/Math.PI : NaN;
+        },
+
+        /* ---------------- 结构因子与反射列表 ---------------- */
+        cellAtomsFrac: function() {
+            const st = STRUCTS[this.struct];
+            const list = [];
+            st.centering.forEach(function(t) {
+                st.basis.forEach(function(b) {
+                    list.push([ (b[0]+t[0])%1, (b[1]+t[1])%1, (b[2]+t[2])%1 ]);
+                });
+            });
+            return list;
+        },
+        structFactor: function(h, k, l) {
+            const atoms = this.cellAtomsFrac();
+            let re = 0, im = 0;
+            for (let i = 0; i < atoms.length; i++) {
+                const ph = 2*Math.PI*(h*atoms[i][0] + k*atoms[i][1] + l*atoms[i][2]);
+                re += Math.cos(ph); im += Math.sin(ph);
+            }
+            return re*re + im*im;
+        },
+
+        /* ---------------- Three.js ---------------- */
+        initThree: function() {
+            const host = this.$refs.viewport;
+            const self = this;
+            this.renderer = new THREE.WebGLRenderer({ antialias: true });
+            this.renderer.setPixelRatio(window.devicePixelRatio);
+            host.appendChild(this.renderer.domElement);
+
+            this.sceneReal = new THREE.Scene();
+            this.sceneRec = new THREE.Scene();
+            this.sceneReal.background = new THREE.Color(0x10141c);
+            this.sceneRec.background = new THREE.Color(0x10141c);
+
+            [this.sceneReal, this.sceneRec].forEach(function(sc) {
+                sc.add(new THREE.AmbientLight(0xffffff, 0.55));
+                const dl = new THREE.DirectionalLight(0xffffff, 0.85);
+                dl.position.set(5, 8, 6); sc.add(dl);
+                const dl2 = new THREE.DirectionalLight(0x88aaff, 0.35);
+                dl2.position.set(-6, -3, -5); sc.add(dl2);
+            });
+
+            this.realGroup = new THREE.Group();
+            this.recGroup = new THREE.Group();
+            this.sceneReal.add(this.realGroup);
+            this.sceneRec.add(this.recGroup);
+
+            this.camera = new THREE.PerspectiveCamera(45, 1, 0.05, 500);
+            this.camera.position.set(6.5, 5.0, 7.5);
+            this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
+            this.controls.enableDamping = true;
+            this.controls.dampingFactor = 0.08;
+            this.controls.minDistance = 1.5;
+            this.controls.maxDistance = 120;
+
+            this.raycaster = new THREE.Raycaster();
+            this.pointer = new THREE.Vector2();
+            this.recPoints = [];
+            this.labels = [];
+
+            this.renderer.domElement.addEventListener('click', function(ev) { self.onPick(ev); });
+            this.onResize();
+            this.animate();
+        },
+
+        onResize: function() {
+            if (!this.renderer) return;
+            const host = this.$refs.viewport;
+            if (!host) return;
+            const w = host.clientWidth, h = host.clientHeight;
+            if (w === 0 || h === 0) return;
+            // 绘图缓冲区按 devicePixelRatio 分配，CSS 尺寸由样式锁定为容器的 100%，
+            // 否则高 DPI 下缓冲区会按 1:1 像素铺开并溢出容器，倒空间那一半会被裁掉。
+            this.renderer.setSize(w, h, false);
+            // 分屏方向：左右分屏每半 (w/2)×h，上下分屏每半 w×(h/2)。
+            // 取更接近正方形的一种；左右分屏后过窄时也强制上下分屏。
+            const horizA = w/(2*h), vertA = 2*w/h;
+            this.vsplit = (h >= 380) && ((w/2 < 300) || (Math.abs(vertA - 1) < Math.abs(horizA - 1)));
+            host.classList.toggle('vsplit', this.vsplit);
+            this.camera.aspect = this.vsplit ? w/(h/2) : (w/2)/h;
+            this.camera.updateProjectionMatrix();
+        },
+
+        clearGroup: function(grp) {
+            while (grp.children.length) {
+                const ch = grp.children.pop();
+                if (ch.geometry) ch.geometry.dispose();
+                if (ch.material) {
+                    if (Array.isArray(ch.material)) ch.material.forEach(function(m){ m.dispose(); });
+                    else ch.material.dispose();
+                }
+                grp.remove(ch);
+            }
+        },
+        addLabel: function(grp, text, color, scale, pos) {
+            const spr = makeLabel(text, color, scale);
+            spr.position.copy(pos);
+            grp.add(spr);
+            this.labels.push({ spr: spr, base: scale, grp: grp, aspect: spr.userData.aspect });
+            return spr;
+        },
+        updateLabelScales: function() {
+            // 标签在缩放组内 -> 反向补偿，保持屏幕上的字号不变
+            for (let i = 0; i < this.labels.length; i++) {
+                const o = this.labels[i];
+                const s = o.grp.scale;
+                const avg = (Math.abs(s.x) + Math.abs(s.y) + Math.abs(s.z))/3 || 1;
+                const asp = (o.spr.userData && o.spr.userData.aspect) || o.aspect || (320/LABEL_H);
+                o.spr.scale.set(o.base*0.28*asp/avg, o.base*0.28/avg, 1);
+            }
+        },
+
+        /* ---------- 实空间（单位坐标 a=c=1，由组缩放展开） ---------- */
+        buildReal: function() {
+            this.clearGroup(this.realGroup);
+            const self = this;
+            const g = this.unitGeo();
+
+            if (this.showCell) {
+                const corners = [];
+                for (let i = 0; i < 8; i++) {
+                    const p = [i & 1, (i >> 1) & 1, (i >> 2) & 1];
+                    corners.push(new THREE.Vector3(...fracToCart(p, g.L)));
+                }
+                const edgePts = [];
+                for (let i = 0; i < 8; i++) for (let j = i + 1; j < 8; j++) {
+                    const diff = i ^ j;
+                    if (diff === 1 || diff === 2 || diff === 4) edgePts.push(corners[i].clone(), corners[j].clone());
+                }
+                this.realGroup.add(new THREE.LineSegments(
+                    new THREE.BufferGeometry().setFromPoints(edgePts),
+                    new THREE.LineBasicMaterial({ color: 0x5d6d7e })
+                ));
+                const axes = [
+                    { v: g.v1, c: 0xe74c3c, label: 'a' },
+                    { v: g.v2, c: 0x27ae60, label: 'b' },
+                    { v: g.v3, c: 0x2980b9, label: 'c' }
+                ];
+                axes.forEach(function(ax) {
+                    const dir = ax.v.clone().normalize();
+                    const len = ax.v.length() * 0.95;
+                    self.realGroup.add(new THREE.Line(
+                        new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), dir.clone().multiplyScalar(len)]),
+                        new THREE.LineBasicMaterial({ color: ax.c })
+                    ));
+                    self.addLabel(self.realGroup, ax.label, '#' + ax.c.toString(16).padStart(6,'0'), 0.9, dir.clone().multiplyScalar(len * 1.1));
+                });
+            }
+
+            if (this.showAtoms) {
+                const st = STRUCTS[this.struct];
+                const sphere = new THREE.SphereGeometry(0.075, 16, 12);
+                const matMain = new THREE.MeshStandardMaterial({ color: 0xf5b041, roughness: 0.35, metalness: 0.15 });
+                const matGhost = new THREE.MeshStandardMaterial({ color: 0x7f8c8d, roughness: 0.6, metalness: 0.05, transparent: true, opacity: 0.3 });
+                for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (let k = -1; k <= 1; k++) {
+                    const inCenter = (i === 0 && j === 0 && k === 0);
+                    st.centering.forEach(function(t) {
+                        st.basis.forEach(function(b) {
+                            const p = [b[0] + t[0] + i, b[1] + t[1] + j, b[2] + t[2] + k];
+                            const mesh = new THREE.Mesh(sphere, inCenter ? matMain : matGhost);
+                            mesh.position.set(...fracToCart(p, g.L));
+                            self.realGroup.add(mesh);
+                        });
+                    });
+                }
+            }
+
+            // 选中的晶面族 (hkl)：分数坐标下 h·x + k·y + l·z = m（m 为整数）
+            // 同一族的所有平行面都画出来（可关），并挑出一对"相邻面"（间距恒为 d）用橙色/紫色高亮，
+            // 红色虚线 d 箭头正好跨越这两个面。
+            if (this.showPlane && !(this.h === 0 && this.k === 0 && this.l === 0)) {
+                // 选出一对相邻晶面并定下 d 箭头的方向（±G 自适应，见 pickPlanePair）
+                const pick = self.pickPlanePair(g, self.h, self.k, self.l);
+                const fam = pick.fam;
+                this.arrowM = 0;                  // d 箭头恒从 m = 0 面（过原点）出发
+                this.arrowSign = pick.sign;      // 箭头指向 m = ±1 面
+                fam.forEach(function(pl) {
+                    const isHi = (pl.m === 0) || (pl.m === pick.sign);
+                    if (!isHi && !self.showFamily) return;
+                    const col = isHi ? (pl.m === 0 ? 0xf39c12 : 0x8e44ad) : 0x7f8c8d;
+                    const hex = '#' + col.toString(16).padStart(6, '0');
+                    const poly = pl.poly;
+                    const c0 = new THREE.Vector3();
+                    poly.forEach(function(p){ c0.add(p); });
+                    c0.multiplyScalar(1/poly.length);
+                    // 填充：中心扇形三角化
+                    const verts = [];
+                    poly.forEach(function(p, j) {
+                        const q = poly[(j + 1) % poly.length];
+                        verts.push(c0.x, c0.y, c0.z, p.x, p.y, p.z, q.x, q.y, q.z);
+                    });
+                    const geoP = new THREE.BufferGeometry();
+                    geoP.setAttribute('position', new THREE.Float32BufferAttribute(verts, 3));
+                    geoP.computeVertexNormals();
+                    self.realGroup.add(new THREE.Mesh(geoP, new THREE.MeshStandardMaterial({
+                        color: col, transparent: true, opacity: isHi ? 0.36 : 0.12,
+                        side: THREE.DoubleSide, roughness: 0.9, depthWrite: false
+                    })));
+                    // 轮廓
+                    self.realGroup.add(new THREE.Line(
+                        new THREE.BufferGeometry().setFromPoints(poly.concat([poly[0]])),
+                        new THREE.LineBasicMaterial({ color: col, transparent: true, opacity: isHi ? 1 : 0.45 })
+                    ));
+                    if (isHi) self.addLabel(self.realGroup, 'm = ' + pl.m, hex, 0.8, c0.clone());
+                });
+            } else {
+                this.arrowM = 0;
+                this.arrowSign = 1;
+            }
+        },
+
+        /* ---------- 晶面族的几何计算 ---------- */
+        // 晶面族：h·x + k·y + l·z = m（m 为整数，x,y,z 为分数坐标）
+        // 返回所有与截取盒相交的平面（按 m 升序），poly 为笛卡尔坐标多边形
+        // E 可外部指定：d 箭头的落点落在盒外时要自动放大截取范围
+        planeFamily: function(g, h, k, l, E) {
+            if (E === undefined) E = this.planeE;
+            const lo = -E, hi = 1 + E;
+            let fmin = Infinity, fmax = -Infinity;
+            for (let i = 0; i < 8; i++) {
+                const p = [(i & 1) ? hi : lo, ((i >> 1) & 1) ? hi : lo, ((i >> 2) & 1) ? hi : lo];
+                const f = h*p[0] + k*p[1] + l*p[2];
+                if (f < fmin) fmin = f;
+                if (f > fmax) fmax = f;
+            }
+            const list = [];
+            const m0 = Math.ceil(fmin - 1e-9), m1 = Math.floor(fmax + 1e-9);
+            for (let m = m0; m <= m1; m++) {
+                const poly = this.clipPlaneToBox(g, h, k, l, m, E);
+                if (poly) list.push({ m: m, poly: poly });
+            }
+            return list;
+        },
+
+        // 选一对相邻晶面来标注 d，并决定 d 箭头的方向（±G 自适应）
+        // 规则：箭头一律从原点出发（原点必在 m = 0 面上），长度恒为 d，方向沿 ±G。
+        // 取符号 s ∈ {+1,-1}，使 m = s 面的垂足落在已画出的晶面范围内；
+        // 若两个方向都不行，就逐步放大截取盒再试，保证箭头两端都搭在真实画出的平面上。
+        pickPlanePair: function(g, h, k, l) {
+            const a = this.a, c = (this.struct === 'hcp') ? this.c : this.a;
+            // 真实倒易矢量 G = h·a* + k·b* + l·c*（单位倒易基按 1/a,1/a,1/c 还原到真实胞）
+            const Gun = this.Gvec(g, h, k, l);
+            const Gp = new THREE.Vector3(Gun.x/a, Gun.y/a, Gun.z/c);
+            const gLen = Gp.length();
+            if (gLen < 1e-9) return { fam: [], E: this.planeE, sign: 1 };
+            const d = 1/gLen;
+            const n = Gp.clone().normalize();
+            const Linv = matInv3(g.L);
+            const ladder = [this.planeE, 0.4, 0.8, 1.2];
+            for (let i = 0; i < ladder.length; i++) {
+                const E = ladder[i];
+                const fam = this.planeFamily(g, h, k, l, E);
+                let has0 = false;
+                fam.forEach(function(p){ if (p.m === 0) has0 = true; });
+                if (!has0) continue;
+                for (let si = 0; si < 2; si++) {
+                    const s = (si === 0) ? 1 : -1;
+                    let hasS = false;
+                    fam.forEach(function(p){ if (p.m === s) hasS = true; });
+                    if (!hasS) continue;
+                    // 垂足：真实坐标 = s·d·n̂，换算回分数坐标看是否落在截取盒内
+                    const u = new THREE.Vector3(s*d*n.x/a, s*d*n.y/a, s*d*n.z/c);
+                    const f = fracToCart([u.x, u.y, u.z], Linv);
+                    let ok = true;
+                    for (let t = 0; t < 3; t++) {
+                        if (f[t] < -E - 1e-9 || f[t] > 1 + E + 1e-9) ok = false;
+                    }
+                    if (ok) return { fam: fam, E: E, sign: s };
+                }
+            }
+            return { fam: this.planeFamily(g, h, k, l, this.planeE), E: this.planeE, sign: 1 };
+        },
+
+        // 平面与盒子的交多边形：先取平面内一个大四边形，再用六个半空间做 Sutherland–Hodgman 裁剪
+        clipPlaneToBox: function(g, h, k, l, m, E) {
+            const n2 = h*h + k*k + l*l;
+            if (n2 < 1e-12) return null;
+            const inv = 1/Math.sqrt(n2);
+            const nf = [h*inv, k*inv, l*inv];
+            const cross = function(a, b) {
+                return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
+            };
+            const helper = (Math.abs(nf[2]) < 0.9) ? [0, 0, 1] : [1, 0, 0];
+            let u = cross(nf, helper);
+            const ul = Math.hypot(u[0], u[1], u[2]);
+            if (ul < 1e-8) return null;
+            u = [u[0]/ul, u[1]/ul, u[2]/ul];
+            const v = cross(nf, u);
+            // 原点到平面的垂足（分数坐标）
+            const c = [h*m/n2, k*m/n2, l*m/n2];
+            const R = 6;   // 四边形半边长（分数单位），远大于盒子尺寸
+            let poly = [
+                [c[0]+R*u[0]+R*v[0], c[1]+R*u[1]+R*v[1], c[2]+R*u[2]+R*v[2]],
+                [c[0]-R*u[0]+R*v[0], c[1]-R*u[1]+R*v[1], c[2]-R*u[2]+R*v[2]],
+                [c[0]-R*u[0]-R*v[0], c[1]-R*u[1]-R*v[1], c[2]-R*u[2]-R*v[2]],
+                [c[0]+R*u[0]-R*v[0], c[1]+R*u[1]-R*v[1], c[2]+R*u[2]-R*v[2]]
+            ];
+            const half = [
+                function(p){ return p[0] + E; },       function(p){ return (1+E) - p[0]; },
+                function(p){ return p[1] + E; },       function(p){ return (1+E) - p[1]; },
+                function(p){ return p[2] + E; },       function(p){ return (1+E) - p[2]; }
+            ];
+            for (let i = 0; i < half.length; i++) {
+                const f = half[i], out = [];
+                for (let j = 0; j < poly.length; j++) {
+                    const A = poly[j], B = poly[(j + 1) % poly.length];
+                    const fa = f(A), fb = f(B);
+                    const ina = fa >= -1e-12, inb = fb >= -1e-12;
+                    if (ina) out.push(A);
+                    if (ina !== inb) {
+                        const t = fa/(fa - fb);
+                        out.push([A[0]+t*(B[0]-A[0]), A[1]+t*(B[1]-A[1]), A[2]+t*(B[2]-A[2])]);
+                    }
+                }
+                poly = out;
+                if (poly.length < 3) return null;
+            }
+            // 去掉相邻重复点（平面恰好过盒角时会出现）
+            const uniq = [];
+            for (let i = 0; i < poly.length; i++) {
+                const p = poly[i], q = poly[(i + poly.length - 1) % poly.length];
+                if (Math.hypot(p[0]-q[0], p[1]-q[1], p[2]-q[2]) > 1e-9) uniq.push(p);
+            }
+            poly = uniq;
+            if (poly.length < 3) return null;
+            // 面积检查：滤掉只擦到盒角/盒棱的退化多边形
+            const cen = [0, 0, 0];
+            poly.forEach(function(p){ cen[0] += p[0]; cen[1] += p[1]; cen[2] += p[2]; });
+            cen[0] /= poly.length; cen[1] /= poly.length; cen[2] /= poly.length;
+            let area = 0;
+            for (let i = 0; i < poly.length; i++) {
+                const A = poly[i], B = poly[(i + 1) % poly.length];
+                const au = (A[0]-cen[0])*u[0] + (A[1]-cen[1])*u[1] + (A[2]-cen[2])*u[2];
+                const av = (A[0]-cen[0])*v[0] + (A[1]-cen[1])*v[1] + (A[2]-cen[2])*v[2];
+                const bu = (B[0]-cen[0])*u[0] + (B[1]-cen[1])*u[1] + (B[2]-cen[2])*u[2];
+                const bv = (B[0]-cen[0])*v[0] + (B[1]-cen[1])*v[1] + (B[2]-cen[2])*v[2];
+                area += au*bv - av*bu;
+            }
+            if (Math.abs(area)/2 < 1e-6) return null;
+            // 按绕中心的极角排序，保证多边形顶点有序（填充用扇形三角化）
+            poly.sort(function(A, B) {
+                const au = (A[0]-cen[0])*u[0] + (A[1]-cen[1])*u[1] + (A[2]-cen[2])*u[2];
+                const av = (A[0]-cen[0])*v[0] + (A[1]-cen[1])*v[1] + (A[2]-cen[2])*v[2];
+                const bu = (B[0]-cen[0])*u[0] + (B[1]-cen[1])*u[1] + (B[2]-cen[2])*u[2];
+                const bv = (B[0]-cen[0])*v[0] + (B[1]-cen[1])*v[1] + (B[2]-cen[2])*v[2];
+                return Math.atan2(av, au) - Math.atan2(bv, bu);
+            });
+            const self = this;
+            return poly.map(function(p){ return new THREE.Vector3(...fracToCart(p, g.L)); });
+        },
+
+        /* ---------- 倒空间（单位倒易基矢，组缩放 1/a, 1/c） ---------- */
+        buildRec: function() {
+            this.clearGroup(this.recGroup);
+            this.recPoints = [];
+            this.shellMesh = null;
+            this.gLabel = null;
+            const self = this;
+            const g = this.unitGeo();
+
+            // 倒易网格与坐标轴：始终保留（已选晶面的 G 矢量需要参照系才能读出方向）
+            {
+                const p1 = g.as.clone(), p2 = g.bs.clone(), p3 = g.cs.clone();
+                const seg = [
+                    [p1, p1.clone().add(p2)], [p2, p2.clone().add(p3)], [p3, p3.clone().add(p1)],
+                    [p1, p1.clone().add(p3)], [p1.clone().add(p2), p1.clone().add(p2).add(p3)],
+                    [p1.clone().add(p3), p1.clone().add(p2).add(p3)],
+                    [p2.clone().add(p3), p1.clone().add(p2).add(p3)]
+                ];
+                const pts = [];
+                seg.forEach(function(s){ pts.push(s[0].clone(), s[1].clone()); });
+                this.recGroup.add(new THREE.LineSegments(
+                    new THREE.BufferGeometry().setFromPoints(pts),
+                    new THREE.LineBasicMaterial({ color: 0x46596b })
+                ));
+                const axes = [
+                    { v: g.as, c: 0xe74c3c, label: 'a*' },
+                    { v: g.bs, c: 0x27ae60, label: 'b*' },
+                    { v: g.cs, c: 0x2980b9, label: 'c*' }
+                ];
+                axes.forEach(function(ax) {
+                    const dir = ax.v.clone().normalize();
+                    const len = ax.v.length();
+                    self.recGroup.add(new THREE.Line(
+                        new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), dir.clone().multiplyScalar(len)]),
+                        new THREE.LineBasicMaterial({ color: ax.c })
+                    ));
+                    self.addLabel(self.recGroup, ax.label, '#' + ax.c.toString(16).padStart(6,'0'), 0.9, dir.clone().multiplyScalar(len * 1.12));
+                });
+            }
+
+            // 倒易点阵：|h|,|k|,|l| <= N（N 由"倒空间壳层数"滑块控制）
+            if (this.showRec) {
+                const N = Math.max(1, Math.round(this.recShell));
+                const geoOff = new THREE.SphereGeometry(0.055, 14, 10);
+                const geoOn = new THREE.SphereGeometry(0.075, 14, 10);
+                const geoSel = new THREE.SphereGeometry(0.12, 20, 14);
+                const matOff = new THREE.MeshBasicMaterial({ color: 0x46586a });
+                const matOn = new THREE.MeshBasicMaterial({ color: 0x5dade2 });
+                const matSel = new THREE.MeshBasicMaterial({ color: 0xff3b3b });
+                for (let hh = -N; hh <= N; hh++) for (let kk = -N; kk <= N; kk++) for (let ll = -N; ll <= N; ll++) {
+                    if (hh === 0 && kk === 0 && ll === 0) continue;
+                    const Gv = this.Gvec(g, hh, kk, ll);
+                    const isSel = (hh === this.h && kk === this.k && ll === this.l);
+                    const allowed = this.structFactor(hh, kk, ll) > 1e-6;
+                    const mesh = new THREE.Mesh(isSel ? geoSel : (allowed ? geoOn : geoOff), isSel ? matSel : (allowed ? matOn : matOff));
+                    mesh.position.copy(Gv);
+                    mesh.userData = { h: hh, k: kk, l: ll };
+                    this.recGroup.add(mesh);
+                    this.recPoints.push(mesh);
+                }
+            }
+
+            // 选中的 G 矢量 + 端点标记：属于"晶面指示"，不随"显示倒易点阵"开关消失
+            const G = this.Gvec(g, this.h, this.k, this.l);
+            const gLen = G.length();
+            if (gLen > 0) {
+                this.recGroup.add(new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), G.clone()]),
+                    new THREE.LineBasicMaterial({ color: 0xff3b3b })
+                ));
+                // G 端点标记：点阵壳层有限，(200)、(222) 等可能没有对应球，这里补一个红点
+                const gDot = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.075, 20, 14),
+                    new THREE.MeshBasicMaterial({ color: 0xff3b3b })
+                );
+                gDot.position.copy(G);
+                this.recGroup.add(gDot);
+                // G 矢量标签：|G| = 1/d，与实空间的 d 互为倒数
+                this.gLabel = self.addLabel(this.recGroup, 'G = 1/d', '#ff8080', 1.0, G.clone().multiplyScalar(1.2));
+                if (this.showShell) {
+                    // 等 |G| 壳：物理上是以 O 为心的球。倒空间显示做了各向异性缩放 (1/a,1/a,1/c)，
+                    // 故在单位坐标里取半轴 (a|G|, a|G|, c|G|) 的椭球，映射到屏幕后恰为正球，
+                    // 且只穿过物理 |G| 相同的那些倒易点。
+                    const aReal = this.a, cReal = (this.struct === 'hcp') ? this.c : this.a;
+                    const gPhys = Math.hypot(G.x/aReal, G.y/aReal, G.z/cReal);
+                    const shell = new THREE.Mesh(
+                        new THREE.SphereGeometry(1, 44, 28),
+                        new THREE.MeshBasicMaterial({ color: 0xff3b3b, wireframe: true, transparent: true, opacity: 0.12 })
+                    );
+                    shell.scale.set(aReal*gPhys, aReal*gPhys, cReal*gPhys);
+                    this.recGroup.add(shell);
+                    this.shellMesh = shell;
+                }
+            }
+        },
+
+        // 每帧更新：缩放、法线箭头、标签
+        updateDynamic: function() {
+            const a = this.a, c = (this.struct === 'hcp') ? this.c : this.a;
+            this.realGroup.scale.set(K_REAL*a, K_REAL*a, K_REAL*c);
+            this.recGroup.scale.set(K_REC*this.recZoom/a, K_REC*this.recZoom/a, K_REC*this.recZoom/c);
+
+            // 等 |G| 壳随晶格参数（呼吸）连续变化，需要跟着缩放
+            if (this.shellMesh) {
+                const g = this.unitGeo();
+                const G = this.Gvec(g, this.h, this.k, this.l);
+                if (G.length() > 1e-9) {
+                    const gPhys = Math.hypot(G.x/a, G.y/a, G.z/c);
+                    this.shellMesh.scale.set(a*gPhys, a*gPhys, c*gPhys);
+                }
+            }
+
+            // 法线箭头：对象只在晶面/结构/可见性/起点平面变化时重建，方向与长度就地刷新
+            const key = [this.h, this.k, this.l, this.showPlane ? 1 : 0, this.struct, this.arrowM, this.arrowSign].join('|');
+            if (key !== this._arrowKey) {
+                this._arrowKey = key;
+                this.rebuildArrow();
+            }
+            this.refreshArrow(a, c);
+            // 倒空间 G 标签：|G| = 1/d
+            if (this.gLabel) updateLabelText(this.gLabel, 'G = 1/d = ' + this.gval.toFixed(3) + ' Å⁻¹');
+            // 箭头位于场景坐标，晶胞在旋转组内 → 跟随同一四元数，两者始终一致
+            if (this.arrowGroup) this.arrowGroup.quaternion.copy(this.realGroup.quaternion);
+            this.updateLabelScales();
+        },
+
+        // 法线箭头：方向取真实倒易矢量 G = h·a* + k·b* + l·c*（各向异性缩放，a≠c 时不能直接乘 a/c）
+        rebuildArrow: function() {
+            if (this.arrowGroup) {
+                this.sceneReal.remove(this.arrowGroup);
+                this.arrowGroup.traverse(function(o) {
+                    if (o.geometry) o.geometry.dispose();
+                    if (o.material) {
+                        if (o.material.map) o.material.map.dispose();
+                        o.material.dispose();
+                    }
+                });
+                this.arrowGroup = null;
+                this.arrowLine = null;
+                this.arrowLabel = null;
+            }
+            if (!this.showPlane || (this.h === 0 && this.k === 0 && this.l === 0)) return;
+            const grp = new THREE.Group();
+            // 箭头与晶面共面：关闭深度测试并提高 renderOrder，保证它始终清晰可见
+            const line = new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0,0,0), new THREE.Vector3(0,1,0)]),
+                new THREE.LineDashedMaterial({ color: 0xff4444, dashSize: 0.06, gapSize: 0.04, transparent: true, opacity: 0.95, depthTest: false })
+            );
+            line.renderOrder = 20;
+            line.computeLineDistances();
+            grp.add(line);
+            this.arrowLabelBase = 1.5;
+            const lab = makeLabel('d = ', '#ff8080', this.arrowLabelBase);
+            lab.renderOrder = 21;
+            grp.add(lab);
+            this.sceneReal.add(grp);
+            this.arrowGroup = grp;
+            this.arrowLine = line;
+            this.arrowLabel = lab;
+        },
+
+        // 就地刷新箭头：方向、长度、d 读数（不重建对象、不新建贴图）
+        refreshArrow: function(a, c) {
+            if (!this.arrowGroup || !this.arrowLine || !this.arrowLabel) return;
+            const g = this.unitGeo();
+            const Gun = this.Gvec(g, this.h, this.k, this.l);
+            // 真实空间的晶面法线：单位倒易基按 (1/a, 1/a, 1/c) 变换（各向异性时不能直接乘 a/c）
+            const nWorld = new THREE.Vector3(Gun.x/a, Gun.y/a, Gun.z/c).normalize();
+            const dReal = this.dval;
+            const K = K_REAL;
+            // d 箭头：起点固定在原点（必在 m = 0 面上），终点是相邻晶面 m = ±1 的垂足，
+            // 方向沿 ±G（符号由 pickPlanePair 选出，保证终点落在画出来的晶面上），长度恒为 d
+            const sgn = this.arrowSign >= 0 ? 1 : -1;
+            const start = new THREE.Vector3(0, 0, 0);
+            const tip = nWorld.clone().multiplyScalar(sgn * dReal * K);
+            const pos = this.arrowLine.geometry.attributes.position;
+            pos.setXYZ(0, start.x, start.y, start.z);
+            pos.setXYZ(1, tip.x, tip.y, tip.z);
+            pos.needsUpdate = true;
+            this.arrowLine.geometry.computeBoundingSphere();
+            this.arrowLine.computeLineDistances();
+            this.arrowLabel.position.copy(start.clone().lerp(tip, 0.5));
+            updateLabelText(this.arrowLabel, 'd = ' + dReal.toFixed(3) + ' Å');
+            // 文字变长时画布宽度随之改变，精灵宽高比需同步，避免标签被拉伸
+            const asp = this.arrowLabel.userData.aspect || (320/LABEL_H);
+            const base = this.arrowLabelBase || 1.5;
+            this.arrowLabel.scale.set(base*0.28*asp, base*0.28, 1);
+        },
+
+        onPick: function(ev) {
+            if (!this.renderer) return;
+            const rect = this.renderer.domElement.getBoundingClientRect();
+            const px = ev.clientX - rect.left, py = ev.clientY - rect.top;
+            if (this.vsplit) {
+                // 上下分屏：下半部分为倒空间
+                if (py < rect.height/2) return;
+                this.pointer.x = (px/rect.width)*2 - 1;
+                this.pointer.y = -((py - rect.height/2)/(rect.height/2))*2 + 1;
+            } else {
+                // 左右分屏：右半部分为倒空间
+                if (px < rect.width/2) return;
+                this.pointer.x = ((px - rect.width/2)/(rect.width/2))*2 - 1;
+                this.pointer.y = -(py/rect.height)*2 + 1;
+            }
+            this.raycaster.setFromCamera(this.pointer, this.camera);
+            const hits = this.raycaster.intersectObjects(this.recPoints, false);
+            if (hits.length) {
+                const u = hits[0].object.userData;
+                this.h = u.h; this.k = u.k; this.l = u.l;
+                this.geoDirty = true; this.dirty = true;
+            }
+        },
+
+        toggleBreathing: function() { this.breathing = !this.breathing; this.breathPhase = 0; },
+
+        animate: function() {
+            const self = this;
+            requestAnimationFrame(function(){ self.animate(); });
+            if (!this.renderer) return;
+            const host = this.$refs.viewport;
+            if (!host) return;
+            const w = host.clientWidth, h = host.clientHeight;
+            if (w === 0 || h === 0) {
+                // 视口被隐藏（切到"反射列表与粉末图"页签）：3D 不渲染，但数值面板
+                // 仍要刷新，否则在列表页改了 hkl，d / |G| / 2θ 会一直停在旧值
+                if (this.dirty) { this.dirty = false; this.updateNumbers(); }
+                return;
+            }
+
+            if (this.geoDirty) {
+                this.geoDirty = false;
+                this.labels = [];
+                this.buildReal(); this.buildRec();
+            }
+
+            // 真实帧间隔：避免 120Hz 屏上动画倍速
+            const now = performance.now();
+            const dt = this._lastT ? Math.min(0.1, (now - this._lastT)/1000) : 1/60;
+            this._lastT = now;
+
+            if (this.breathing) {
+                this.breathPhase += dt * 0.25;          // 呼吸周期约 25 s
+                const t = (Math.sin(this.breathPhase) + 1)/2;
+                this.a = 2.8 + t*3.4;
+                if (this.struct === 'hcp') this.c = 4.2 + t*2.6;
+                this.dirty = true;
+            }
+
+            // 数值先算完：d、G、2θ 要用本帧最新的晶格参数
+            if (this.dirty) { this.dirty = false; this.updateNumbers(); }
+
+            if (this.autoRotate) {
+                this.realGroup.rotation.y += dt * 0.22;  // 一圈约 29 s
+                this.realGroup.rotation.x = Math.sin(this.realGroup.rotation.y*0.5)*0.08;
+            }
+            this.recGroup.rotation.copy(this.realGroup.rotation);
+
+            this.updateDynamic();
+            this.controls.update();
+
+            this.renderer.setScissorTest(true);
+            if (this.vsplit) {
+                // 上下分屏：实空间在上，倒空间在下（WebGL 原点在左下）
+                this.renderer.setViewport(0, h/2, w, h/2);
+                this.renderer.setScissor(0, h/2, w, h/2);
+                this.renderer.render(this.sceneReal, this.camera);
+                this.renderer.setViewport(0, 0, w, h/2);
+                this.renderer.setScissor(0, 0, w, h/2);
+                this.renderer.render(this.sceneRec, this.camera);
+            } else {
+                // 左右分屏：实空间在左，倒空间在右
+                this.renderer.setViewport(0, 0, w/2, h);
+                this.renderer.setScissor(0, 0, w/2, h);
+                this.renderer.render(this.sceneReal, this.camera);
+                this.renderer.setViewport(w/2, 0, w/2, h);
+                this.renderer.setScissor(w/2, 0, w/2, h);
+                this.renderer.render(this.sceneRec, this.camera);
+            }
+            this.renderer.setScissorTest(false);
+        }
+    }
+});
+</script>
+</body>
+</html>

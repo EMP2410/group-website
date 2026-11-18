@@ -1332,6 +1332,123 @@ body.emp-demo-page .emp-demo-frame {
   border-left-color: rgba(255, 255, 255, 0.15);
 }
 
+/* --- Demos: collapsible description sections ---------------------------
+   The demo pages carry a lot of explanatory text. Rather than hiding it,
+   every top-level section becomes a collapsible block, so the reader can
+   skim the section titles and open only what they need. The title stays a
+   real <h2> inside <summary>, which keeps the document outline and the
+   existing #anchors working. */
+.emp-accordion {
+  margin: 1.8rem 0 0;
+  border-top: 1px solid #eaeaea;
+}
+
+.emp-accordion:last-of-type {
+  border-bottom: 1px solid #eaeaea;
+}
+
+.emp-accordion > summary {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.9rem 0.7rem;
+  list-style: none;
+  cursor: pointer;
+  color: #16233a;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.emp-accordion > summary::-webkit-details-marker {
+  display: none;
+}
+
+.emp-accordion > summary::marker {
+  content: "";
+}
+
+.emp-accordion > summary:hover {
+  color: #1d5fa8;
+  background: #f4f4f9;
+}
+
+.emp-accordion > summary:focus-visible {
+  outline: 2px solid #1d5fa8;
+  outline-offset: -2px;
+}
+
+/* Chevron on the right: points right when closed, down when open. */
+.emp-accordion > summary::after {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid #6b7280;
+  border-bottom: 2px solid #6b7280;
+  transform: rotate(-45deg);
+  transition: transform 0.25s ease;
+}
+
+.emp-accordion[open] > summary::after {
+  transform: rotate(45deg);
+}
+
+/* The heading inside <summary> titles the section rather than the page,
+   so it is scaled down to the size of a compact trigger row. */
+.emp-accordion > summary h2 {
+  flex: 1 1 auto;
+  margin: 0;
+  font-size: 1.06rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: inherit;
+}
+
+.emp-accordion__body {
+  padding: 0.2rem 0.7rem 1.2rem;
+}
+
+/* The theme gives every <p> inside a <details> a heavy left rule, which
+   was written for the FAQ accordion and reads as noise here. */
+.emp-accordion p,
+.dark .emp-accordion p {
+  margin-left: 0;
+  padding-left: 0;
+  border-left: none;
+}
+
+.emp-accordion__body h3 {
+  margin: 1.5rem 0 0.6rem;
+  font-size: 1.02rem;
+  font-weight: 600;
+  color: #16233a;
+}
+
+.dark .emp-accordion {
+  border-top-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .emp-accordion:last-of-type {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+.dark .emp-accordion > summary {
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.dark .emp-accordion > summary:hover {
+  color: #7fb4ea;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.dark .emp-accordion > summary::after {
+  border-right-color: rgba(255, 255, 255, 0.55);
+  border-bottom-color: rgba(255, 255, 255, 0.55);
+}
+
+.dark .emp-accordion__body h3 {
+  color: rgba(255, 255, 255, 0.92);
+}
+
 /* --- Demos landing page: screenshot cards --------------------------- */
 .emp-demo-grid {
   display: grid;
